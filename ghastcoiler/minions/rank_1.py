@@ -152,3 +152,4 @@ class PunchingBag(Minion):
                          rank=1,
                          base_attack=0,
                          base_defense=100)
+                         
