@@ -17,6 +17,7 @@ class Minion:
                  base_defense: int, 
                  attack: Optional[int] = None, 
                  defense: Optional[int] = None, 
+                 dead: bool = False,
                  types: Optional[List[MinionType]] = None, 
                  base_poisonous: bool = False,
                  poisonous: bool = False,
@@ -48,6 +49,7 @@ class Minion:
         Keyword Arguments:
             attack {Optional[int]} -- Optional overwritten attack (default: {None})
             defense {Optional[int]} -- Optional overwritten defense (default: {None})
+            dead {bool} -- Has the minion been killed (default: {False})
             types {Optional[List[MinionType]]} -- Optional list of MinionTypes (default: {None})
             base_poisonous {bool} -- Standard poisonous (default: {False})
             poisonous {bool} -- Poisonous (default: {False})
@@ -73,6 +75,7 @@ class Minion:
         self.base_defense = base_defense * 2 if golden else base_defense
         self.attack = attack if attack else base_attack
         self.defense = defense if defense else base_defense
+        self.dead = dead,
         self.last_attack = self.attack
         self.last_defense = self.defense
         self.types = types if types else []
@@ -176,16 +179,18 @@ class Minion:
         Returns:
             bool -- Whether the minion has popped a shield
         """
+        if amount <= 0:
+            return False
+
         popped_shield = False
         if self.divine_shield:
-            if amount > 0:
-                popped_shield = True
-                self.divine_shield = False
+            popped_shield = True
+            self.divine_shield = False
         else:
-            if poisonous:
-                self.defense = -9999999
-            else:
-                self.defense -= amount
+            self.defense -= amount
+            if self.defense <= 0 or poisonous:
+                self.dead = True
+
         return popped_shield
 
     def check_death(self, own_board: PlayerBoard, opposing_board: PlayerBoard) -> bool:
