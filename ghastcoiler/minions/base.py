@@ -77,7 +77,7 @@ class Minion:
         self.base_defense = base_defense * 2 if golden else base_defense
         self.attack = attack if attack else base_attack
         self.defense = defense if defense else base_defense
-        self.dead = dead,
+        self.dead = dead
         self.last_attack = self.attack
         self.last_defense = self.defense
         self.types = types if types else []
@@ -121,24 +121,6 @@ class Minion:
                       poisonous=self.poisonous,
                       deathrattles=self.deathrattles,
                       golden=self.golden)
-
-    def add_attack(self, amount: int):
-        """Add attack to minion, should be used for deathrattles and triggers, not for dynamic bonusses by other minions
-
-        Arguments:
-            amount {int} -- Amount of attack to increase
-        """
-        self.attack += amount
-        self.last_attack += amount
-
-    def add_defense(self, amount: int):
-        """Add defense to minion, should be used for deathrattles and triggers, not for dynamic bonusses by other minions
-
-        Arguments:
-            amount {int} -- Amount of defense to increase
-        """
-        self.defense += amount
-        self.last_defense += amount
 
     def minion_string(self):
         """String representation of minion
@@ -206,21 +188,7 @@ class Minion:
         Returns:
             bool -- Whether minion is dead
         """
-        total_defense = self.total_defense(own_board, opposing_board)
-        if total_defense <= 0:
-            self.total_attack(own_board, opposing_board)
-            return True
-        return False
-
-    def update_attack_and_defense(self, own_board, opposing_board):
-        """Update attack and defense 
-
-        Arguments:
-            own_board {[type]} -- [description]
-            opposing_board {[type]} -- [description]
-        """
-        self.total_defense(own_board, opposing_board)
-        self.total_attack(own_board, opposing_board)
+        return self.dead
 
     def at_beginning_game(self, game_instance: GameInstance, player_starts: bool, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented to do things at the beginning of the game
@@ -233,96 +201,15 @@ class Minion:
         """
         pass
 
-    def on_attack(self):
+    def on_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented when the minion attacks
         """
         pass
 
-    def total_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        """Calculate total attack of minion - WILL BE PART OF REFACTORING OF BONUS SYSTEM
-
-        Arguments:
-            own_board {PlayerBoard} -- Player board minion belongs to
-            opposing_board {PlayerBoard} -- Player board minion does not belong to
-
-        Returns:
-            int -- Total attack of minion
+    def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        """Trigger that can be implemented when the minion is attacked
         """
-        additional_attack = self.additional_attack(own_board=own_board, opposing_board=opposing_board)
-        total_bonus_attack = 0
-        for other_minion in own_board.minions:
-            if self.position != other_minion.position:
-                bonus_attack, _ = other_minion.gives_attack_defense_bonus(self)
-                total_bonus_attack += bonus_attack
-        total_attack = self.attack + additional_attack + total_bonus_attack
-        self.last_attack = total_attack
-        return total_attack
-
-    def total_defense(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        """Calculate total defense of minion - WILL BE PART OF REFACTORING OF BONUS SYSTEM
-
-        Arguments:
-            own_board {PlayerBoard} -- Player board minion belongs to
-            opposing_board {PlayerBoard} -- Player board minion does not belong to
-
-        Returns:
-            int -- Total defense of minion
-        """
-        total_bonus_defense = 0        
-        for other_minion in own_board.minions:
-            if self.position != other_minion.position:
-                _, bonus_defense = other_minion.gives_attack_defense_bonus(self)
-                total_bonus_defense += bonus_defense
-        total_defense = self.defense + total_bonus_defense
-        self.last_defense = total_defense
-        return total_defense
-
-    def total_attack_and_defense(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        """Calculate total attack and defense of minion - WILL BE PART OF REFACTORING OF BONUS SYSTEM
-
-        Arguments:
-            own_board {PlayerBoard} -- Player board minion belongs to
-            opposing_board {PlayerBoard} -- Player board minion does not belong to
-
-        Returns:
-            Tuple[int, int] -- Total attack and defense of minion
-        """
-        
-        additional_attack = self.additional_attack(own_board=own_board, opposing_board=opposing_board)
-        total_bonus_attack, total_bonus_defense = 0, 0
-        for other_minion in own_board.minions:
-            if self.position != other_minion.position:
-                bonus_attack, bonus_defense = other_minion.gives_attack_defense_bonus(self)
-                total_bonus_attack += bonus_attack
-                total_bonus_defense += bonus_defense
-        total_attack = self.attack + additional_attack + total_bonus_attack
-        total_defense = self.defense + total_bonus_defense
-        self.last_attack = total_attack
-        self.last_defense = total_defense
-        return total_attack, total_defense
-
-    def additional_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard) -> int:
-        """Additional attack due to personal bonuses
-
-        Arguments:
-            own_board {PlayerBoard} -- Player board minion belongs to
-            opposing_board {PlayerBoard} -- Player board minion does not belong to
-
-        Returns:
-            int -- Additional attack due to personal bonsus
-        """
-        return 0
-
-    def gives_attack_defense_bonus(self, other_minion: Minion):
-        """How much additional attack and defense this minion grants the other minion
-
-        Arguments:
-            other_minion {Minion} -- Minion to potentially grant bonus attack and defense
-
-        Returns:
-            Tuple[int, int] -- Attack and defense bonus granted
-        """
-        return 0, 0
+        pass
 
     def on_kill(self):
         """Trigger that happens when this minion kills another minion"""
@@ -332,15 +219,27 @@ class Minion:
         """Trigger that happens when this minion receives damage"""
         pass
 
-    def on_other_enter(self, other_minion: Minion):
-        """Trigger that happens when another minion enters the player board
+    def on_summon(self, other_minion: Minion):
+        """Trigger that happens when this minion enters the board"""
+        pass
 
+    def on_friendly_summon(self, other_minion: Minion):
+        """Trigger that happens when another minion enters the friendly player board
+
+        Arguments:
+            other_minion {Minion} -- Minion entering the friendly player board
+        """
+        pass
+
+    def on_removal(self, other_minion: Minion):
+        """What the minion should do to other minion on the player board when it exits (NOT a deathrattle)
+        
         Arguments:
             other_minion {Minion} -- Minion entering the player board
         """
         pass
 
-    def on_other_death(self, other_minion: Minion):
+    def on_friendly_removal(self, other_minion: Minion):
         """Trigger that happens when another minion on the player board dies
 
         Arguments:

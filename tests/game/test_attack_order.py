@@ -1,4 +1,5 @@
-from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant, RabidSaurolisk, PunchingBag, WrathWeaver
+from ghastcoiler.minions.test_minions import PunchingBag
+from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant, RabidSaurolisk, WrathWeaver
 from ghastcoiler.minions.rank_2 import HarvestGolem, RatPack
 
 
@@ -34,6 +35,10 @@ def test_simple_attack_sequence(initialized_game):
 
 def test_simple_defender_selection(initialized_game):
     # TODO: Make sure taunts are selected over non-taunts, test other specific taunt override mechanics
+    assert(True)
+
+def test_windfury(initialized_game):
+    # TODO: test windfury mechanic
     assert(True)
 
 def test_minion_insertion(initialized_game):
