@@ -25,7 +25,6 @@ class GameInstance:
 
     def log_current_game(self):
         """Log current game state"""
-        self.update_attack_and_defense()
         logging.debug("Player 0 board:")
         logging.debug(self.player_board[0].minions_string())
         logging.debug("Player 1 board:")
@@ -37,19 +36,11 @@ class GameInstance:
         Returns:
             string -- Representation
         """
-        self.update_attack_and_defense()
         return_string = "Player 0:\n"
         return_string += str(self.player_board[0]) + "\n\n"
         return_string += "Player 1:\n"
         return_string += str(self.player_board[1])
         return return_string
-
-    def update_attack_and_defense(self):
-        """Update the attack and defense of all minions, this will be replaced soon"""
-        for minion in self.player_board[0].get_minions():
-            minion.update_attack_and_defense(self.player_board[0], self.player_board[1])
-        for minion in self.player_board[1].get_minions():
-            minion.update_attack_and_defense(self.player_board[1], self.player_board[0])
 
     def attacking_player_board(self):
         """Return board of currently attacking player
@@ -99,11 +90,12 @@ class GameInstance:
             opposing_board {PlayerBoard} -- Board opposing of the minion that dies
             minion_defending_player {bool} -- Whether the minion died is on the defending side for trigger orders
         """
-        # TODO: Baron
         if minion_defending_player:
             opposing_board.remove_minion(minion)
         else:
             minion_board.remove_minion(minion)
+
+        # TODO: Baron
         for deathrattle in minion.deathrattles:
             if minion_defending_player:
                 deathrattle.trigger(minion, opposing_board, minion_board)
@@ -134,16 +126,15 @@ class GameInstance:
             attacking_minion {Minion} -- Minion that attacks
             defending_minion {Minion} -- Minion that is attacked
         """
-        # TODO: Cleave, Windfury, Mega windfury
+        # TODO: Cleave
         attacker, defender = self.attacking_player_board(), self.defending_player_board()
-        logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}")
-        attacking_minion.on_attack()
-        attacking_minion_attack, _ = attacking_minion.total_attack_and_defense(attacker, defender)
-        defending_minion_attack, _ = defending_minion.total_attack_and_defense(defender, attacker)
+        attacking_minion.on_attack(attacker, defender)
+        defending_minion.on_attacked(attacker, defender)
 
-        # TODO Double check if order matters for who processes damage first, the attacking minion vs defending minion
-        self.deal_damage(attacking_minion, attacker, defending_minion_attack, defending_minion.poisonous)
-        self.deal_damage(defending_minion, defender, attacking_minion_attack, attacking_minion.poisonous)
+        logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}") 
+
+        self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
+        self.deal_damage(defending_minion, defender, attacking_minion.attack, attacking_minion.poisonous)
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X
@@ -195,8 +186,10 @@ class GameInstance:
             attacking_minion = self.attacking_player_board().select_attacking_minion()
             defending_minion = self.defending_player_board().select_defending_minion()
             if attacking_minion:
-                self.attack(attacking_minion, defending_minion)
-                self.check_deaths(self.attacking_player_board(), self.defending_player_board())
+                attacks = 2 if attacking_minion.windfury else 1 #TODO: mega windfury
+                for _ in range(attacks):
+                    self.attack(attacking_minion, defending_minion)
+                    self.check_deaths(self.attacking_player_board(), self.defending_player_board())
                 # Flag the minion as having attacked. 
                 # It may be dead, but we have to set this after all deathrattles have been resolved to maintain correct attack order...
                 attacking_minion.attacked = True

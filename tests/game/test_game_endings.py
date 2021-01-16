@@ -1,4 +1,5 @@
-from ghastcoiler.minions.rank_1 import PunchingBag, FiendishServant, DragonspawnLieutenant
+from ghastcoiler.minions.test_minions import PunchingBag
+from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant
 
 
 def test_simple_ending(initialized_game):

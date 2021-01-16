@@ -18,7 +18,7 @@ class GlyphGuardian(Minion):
                          types=[MinionType.Dragon],
                          **kwargs)
 
-    def on_attack(self):
+    def on_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         if self.golden:
             self.attack *= 3
         else:
@@ -88,14 +88,22 @@ class MurlocWarleader(Minion):
                          base_defense=3,
                          types=[MinionType.Murloc],
                          **kwargs)
-
-    def gives_attack_defense_bonus(self, other_minion):
+    # apply or remove the warleader attack bonus to the other minion
+    def adjust_murlock_power(self, other_minion: Minion, add_power :bool):
         if MinionType.Murloc in other_minion.types:
-            if self.golden:
-                return 4, 0
-            return 2, 0
-        return 0, 0
+            if add_power:
+                other_minion.attack += 4 if self.golden else 2
+            else:
+                other_minion.attack -= 4 if self.golden else 2
 
+    def on_summon(self, other_minion: Minion):
+        self.adjust_murlock_power(other_minion, True)
+
+    def on_friendly_summon(self, other_minion: Minion):
+        self.adjust_murlock_power(other_minion, True)
+
+    def on_removal(self, other_minion: Minion):
+        self.adjust_murlock_power(other_minion, False)
 
 class NathrezimOverseer(Minion):
     def __init__(self, **kwargs):
@@ -109,6 +117,7 @@ class NathrezimOverseer(Minion):
 
 class OldMurkEye(Minion):
     def __init__(self, **kwargs):
+        self.bonus_attack = 0
         super().__init__(name="Old Murk Eye",
                          rank=2,
                          base_attack=2,
@@ -116,11 +125,19 @@ class OldMurkEye(Minion):
                          types=[MinionType.Murloc],
                          **kwargs)
 
-    def additional_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def update_bonus_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         total_number_other_murlocs = own_board.count_minion_type(MinionType.Murloc) + opposing_board.count_minion_type(MinionType.Murloc) - 1 # Don't count itself
         bonus = total_number_other_murlocs * 2 if self.golden else total_number_other_murlocs
-        return bonus
 
+        self.attack -= self.bonus_attack
+        self.bonus_attack = bonus
+        self.attack += self.bonus_attack
+
+    def on_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        self.update_bonus_attack(own_board, opposing_board)
+
+    def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        self.update_bonus_attack(own_board, opposing_board)
 
 class PogoHopper(Minion):
     def __init__(self, **kwargs):
@@ -152,11 +169,11 @@ class ScavengingHyena(Minion):
                          types=[MinionType.Beast],
                          **kwargs)
 
-    def on_other_death(self, other_minion):
+    def on_friendly_removal(self, other_minion):
         if MinionType.Beast in other_minion.types:
             multiplier = 2 if self.golden else 1
-            self.add_attack(2 * multiplier)
-            self.add_defense(multiplier)
+            self.attack += (2 * multiplier)
+            self.defense += multiplier
 
 
 class SpawnofNZoth(Minion):
@@ -198,11 +215,12 @@ class WaxriderTogwaggle(Minion):
                          base_defense=2,
                          **kwargs)
 
-    def on_other_death(self, other_minion):
-        if MinionType.Dragon in other_minion.types:
-            added_bonus = 4 if self.golden else 2
-            self.add_attack(added_bonus)
-            self.add_defense(added_bonus)
+    # def on_other_death(self, other_minion):
+    #     #TODO: Fix this
+    #     if MinionType.Dragon in other_minion.types:
+    #         added_bonus = 4 if self.golden else 2
+    #         self.attack += added_bonus
+    #         self.defense += added_bonus
 
 
 class Zoobot(Minion):

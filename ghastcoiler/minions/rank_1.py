@@ -25,11 +25,11 @@ class RabidSaurolisk(Minion):
                          types=[MinionType.Beast],
                          **kwargs)
 
-    def on_other_enter(self, other_minion):
+    def on_friendly_summon(self, other_minion):
         if other_minion.deathrattles:
             increase_amount = 2 if self.golden else 1
-            self.add_attack(increase_amount)
-            self.add_defense(increase_amount)
+            self.attack += increase_amount
+            self.defense += increase_amount
 
 
 class DragonspawnLieutenant(Minion):
@@ -145,11 +145,4 @@ class WrathWeaver(Minion):
                          rank=1,
                          base_attack=1,
                          base_defense=1)
-
-class PunchingBag(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="PunchingBag",
-                         rank=1,
-                         base_attack=0,
-                         base_defense=100)
                          

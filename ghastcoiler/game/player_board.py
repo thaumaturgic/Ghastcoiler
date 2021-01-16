@@ -6,7 +6,6 @@ from typing import List, Optional
 from minions.base import Minion
 from minions.types import MinionType
 
-
 class PlayerBoard:
     def __init__(self, player_id: int, hero: None, life_total: int, rank: int, minions: List[Minion]):
         """The board of one the players in a game instance
@@ -175,9 +174,13 @@ class PlayerBoard:
         logging.debug(f"Removing {minion.minion_string()}")
         position = minion.position
         self.minions.pop(position)
-        for minion in self.minions[position:]:
-            minion.shift_left()
+        for other_minion in self.minions[position:]:
+            other_minion.shift_left()
 
+        for other_minion in self.minions:
+            minion.on_removal(other_minion)
+            other_minion.on_friendly_removal(minion)
+            
     def add_minion(self, new_minion: Minion, position: Optional[int] = None) -> Optional[Minion]:
         """Add minion to the board if there is space
 
@@ -193,8 +196,11 @@ class PlayerBoard:
         if len(self.minions) < 7:
             if position is None:
                 position = len(self.minions)
+
             for minion in self.minions:
-                minion.on_other_enter(other_minion=new_minion)
+                minion.on_friendly_summon(other_minion=new_minion)
+                new_minion.on_summon(minion)
+
             new_minion.position = position
             new_minion.player_id = self.player_id
             self.minions.insert(position, new_minion)

@@ -14,7 +14,7 @@ class FiendishServantDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
         target_minion = own_board.random_minion()
         if target_minion:
-            target_minion.add_attack(minion.last_attack)
+            target_minion.attack += minion.attack
             logging.debug(f"Fiendish Servant deathrattle triggers onto {target_minion.minion_string()}")
         else:
             logging.debug("Fiendish Servant deathrattle triggers but there are no targets left")
