@@ -111,11 +111,11 @@ class GameInstance:
             defending_player_board {PlayerBoard} -- Player board of defending player
         """
         for minion in attacking_player_board.get_minions():
-            if minion.check_death(attacking_player_board, defending_player_board):
+            if minion.dead:
                 self.kill(minion, attacking_player_board, defending_player_board, minion_defending_player=False)
                 return # TODO: Allow multiple units to die at once, ie when cleave happens
         for minion in defending_player_board.get_minions():
-            if minion.check_death(defending_player_board, attacking_player_board):
+            if minion.dead:
                 self.kill(minion, attacking_player_board, defending_player_board, minion_defending_player=True)
                 return
 

@@ -157,13 +157,16 @@ class PlayerBoard:
         return self.minions
 
     def random_minion(self):
-        """Return a random minion from the player board
+        """Return a random minion from the player board. In some game states its possible to have a dead minion that has not been removed from the board yet.
+        For example, while a bomb or soul juggler has triggered. In these cases we want to not target already dead units
 
         Returns:
             Minion -- Randomly selected minion
         """
         if len(self.minions) > 0:
-            return self.minions[random.randint(0, len(self.minions) - 1)]
+            live_minions = [minion for minion in self.minions if not minion.dead]
+            position = live_minions[random.randint(0, len(live_minions) - 1)].position
+            return self.minions[position]
 
     def remove_minion(self, minion: Minion):
         """Remove minion from board

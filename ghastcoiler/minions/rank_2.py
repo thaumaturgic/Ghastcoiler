@@ -6,7 +6,8 @@ from minions.base import Minion
 from minions.types import MinionType
 
 from deathrattles.rank_2 import HarvestGolemDeathrattle, ImprisonerDeathrattle, KaboomBotDeathrattle, \
-    KindlyGrandmotherDeathrattle, RatPackDeathrattle, SpawnofNZothDeathrattle, UnstableGhoulDeathrattle
+    KindlyGrandmotherDeathrattle, RatPackDeathrattle, SpawnofNZothDeathrattle, UnstableGhoulDeathrattle, \
+    SelflessHeroDeathrattle
 
 
 class GlyphGuardian(Minion):
@@ -90,11 +91,12 @@ class MurlocWarleader(Minion):
                          **kwargs)
     # apply or remove the warleader attack bonus to the other minion
     def adjust_murlock_power(self, other_minion: Minion, add_power :bool):
+        buffAmount = 4 if self.golden else 2
         if MinionType.Murloc in other_minion.types:
             if add_power:
-                other_minion.attack += 4 if self.golden else 2
+                other_minion.add_stats(buffAmount, 0)
             else:
-                other_minion.attack -= 4 if self.golden else 2
+                other_minion.remove_stats(buffAmount, 0)
 
     def on_summon(self, other_minion: Minion):
         self.adjust_murlock_power(other_minion, True)
@@ -139,14 +141,14 @@ class OldMurkEye(Minion):
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         self.update_bonus_attack(own_board, opposing_board)
 
-class PogoHopper(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Pogo-Hopper",
-                         rank=2,
-                         base_attack=1,
-                         base_defense=1,
-                         types=[MinionType.Mech],
-                         **kwargs)
+# class PogoHopper(Minion):
+#     def __init__(self, **kwargs):
+#         super().__init__(name="Pogo-Hopper",
+#                          rank=2,
+#                          base_attack=1,
+#                          base_defense=1,
+#                          types=[MinionType.Mech],
+#                          **kwargs)
 
 
 class RatPack(Minion):
@@ -158,22 +160,6 @@ class RatPack(Minion):
                          types=[MinionType.Beast],
                          base_deathrattle=RatPackDeathrattle(),
                          **kwargs)
-
-
-class ScavengingHyena(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Scavenging Hyena",
-                         rank=2,
-                         base_attack=2,
-                         base_defense=2,
-                         types=[MinionType.Beast],
-                         **kwargs)
-
-    def on_friendly_removal(self, other_minion):
-        if MinionType.Beast in other_minion.types:
-            multiplier = 2 if self.golden else 1
-            self.attack += (2 * multiplier)
-            self.defense += multiplier
 
 
 class SpawnofNZoth(Minion):
@@ -223,11 +209,120 @@ class WaxriderTogwaggle(Minion):
     #         self.defense += added_bonus
 
 
-class Zoobot(Minion):
+class SelflessHero(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Zoobot",
+        super().__init__(name="Selfless Hero",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=1,
+                         base_deathrattle=SelflessHeroDeathrattle(),
+                         **kwargs)
+
+class SouthseaCaptain(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Southsea Captain",
                          rank=2,
                          base_attack=3,
                          base_defense=3,
-                         types=[MinionType.Mech],
+                         types=[MinionType.Pirate],
                          **kwargs)
+
+    def adjust_pirate_stats(self, other_minion: Minion, add_stats :bool):
+        buffAmount = 2 if self.golden else 1
+        if MinionType.Pirate in other_minion.types:
+            if add_stats:
+                other_minion.add_stats(buffAmount, buffAmount)
+            else:
+                other_minion.remove_stats(buffAmount, buffAmount)
+                if other_minion.defense < 0:
+                    other_minion.defense = 1 # Losing pirate buffs cannot kill a minion
+
+    def on_summon(self, other_minion: Minion):
+        self.adjust_pirate_stats(other_minion, True)
+
+    def on_friendly_summon(self, other_minion: Minion):
+        self.adjust_pirate_stats(other_minion, True)
+
+    def on_removal(self, other_minion: Minion):
+        self.adjust_pirate_stats(other_minion, False)
+
+
+class FreedealingGambler(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Freedealing Gambler",
+                         rank=2,
+                         base_attack=3,
+                         base_defense=3,
+                         types=[MinionType.Pirate],
+                         **kwargs)
+
+class MenagerieMug(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Menagerie Mug",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=2,
+                         **kwargs)
+
+
+class MoltenRock(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Molten Rock",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=3,
+                         types=[MinionType.Elemental]
+                         **kwargs)
+
+
+class PackLeader(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Pack Leader",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=3,
+                         **kwargs)
+
+    def on_friendly_summon(self, other_minion: Minion):
+        if MinionType.Beast in other_minion.types:
+            other_minion.attack += 4 if self.golden else 2
+                         
+
+class PartyElemental(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Party Elemental",
+                         rank=2,
+                         base_attack=3,
+                         base_defense=2,
+                         types=[MinionType.Elemental]
+                         **kwargs)
+
+
+class TormentedRitualist(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Tormented Ritualist",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=3,
+                         **kwargs)
+                         
+    def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        buff_amount = 2 if self.golden else 1
+        position = self.position
+        left_position = position - 1
+        right_position = position + 1
+        if left_position >= 0:
+            own_board.minions[left_position].add_stats(buff_amount, buff_amount)
+        if right_position < len(own_board.minions):
+            own_board.minions[right_position].add_stats(buff_amount, buff_amount)
+
+
+class YoHoOgre(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Yo-Ho-Ogre",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=5,
+                         types=[MinionType.Pirate]
+                         **kwargs)
+    # TODO: Implement an 'after attacked' trigger? 

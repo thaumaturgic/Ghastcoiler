@@ -1,4 +1,5 @@
 import logging
+import random
 
 from game.player_board import PlayerBoard
 from minions.base import Minion
@@ -35,7 +36,6 @@ class KaboomBotDeathrattle(Deathrattle):
             logging.debug("Kaboom Bot deathrattle triggered, dealing 4 damage")
         number_bombs = 2 if minion.golden else 1
         for _ in range(number_bombs):
-            # TODO: Should kill the unit before throwing a second bomb
             opposing_minion = opposing_board.random_minion()
             opposing_minion.receive_damage(amount=4, poisonous=False)
 
@@ -54,7 +54,7 @@ class RatPackDeathrattle(Deathrattle):
         super().__init__(name="RatPackDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        number_rats = minion.last_attack
+        number_rats = minion.attack
         logging.debug(f"Rat pack deathrattle triggered, creating {number_rats} rats")
         for _ in range(number_rats):
             own_board.add_minion(Rat(golden=minion.golden, attacked=minion.attacked), position=minion.position)
@@ -68,8 +68,7 @@ class SpawnofNZothDeathrattle(Deathrattle):
         logging.debug(f"Spawn of NZoth deathrattle triggered")
         bonus = 2 if minion.golden else 1
         for other_minion in own_board.get_minions():
-            other_minion.attack += bonus
-            other_minion.defense += bonus
+            other_minion.add_stats(bonus,bonus)
 
 
 class UnstableGhoulDeathrattle(Deathrattle):
@@ -83,3 +82,16 @@ class UnstableGhoulDeathrattle(Deathrattle):
             opposing_minion.receive_damage(damage=damage, poisonous=False)
         for friendly_minion in own_board.get_minions():
             friendly_minion.receive_damage(damage=damage, poisonous=False)
+
+
+class SelflessHeroDeathrattle(Deathrattle):
+    def __init__(self):
+        super().__init__(name="SelflessHeroDeathrattle")
+
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        logging.debug(f"Selfless Hero deathrattle triggered")
+        iterations = 2 if minion.golden else 1
+        for _ in range(iterations):
+            unshielded_minions = [minion for minion in own_board.minions if not minion.divine_shield]
+            board_index = unshielded_minions[random.randint(0, len(unshielded_minions) - 1)].position
+            own_board.minions[board_index].divine_shield = True

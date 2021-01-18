@@ -78,8 +78,6 @@ class Minion:
         self.attack = attack if attack else base_attack
         self.defense = defense if defense else base_defense
         self.dead = dead
-        self.last_attack = self.attack
-        self.last_defense = self.defense
         self.types = types if types else []
         self.base_divine_shield = base_divine_shield
         self.divine_shield = divine_shield if divine_shield else base_divine_shield
@@ -141,7 +139,7 @@ class Minion:
             attributes += "[Cl]"
         if self.reborn:
             attributes += "[Re]"
-        return_string = f"{self.last_attack}/{self.last_defense} {''.join(attributes)} ({self.name})"
+        return_string = f"{self.attack}/{self.defense} {''.join(attributes)} ({self.name})"
         positional_part = f"<P{self.player_id} {self.position}> "
         return_string = positional_part + return_string
         return return_string
@@ -153,6 +151,18 @@ class Minion:
             str -- String representation
         """
         return self.minion_string()
+
+    def add_stats(self, attack: int, defense: int):
+        """Add minion attack/defense
+        """
+        self.attack += attack
+        self.defense += defense
+
+    def remove_stats(self, attack: int, defense: int):
+        """Remove minion attack/defense
+        """
+        self.attack -= attack
+        self.defense -= defense
 
     def receive_damage(self, amount: int, poisonous: bool):
         """Receive amount of damage which can be poisonous
@@ -177,18 +187,6 @@ class Minion:
                 self.dead = True
 
         return popped_shield
-
-    def check_death(self, own_board: PlayerBoard, opposing_board: PlayerBoard) -> bool:
-        """Check whether the minion is dead
-
-        Arguments:
-            own_board {PlayerBoard} -- Board minion belongs to
-            opposing_board {PlayerBoard} -- Board minion does not belong to
-
-        Returns:
-            bool -- Whether minion is dead
-        """
-        return self.dead
 
     def at_beginning_game(self, game_instance: GameInstance, player_starts: bool, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented to do things at the beginning of the game

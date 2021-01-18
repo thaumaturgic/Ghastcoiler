@@ -6,3 +6,5 @@ class MinionType(Enum):
     Demon = 3
     Beast = 4
     Mech = 5
+    Pirate = 6
+    Elemental = 7

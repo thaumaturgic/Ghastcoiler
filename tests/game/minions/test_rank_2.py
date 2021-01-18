@@ -1,6 +1,7 @@
 from ghastcoiler.minions.test_minions import PunchingBag
-from ghastcoiler.minions.rank_2 import GlyphGuardian, HarvestGolem, Imprisoner, KaboomBot, KindlyGrandmother, MurlocWarleader, OldMurkEye, ScavengingHyena, SpawnofNZoth
-from ghastcoiler.minions.rank_1 import MurlocTidehunter, Alleycat
+from ghastcoiler.minions.rank_2 import GlyphGuardian, HarvestGolem, Imprisoner, KaboomBot, KindlyGrandmother, MurlocWarleader, OldMurkEye, SpawnofNZoth, SelflessHero, \
+    PackLeader, TormentedRitualist
+from ghastcoiler.minions.rank_1 import MurlocTidehunter, Alleycat, ScavengingHyena
 
 def test_kaboombot_deathrattle(initialized_game):
     attacker_board = initialized_game.player_board[0]
@@ -27,7 +28,7 @@ def test_murloc_war_leader(initialized_game):
     attacker_board.add_minion(KaboomBot())
     defender_board.add_minion(MurlocWarleader())
 
-    # Warleaders should buff each other
+    # Friendly Warleaders should buff each other
     assert attacker_board.minions[0].attack == 5
     assert attacker_board.minions[1].attack == 5
     # Warleader should not buff non-murlocs
@@ -87,29 +88,77 @@ def test_glyph_guardian(initialized_game):
     assert glyph_guardian.attack == 4
 
 
-def test_scavenging_hyena(initialized_game):
-    attacker_board = initialized_game.player_board[0]
-    defender_board = initialized_game.player_board[1]
-
-    hyena = ScavengingHyena()
-
-    attacker_board.add_minion(hyena)
-    attacker_board.add_minion(Alleycat())
-    attacker_board.minions[1].dead = True
-    initialized_game.check_deaths(attacker_board, defender_board)
-
-    assert hyena.attack == 4
-    assert hyena.defense == 3
-
 def test_spawn_of_nzoth(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
     spawn = SpawnofNZoth()
-    murloc = MurlocTidehunter()
 
     attacker_board.add_minion(spawn)
-    attacker_board.add_minion(murloc)
+    attacker_board.add_minion(MurlocTidehunter())
+    attacker_board.add_minion(MurlocTidehunter())
     spawn.dead = True
     initialized_game.check_deaths(attacker_board, defender_board)
-    assert murloc.attack == 3
+    assert attacker_board.minions[0].attack == 3 and attacker_board.minions[0].defense == 2
+    assert attacker_board.minions[1].attack == 3 and attacker_board.minions[1].defense == 2
+
+def test_selfless_hero(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    hero = SelflessHero()
+    attacker_board.add_minion(hero)
+    attacker_board.add_minion(SpawnofNZoth())
+    attacker_board.add_minion(SpawnofNZoth())
+    attacker_board.add_minion(SpawnofNZoth())
+
+    hero.dead = True
+    initialized_game.check_deaths(attacker_board, defender_board)
+
+    shielded_minions = sum(1 for minion in attacker_board.minions if minion.divine_shield)
+    assert shielded_minions == 1
+
+    # Test golden hero
+    golden_hero = SelflessHero(golden=True)
+    attacker_board.minions = []
+
+    attacker_board.add_minion(golden_hero)
+    attacker_board.add_minion(SpawnofNZoth())
+    attacker_board.add_minion(SpawnofNZoth())
+    attacker_board.add_minion(SpawnofNZoth())
+
+    golden_hero.dead = True
+    initialized_game.check_deaths(attacker_board, defender_board)
+
+    shielded_minions = sum(1 for minion in attacker_board.minions if minion.divine_shield)
+    assert shielded_minions == 2
+    
+def test_pack_leader(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    beast = Alleycat()
+    attacker_board.add_minion(PackLeader())
+    attacker_board.add_minion(beast)
+    assert beast.attack == 3
+
+
+def test_tormented_ritualist(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    defender_ritualist = TormentedRitualist()
+    attacker_cat = Alleycat()
+
+    attacker_board.add_minion(attacker_cat)
+
+    defender_board.add_minion(Alleycat())
+    defender_board.add_minion(defender_ritualist)
+    defender_board.add_minion(Alleycat())
+
+    # TODO: Test when no minions are to the left and/or right
+    initialized_game.attack(attacker_cat, defender_ritualist)
+
+    assert defender_board.minions[0].attack == 2
+    assert defender_board.minions[0].defense == 2
+    assert defender_board.minions[2].attack == 2
+    assert defender_board.minions[2].defense == 2
+

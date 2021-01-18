@@ -1,4 +1,4 @@
-from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant, RabidSaurolisk
+from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant, RabidSaurolisk, ScavengingHyena, Alleycat, AcolyteOfCThun, Scallywag
 
 
 def test_fiendish_servant_deathrattle(initialized_game):
@@ -23,3 +23,27 @@ def test_rabid_saurolisk(initialized_game):
     initialized_game.player_board[0].add_minion(DragonspawnLieutenant())
     assert rabid_saurolisk.attack == 4
     assert rabid_saurolisk.defense == 2
+
+def test_scavenging_hyena(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    hyena = ScavengingHyena()
+
+    attacker_board.add_minion(hyena)
+    attacker_board.add_minion(Alleycat())
+    attacker_board.minions[1].dead = True
+    initialized_game.check_deaths(attacker_board, defender_board)
+
+    assert hyena.attack == 4
+    assert hyena.defense == 3
+
+def test_acolyte_of_cthun(initialized_game):
+    # TODO: Test reborn
+    assert True
+
+def test_scallywag(initialized_game):
+    # TODO: Test 'attacks immediately' mechanic
+    assert True
+
+    

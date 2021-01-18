@@ -3,7 +3,7 @@ import logging
 from game.player_board import PlayerBoard
 from minions.base import Minion
 from deathrattles.base import Deathrattle
-from minions.tokens import JoEBot
+from minions.tokens import SkyPirate
 
 
 class FiendishServantDeathrattle(Deathrattle):
@@ -14,17 +14,30 @@ class FiendishServantDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
         target_minion = own_board.random_minion()
         if target_minion:
-            target_minion.attack += minion.attack
+            target_minion.add_stats(minion.attack, 0)
             logging.debug(f"Fiendish Servant deathrattle triggers onto {target_minion.minion_string()}")
         else:
             logging.debug("Fiendish Servant deathrattle triggers but there are no targets left")
 
 
-class MecharooDeathrattle(Deathrattle):
-    """When Mecharoo dies, create a Jo-E Bot token"""
+# class MecharooDeathrattle(Deathrattle):
+#     """When Mecharoo dies, create a Jo-E Bot token"""
+#     def __init__(self):
+#         super().__init__(name="MecharooDeathrattle")
+
+#     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+#         logging.debug("Mecharoo deathrattle triggered, creating Jo-E Bot")
+#         own_board.add_minion(JoEBot(golden=minion.golden, attacked=minion.attacked), position=minion.position)
+
+
+class ScallywagDeathrattle(Deathrattle):
+    """Summon a 1/1 Pirate. It attacks immediately."""
     def __init__(self):
-        super().__init__(name="MecharooDeathrattle")
+        super().__init__(name="ScallywagDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        logging.debug("Mecharoo deathrattle triggered, creating Jo-E Bot")
-        own_board.add_minion(JoEBot(golden=minion.golden, attacked=minion.attacked), position=minion.position)
+        logging.debug("Scallyway deathrattle triggered, creating Sky Pirate")
+        own_board.add_minion(SkyPirate(golden=minion.golden, attacked=minion.attacked), position=minion.position)
+        #TODO: Sky pirate attacks immediately. 
+        # What happens if there a scallyway attacks and kills an opposing death rattle minion. Does the opposing deathrattle resolve before the sky pirate attack?
+        # For example, if the opposing minion spawns another minion, is it a valid target to be attacked?
