@@ -90,12 +90,12 @@ class GameInstance:
             opposing_board {PlayerBoard} -- Board opposing of the minion that dies
             minion_defending_player {bool} -- Whether the minion died is on the defending side for trigger orders
         """
+        # TODO: Check when minions are removed from the board, this is important for aura removal interacting with death rattles that damage other minions
         if minion_defending_player:
             opposing_board.remove_minion(minion)
         else:
             minion_board.remove_minion(minion)
 
-        # TODO: Baron
         for deathrattle in minion.deathrattles:
             if minion_defending_player:
                 deathrattle.trigger(minion, opposing_board, minion_board)
@@ -103,21 +103,57 @@ class GameInstance:
                 deathrattle.trigger(minion, minion_board, opposing_board)
         self.check_deaths(minion_board, opposing_board)
 
+    """Remove any dead minions, collect their deathrattles for processing
+    
+    Arguments:
+        board {PlayerBoard} -- Player board to check for dead minions
+    """
+    def cleanup_dead_minions(self, board: PlayerBoard):
+        deathrattle_minions = []
+        for minion in [x for x in board.get_minions() if x.dead]:
+            deathrattle_minions.append(minion)
+            board.remove_minion(minion)
+        return deathrattle_minions
+
+    def resolve_extra_attacks(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard ):
+        for minion in [x for x in attacking_player_board.minions if x.immediate_attack_pending]:
+            minion.immediate_attack_pending = False
+            self.attack(minion, defending_player_board.select_defending_minion()) #TODO: Handle attack when enemy board is dead
+            self.check_deaths(attacking_player_board, defending_player_board)
+
     def check_deaths(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard):
-        """Check deaths on both sides
+        """Check deaths on both sides, collect death rattles, process them and resolve consequences (immediate attacks / reborn triggers)
 
         Arguments:
             attacking_player_board {PlayerBoard} -- Player board of attacking player
             defending_player_board {PlayerBoard} -- Player board of defending player
         """
-        for minion in attacking_player_board.get_minions():
-            if minion.dead:
-                self.kill(minion, attacking_player_board, defending_player_board, minion_defending_player=False)
-                return # TODO: Allow multiple units to die at once, ie when cleave happens
-        for minion in defending_player_board.get_minions():
-            if minion.dead:
-                self.kill(minion, attacking_player_board, defending_player_board, minion_defending_player=True)
-                return
+        # General flow of resolving death states:
+        # Resolve attacker deathrattles from left to right, multiplied by baron
+	    #     Resolve extra attacks after each deathrattle resolves (then check deaths)
+        # Resolve defender deathrattles from left to right, multiplied by baron
+	    #     Resolve extra attacks after each deathrattle resolves (then check deaths)
+
+        # Collect pending death rattles, remove dead minions to free up board space for deathrattles
+        attacker_deathrattle_minions = self.cleanup_dead_minions(attacking_player_board)
+        defender_deathrattle_minions = self.cleanup_dead_minions(defending_player_board)
+
+        # Resolve death rattles and 'attacks immediately' triggers
+        for minion in attacker_deathrattle_minions:
+            for deathrattle in minion.deathrattles:
+                for _ in range(attacking_player_board.deathrattle_multiplier):
+                    # Trigger death rattles in left to right order
+                    deathrattle.trigger(minion, attacking_player_board, defending_player_board)
+                    # Check for any 'attack immediately' minions, ie scallywag tokens
+                    self.resolve_extra_attacks(attacking_player_board, defending_player_board)
+
+        for minion in defender_deathrattle_minions:
+            for deathrattle in minion.deathrattles:
+                for _ in range(defending_player_board.deathrattle_multiplier):
+                    deathrattle.trigger(minion, defending_player_board, attacking_player_board)
+                    self.resolve_extra_attacks(defending_player_board, attacking_player_board)
+
+        #TODO: Resolve reborns after deathrattles
 
     def attack(self, attacking_minion: Minion, defending_minion: Minion):
         """Let one minion attack the other
@@ -129,12 +165,14 @@ class GameInstance:
         # TODO: Cleave
         attacker, defender = self.attacking_player_board(), self.defending_player_board()
         attacking_minion.on_attack(attacker, defender)
-        defending_minion.on_attacked(attacker, defender)
+        defending_minion.on_attacked(defender, attacker)
 
         logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}") 
 
         self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
         self.deal_damage(defending_minion, defender, attacking_minion.attack, attacking_minion.poisonous)
+
+        #TODO: Handle overkill triggers here and other on kill events (ie wagtoggle)
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X
@@ -158,15 +196,13 @@ class GameInstance:
         else:
             return self.player_board[0].score() # player 0 wins
 
-    def start(self):
-        """Start game instance rollout
-
-        Returns:
-            int -- Final score from player 0 perspective
+    def start_of_game(self):
+        """Do all game actions up until the first attack is do pre-game minion and hero power actions, determine who attacks first, etc. 
         """
         # TODO: Handle Illidan Stormrage hero power here (before whelp power triggers)
 
-        # TODO: Is attacking player determined before or after a red whelp potentially kills an opposing minion?
+        # Attacking player is determined before whelp potentially kills enemy minions. 
+        # aka if both boards are full, and a whelp kills an opposing minion, the opposing player can still go first with less minions
         player0minions = len(self.player_board[0].minions)
         player1minions = len(self.player_board[1].minions)
         self.player_turn = 0 if player0minions > player1minions else 1 if player1minions > player0minions else random.randint(0, 1)
@@ -178,25 +214,41 @@ class GameInstance:
             minion.at_beginning_game(self, True, current, other)
         for minion in other.get_minions():
             minion.at_beginning_game(self, False, other, current)
+
+    def single_round(self):
+        """Do one attack and resolve consequences. ie one step of the game 
+        """
+        self.turn += 1
+        logging.debug(f"Turn {self.turn} has started, player {self.player_turn} will attack")
+        self.log_current_game()
+        logging.debug('-----------------')
+        attacking_minion = self.attacking_player_board().select_attacking_minion()
+        defending_minion = self.defending_player_board().select_defending_minion()
+        if attacking_minion and defending_minion:
+            attacks = 2 if attacking_minion.windfury else 1 #TODO: mega windfury
+            for _ in range(attacks):
+                self.attack(attacking_minion, defending_minion)
+                self.check_deaths(self.attacking_player_board(), self.defending_player_board())
+                # TODO: Resolve extra attacks that werent part of deathrattles?
+                # TODO: resolve reborn here?
+            # Flag the minion as having attacked. 
+            # It may be dead, but we have to set this after all deathrattles have been resolved to maintain correct attack order...
+            attacking_minion.attacked = True
+        else:
+            logging.debug("No attacker or No defender")
+        logging.debug("=================")
+        self.player_turn = 1 - self.player_turn
+
+    def start(self):
+        """Play a game to completion
+
+        Returns:
+            int -- Final score from player 0 perspective
+        """
+        self.start_of_game()
+        
         while not self.finished():
-            self.turn += 1
-            logging.debug(f"Turn {self.turn} has started, player {self.player_turn} will attack")
-            self.log_current_game()
-            logging.debug('-----------------')
-            attacking_minion = self.attacking_player_board().select_attacking_minion()
-            defending_minion = self.defending_player_board().select_defending_minion()
-            if attacking_minion:
-                attacks = 2 if attacking_minion.windfury else 1 #TODO: mega windfury
-                for _ in range(attacks):
-                    self.attack(attacking_minion, defending_minion)
-                    self.check_deaths(self.attacking_player_board(), self.defending_player_board())
-                # Flag the minion as having attacked. 
-                # It may be dead, but we have to set this after all deathrattles have been resolved to maintain correct attack order...
-                attacking_minion.attacked = True
-            else:
-                logging.debug("No eligible attackers")
-            logging.debug("=================")
-            self.player_turn = 1 - self.player_turn
+            self.single_round()
 
         logging.debug(f"Ending board score {self.calculate_score_player_0()}")
         return self.calculate_score_player_0()

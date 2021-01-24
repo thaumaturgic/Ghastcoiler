@@ -16,3 +16,8 @@ class Deathrattle:
             opposing_board {PlayerBoard} -- Player board of the opposing player of the minion that died
         """
         pass
+
+# class Reborn(Deathrattle):
+#     def trigger(self, minion, own_board, opposing_board):
+#         # Add a new minion thats a base copy of this one with 1 defense in the same position
+#         # All the board entry triggers should trigger

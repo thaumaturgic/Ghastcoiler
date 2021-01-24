@@ -1,8 +1,6 @@
 from minions.base import Minion
 from minions.types import MinionType
 
-#TODO: Support golden tokens
-
 # class JoEBot(Minion):
 #     def __init__(self, **kwargs):
 #         super().__init__(name="Jo-E Bot",

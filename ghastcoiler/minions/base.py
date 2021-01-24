@@ -36,7 +36,9 @@ class Minion:
                  golden: bool = False,
                  position: Optional[int] = None,
                  player_id: Optional[int] = None,
-                 attacked: bool = False):
+                 attacked: bool = False,
+                 immediate_attack_pending: bool = False,
+                 token: bool = False):
         """Base minion class of which all normal minions and tokens should inherit from, and they can override certain triggers to implement custom behaviour.
         Important to note is that all the "base_*" arguments should be used in implementing the normal minions and that the non-base versions should be used
         for specific instances of the normal minions, so for the simulations itself in which case they can be different than their base type.
@@ -70,6 +72,8 @@ class Minion:
             position {Optional[int]} -- Position on the player board (default: {None})
             player_id {Optional[int]} -- ID of player minion belongs to (default: {None})
             attacked {bool} -- Has this minion been passed in the attack order this round (i.e. has it or the minion who spawned it attacked already) (default: {False})
+            immediate_attack_pending {bool} -- When bonus attacks are checked, should this minion attack (default: {False})
+            token {bool} -- Is this a token spawned by another minion (default: {False})
         """
         self.name = name
         self.rank = rank
@@ -97,6 +101,13 @@ class Minion:
         self.position = position
         self.player_id = player_id
         self.attacked = attacked
+        self.immediate_attack_pending = immediate_attack_pending
+        self.token = token
+
+        # TODO: Think about this with reborn
+        if self.golden:
+            self.attack *= 2
+            self.defense *= 2
 
     def copy(self) -> "Minion":
         """Semi-deep copy of minion - should only be used for copying initial state of player boards

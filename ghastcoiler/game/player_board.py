@@ -21,11 +21,21 @@ class PlayerBoard:
         self.hero = hero
         self.life_total = life_total
         self.rank = rank
-        self.minions: List[Minion] = minions
         self.attack_position = 0
+        self.set_minions(minions)
+        self.deathrattle_multiplier = 1 # TODO: Implement baron minion to adjust this value
+        self.token_creation_multiplier = 1 #TODO: Implement khadgar minion to adjust this value
+
+    def set_minions(self, minions: List[Minion]):
+        """String representation of all minions in player board
+
+        Returns:
+            string -- Generated representation
+        """
+        self.minions: List[Minion] = minions
         for index, minion in enumerate(minions):
             minion.position = index
-            minion.player_id = player_id
+            minion.player_id = self.player_id
 
     def copy(self):
         """Deep copy PlayerBoard instance to not carry state over multiple simulations
@@ -84,7 +94,7 @@ class PlayerBoard:
         Returns:
             List[Minion] -- List of all minions with Taunt
         """
-        return [minion for minion in self.minions if minion.taunt]
+        return [minion for minion in self.minions if minion.taunt and not minion.dead]
 
     def divine_shield_popped(self):
         """Called when a divine shield pops on this board to execute possible triggers on other minions"""
@@ -131,7 +141,7 @@ class PlayerBoard:
         # TODO: Rank 6 windfury guy
         possible_minions = self.select_taunts()
         if len(possible_minions) == 0:
-            possible_minions = self.minions
+            possible_minions = [minion for minion in self.minions if not minion.dead]
         return possible_minions
 
     def select_defending_minion(self, attacks_lowest=False):
@@ -184,11 +194,12 @@ class PlayerBoard:
             minion.on_removal(other_minion)
             other_minion.on_friendly_removal(minion)
             
-    def add_minion(self, new_minion: Minion, position: Optional[int] = None) -> Optional[Minion]:
+    def add_minion(self, new_minion: Minion, position: Optional[int] = None, token: Optional[bool] = False) -> Optional[Minion]:
         """Add minion to the board if there is space
 
         Arguments:
             new_minion {Minion} -- Instance of minion to be added
+            token {Bool} -- is this minion being added a token (including reborns)? For khadgar multipliers
 
         Keyword Arguments:
             position {Optional[int]} -- Optional position to insert the minion at, if None add at the end (default: {None})
@@ -199,6 +210,8 @@ class PlayerBoard:
         if len(self.minions) < 7:
             if position is None:
                 position = len(self.minions)
+
+            #TODO: Implement khadgar multiplier
 
             for minion in self.minions:
                 minion.on_friendly_summon(other_minion=new_minion)

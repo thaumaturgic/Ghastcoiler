@@ -116,7 +116,10 @@ class NathrezimOverseer(Minion):
                          types=[MinionType.Demon],
                          **kwargs)
 
-
+# I think there are two ways to implement murkeye
+# 1) Every time a minion is added or removed from any board, check if its a murloc and adjust power accordingly
+# 2) Any time murkeye attacks or is attacked (ie the only time power currently matters), check the state of the board to calculate the correct power
+# Currently method #2 is implemented
 class OldMurkEye(Minion):
     def __init__(self, **kwargs):
         self.bonus_attack = 0
@@ -271,6 +274,7 @@ class MoltenRock(Minion):
                          rank=2,
                          base_attack=2,
                          base_defense=3,
+                         base_taunt=True,
                          types=[MinionType.Elemental]
                          **kwargs)
 
@@ -304,6 +308,7 @@ class TormentedRitualist(Minion):
                          rank=2,
                          base_attack=2,
                          base_defense=3,
+                         base_taunt=True,
                          **kwargs)
                          
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):

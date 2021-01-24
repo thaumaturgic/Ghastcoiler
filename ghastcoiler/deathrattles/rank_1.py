@@ -37,7 +37,4 @@ class ScallywagDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
         logging.debug("Scallyway deathrattle triggered, creating Sky Pirate")
-        own_board.add_minion(SkyPirate(golden=minion.golden, attacked=minion.attacked), position=minion.position)
-        #TODO: Sky pirate attacks immediately. 
-        # What happens if there a scallyway attacks and kills an opposing death rattle minion. Does the opposing deathrattle resolve before the sky pirate attack?
-        # For example, if the opposing minion spawns another minion, is it a valid target to be attacked?
+        own_board.add_minion(SkyPirate(golden=minion.golden, attacked=minion.attacked, immediate_attack_pending=True),position=minion.position, token=True)
