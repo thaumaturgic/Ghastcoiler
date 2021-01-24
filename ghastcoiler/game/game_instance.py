@@ -81,34 +81,13 @@ class GameInstance:
             logging.debug("Divine shield popped")
             board.divine_shield_popped()
 
-    def kill(self, minion: Minion, minion_board: PlayerBoard, opposing_board: PlayerBoard, minion_defending_player: bool):
-        """Kill a minion off and update board using deathrattles and other triggers
 
-        Arguments:
-            minion {Minion} -- Minion that will die
-            minion_board {PlayerBoard} -- Player board belonging to the minion that will die
-            opposing_board {PlayerBoard} -- Board opposing of the minion that dies
-            minion_defending_player {bool} -- Whether the minion died is on the defending side for trigger orders
-        """
-        # TODO: Check when minions are removed from the board, this is important for aura removal interacting with death rattles that damage other minions
-        if minion_defending_player:
-            opposing_board.remove_minion(minion)
-        else:
-            minion_board.remove_minion(minion)
-
-        for deathrattle in minion.deathrattles:
-            if minion_defending_player:
-                deathrattle.trigger(minion, opposing_board, minion_board)
-            else:
-                deathrattle.trigger(minion, minion_board, opposing_board)
-        self.check_deaths(minion_board, opposing_board)
-
-    """Remove any dead minions, collect their deathrattles for processing
-    
-    Arguments:
-        board {PlayerBoard} -- Player board to check for dead minions
-    """
     def cleanup_dead_minions(self, board: PlayerBoard):
+        """Remove any dead minions, collect their deathrattles for processing
+        
+        Arguments:
+            board {PlayerBoard} -- Player board to check for dead minions
+        """
         deathrattle_minions = []
         for minion in [x for x in board.get_minions() if x.dead]:
             deathrattle_minions.append(minion)
@@ -116,10 +95,18 @@ class GameInstance:
         return deathrattle_minions
 
     def resolve_extra_attacks(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard ):
-        for minion in [x for x in attacking_player_board.minions if x.immediate_attack_pending]:
-            minion.immediate_attack_pending = False
-            self.attack(minion, defending_player_board.select_defending_minion()) #TODO: Handle attack when enemy board is dead
-            self.check_deaths(attacking_player_board, defending_player_board)
+        """Resolve any 'attacks immediately' minions and the consequences of those attacks
+        
+        Arguments:
+            attacking_player_board {PlayerBoard} -- Player board of attacking player
+            defending_player_board {PlayerBoard} -- Player board of defending player
+        """
+        for attacker in [x for x in attacking_player_board.minions if x.immediate_attack_pending]:
+            attacker.immediate_attack_pending = False
+            defender = defending_player_board.select_defending_minion()
+            if defender:
+                self.attack(attacker, defender)
+                self.check_deaths(attacking_player_board, defending_player_board)
 
     def check_deaths(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard):
         """Check deaths on both sides, collect death rattles, process them and resolve consequences (immediate attacks / reborn triggers)
@@ -172,7 +159,12 @@ class GameInstance:
         self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
         self.deal_damage(defending_minion, defender, attacking_minion.attack, attacking_minion.poisonous)
 
+        if attacking_minion.cleave:
+            for neighbor in defender.get_minions_neighbors(defending_minion):
+                self.deal_damage(neighbor, defender, attacking_minion.attack, attacking_minion.poisonous)
+
         #TODO: Handle overkill triggers here and other on kill events (ie wagtoggle)
+        #TODO: Handle post damage triggers like imp and patrolbot
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X
