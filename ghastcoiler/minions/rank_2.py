@@ -313,14 +313,8 @@ class TormentedRitualist(Minion):
                          
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         buff_amount = 2 if self.golden else 1
-        position = self.position
-        left_position = position - 1
-        right_position = position + 1
-        if left_position >= 0:
-            own_board.minions[left_position].add_stats(buff_amount, buff_amount)
-        if right_position < len(own_board.minions):
-            own_board.minions[right_position].add_stats(buff_amount, buff_amount)
-
+        for minion in own_board.get_minions_neighbors(self):
+            minion.add_stats(buff_amount, buff_amount)
 
 class YoHoOgre(Minion):
     def __init__(self, **kwargs):

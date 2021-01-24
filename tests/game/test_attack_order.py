@@ -74,8 +74,9 @@ def test_minion_insertion_multiple(initialized_game):
     initialized_game.attack(minion, player1board.minions[0])
     minion.attacked = True
 
-    # Kill The rat, creating tokens. This simulates the enemy board killing it
-    initialized_game.kill(minion, player0board, player1board, False)
+    # Kill The rat, creating tokens
+    minion.dead = True
+    initialized_game.check_deaths(player0board, player1board)
     assert(len(player0board.minions) == 3)
     assert(player0board.minions[0].name and player0board.minions[1].name == "Rat")
 

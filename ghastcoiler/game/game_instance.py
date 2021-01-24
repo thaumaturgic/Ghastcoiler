@@ -210,17 +210,22 @@ class GameInstance:
     def single_round(self):
         """Do one attack and resolve consequences. ie one step of the game 
         """
+        attacker_board = self.attacking_player_board()
+        defender_board = self.defending_player_board()
+
         self.turn += 1
         logging.debug(f"Turn {self.turn} has started, player {self.player_turn} will attack")
         self.log_current_game()
         logging.debug('-----------------')
-        attacking_minion = self.attacking_player_board().select_attacking_minion()
-        defending_minion = self.defending_player_board().select_defending_minion()
+        attacking_minion = attacker_board.select_attacking_minion()
+        defending_minion = defender_board.select_defending_minion()
         if attacking_minion and defending_minion:
             attacks = 2 if attacking_minion.windfury else 1 #TODO: mega windfury
             for _ in range(attacks):
                 self.attack(attacking_minion, defending_minion)
                 self.check_deaths(self.attacking_player_board(), self.defending_player_board())
+                self.resolve_extra_attacks(attacker_board, defender_board) #TODO: Test this with yohoho
+
                 # TODO: Resolve extra attacks that werent part of deathrattles?
                 # TODO: resolve reborn here?
             # Flag the minion as having attacked. 

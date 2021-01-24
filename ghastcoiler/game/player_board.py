@@ -151,9 +151,12 @@ class PlayerBoard:
             attacks_lowest {bool} -- Whether we should ignore taunts and select the lowest attack units (default: {False})
 
         Returns:
-            Minion -- Minion that will be attacked
+            Minion -- Minion that will be attacked or None if the board is empty
         """
         # TODO: Rank 6 windfury guy
+        if len(self.minions) == 0:
+            return None
+
         possible_minions = self.generate_possible_defending_minions()
         defending_minion_index = random.randint(0, len(possible_minions) - 1)
         return possible_minions[defending_minion_index]
