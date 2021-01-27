@@ -1,6 +1,6 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_2 import GlyphGuardian, HarvestGolem, Imprisoner, KaboomBot, KindlyGrandmother, MurlocWarleader, OldMurkEye, SpawnofNZoth, SelflessHero, \
-    PackLeader, TormentedRitualist
+    PackLeader, TormentedRitualist, YoHoOgre
 from ghastcoiler.minions.rank_1 import MurlocTidehunter, Alleycat, ScavengingHyena
 
 def test_kaboombot_deathrattle(initialized_game):
@@ -129,3 +129,22 @@ def test_tormented_ritualist(initialized_game):
     assert defender_board.minions[2].attack == 2 and defender_board.minions[2].defense == 2
     # TODO: Test when no minions are to the left and/or right
 
+
+def test_yo_ho_ogre(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    # Ogre should attack twice in a single round
+    attacker_board.set_minions([PunchingBag(attack=1), PunchingBag(taunt=True), PunchingBag()])
+    defender_board.set_minions([YoHoOgre(), PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert attacker_board.minions[0].defense == 98
+    assert attacker_board.minions[1].defense == 98
+
+    # Two pirates, they should kill each other in repeated attacks in one round
+    attacker_board.set_minions([YoHoOgre()])
+    defender_board.set_minions([YoHoOgre()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 0 and len(defender_board.minions) == 0

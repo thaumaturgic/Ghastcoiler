@@ -1,5 +1,6 @@
 import random
 import logging
+import copy
 
 from typing import List, Optional
 
@@ -27,10 +28,7 @@ class PlayerBoard:
         self.token_creation_multiplier = 1 #TODO: Implement khadgar minion to adjust this value
 
     def set_minions(self, minions: List[Minion]):
-        """String representation of all minions in player board
-
-        Returns:
-            string -- Generated representation
+        """Initialize the board to the list of minions given. Used for testing
         """
         self.minions: List[Minion] = minions
         for index, minion in enumerate(minions):
@@ -43,7 +41,7 @@ class PlayerBoard:
         Returns:
             PlayerBoard -- Deep copy of current PlayerBoard
         """
-        return PlayerBoard(player_id=self.player_id, hero=self.hero, life_total=self.life_total, rank=self.rank, minions=[minion.copy() for minion in self.minions])
+        return PlayerBoard(player_id=self.player_id, hero=self.hero, life_total=self.life_total, rank=self.rank, minions=[copy.deepcopy(minion) for minion in self.minions])
 
     def minions_string(self):
         """String representation of all minions in player board
@@ -179,6 +177,17 @@ class PlayerBoard:
         if right_position < len(self.minions):
             neighbors.append(self.minions[right_position])
         return neighbors
+
+    def get_immediate_attack_minions(self,):
+        """ Return a list of minions that should attack 'immediately'
+
+        Returns:
+            List[Minion] -- Randomly selected minion
+        """
+        minions = []
+        for minion in [x for x in self.minions if x.immediate_attack_pending]:
+            minions.append(minion)
+        return minions
 
     def random_minion(self):
         """Return a random minion from the player board. In some game states its possible to have a dead minion that has not been removed from the board yet.

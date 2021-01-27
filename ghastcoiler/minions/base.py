@@ -196,7 +196,7 @@ class Minion:
             self.defense -= amount
             if self.defense <= 0 or poisonous:
                 self.dead = True
-
+        #TODO: Return a tuple consisting of [bool shield popped, bool minion died, int overkill amount]
         return popped_shield
 
     def at_beginning_game(self, game_instance: GameInstance, player_starts: bool, own_board: PlayerBoard, opposing_board: PlayerBoard):

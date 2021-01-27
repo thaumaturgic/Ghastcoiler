@@ -322,6 +322,9 @@ class YoHoOgre(Minion):
                          rank=2,
                          base_attack=2,
                          base_defense=5,
-                         types=[MinionType.Pirate]
+                         base_taunt=True,
+                         types=[MinionType.Pirate],
                          **kwargs)
-    # TODO: Implement an 'after attacked' trigger? 
+                         
+    def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        self.immediate_attack_pending = True

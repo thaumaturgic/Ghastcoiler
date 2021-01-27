@@ -90,7 +90,8 @@ class GameInstance:
         """
         deathrattle_minions = []
         for minion in [x for x in board.get_minions() if x.dead]:
-            deathrattle_minions.append(minion)
+            if minion.deathrattles:
+                deathrattle_minions.append(minion)
             board.remove_minion(minion)
         return deathrattle_minions
 
@@ -101,12 +102,14 @@ class GameInstance:
             attacking_player_board {PlayerBoard} -- Player board of attacking player
             defending_player_board {PlayerBoard} -- Player board of defending player
         """
-        for attacker in [x for x in attacking_player_board.minions if x.immediate_attack_pending]:
+        for attacker in attacking_player_board.get_immediate_attack_minions():
             attacker.immediate_attack_pending = False
             defender = defending_player_board.select_defending_minion()
             if defender:
                 self.attack(attacker, defender)
                 self.check_deaths(attacking_player_board, defending_player_board)
+            else:
+                return
 
     def check_deaths(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard):
         """Check deaths on both sides, collect death rattles, process them and resolve consequences (immediate attacks / reborn triggers)
@@ -142,6 +145,13 @@ class GameInstance:
 
         #TODO: Resolve reborns after deathrattles
 
+
+        # Resolve extra attacks that arise not due to death rattles
+        while attacking_player_board.get_immediate_attack_minions() or defending_player_board.get_immediate_attack_minions():
+            #TODO: Is there a priority for resolving pirate attacks on each other? Are they queued up?
+            self.resolve_extra_attacks(attacking_player_board, defending_player_board)
+            self.resolve_extra_attacks(defending_player_board, attacking_player_board)
+
     def attack(self, attacking_minion: Minion, defending_minion: Minion):
         """Let one minion attack the other
 
@@ -149,7 +159,6 @@ class GameInstance:
             attacking_minion {Minion} -- Minion that attacks
             defending_minion {Minion} -- Minion that is attacked
         """
-        # TODO: Cleave
         attacker, defender = self.attacking_player_board(), self.defending_player_board()
         attacking_minion.on_attack(attacker, defender)
         defending_minion.on_attacked(defender, attacker)
@@ -199,7 +208,7 @@ class GameInstance:
         player1minions = len(self.player_board[1].minions)
         self.player_turn = 0 if player0minions > player1minions else 1 if player1minions > player0minions else random.randint(0, 1)
 
-        # TODO: Determine red whelp trigger priority 
+        # TODO: Determine red whelp trigger order. Is it random? Who has more whelps? Do whelp attacks trade off one by one? 
         current = self.attacking_player_board()
         other = self.defending_player_board()
         for minion in current.get_minions():
@@ -222,14 +231,11 @@ class GameInstance:
         if attacking_minion and defending_minion:
             attacks = 2 if attacking_minion.windfury else 1 #TODO: mega windfury
             for _ in range(attacks):
-                self.attack(attacking_minion, defending_minion)
-                self.check_deaths(self.attacking_player_board(), self.defending_player_board())
-                self.resolve_extra_attacks(attacker_board, defender_board) #TODO: Test this with yohoho
-
-                # TODO: Resolve extra attacks that werent part of deathrattles?
-                # TODO: resolve reborn here?
+                if not attacking_minion.dead:
+                    self.attack(attacking_minion, defending_minion)
+                    self.check_deaths(self.attacking_player_board(), self.defending_player_board())
             # Flag the minion as having attacked. 
-            # It may be dead, but we have to set this after all deathrattles have been resolved to maintain correct attack order...
+            # It may be dead, but we have to set this after combat has resolved to maintain correct attack order...
             attacking_minion.attacked = True
         else:
             logging.debug("No attacker or No defender")
