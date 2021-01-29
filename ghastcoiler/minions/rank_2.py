@@ -275,7 +275,7 @@ class MoltenRock(Minion):
                          base_attack=2,
                          base_defense=3,
                          base_taunt=True,
-                         types=[MinionType.Elemental]
+                         types=[MinionType.Elemental],
                          **kwargs)
 
 
@@ -298,7 +298,7 @@ class PartyElemental(Minion):
                          rank=2,
                          base_attack=3,
                          base_defense=2,
-                         types=[MinionType.Elemental]
+                         types=[MinionType.Elemental],
                          **kwargs)
 
 

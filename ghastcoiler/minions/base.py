@@ -109,28 +109,6 @@ class Minion:
             self.attack *= 2
             self.defense *= 2
 
-    def copy(self) -> "Minion":
-        """Semi-deep copy of minion - should only be used for copying initial state of player boards
-
-        Returns:
-            Minion -- Copy of the minion
-        """
-        return Minion(name=self.name, 
-                      rank=self.rank,
-                      base_attack=self.base_attack,
-                      base_defense=self.base_defense, 
-                      attack=self.attack, 
-                      defense=self.defense, 
-                      types=self.types, 
-                      divine_shield=self.divine_shield, 
-                      taunt=self.taunt, 
-                      cleave=self.cleave,
-                      reborn=self.reborn,
-                      windfury=self.windfury,
-                      poisonous=self.poisonous,
-                      deathrattles=self.deathrattles,
-                      golden=self.golden)
-
     def minion_string(self):
         """String representation of minion
 
