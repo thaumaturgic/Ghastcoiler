@@ -1,7 +1,6 @@
 import logging
 
 from game.player_board import PlayerBoard
-
 from minions.base import Minion
 from minions.types import MinionType
 
@@ -89,8 +88,9 @@ class MurlocWarleader(Minion):
                          base_defense=3,
                          types=[MinionType.Murloc],
                          **kwargs)
+
     # apply or remove the warleader attack bonus to the other minion
-    def adjust_murlock_power(self, other_minion: Minion, add_power :bool):
+    def adjust_murlock_power(self, other_minion: Minion, add_power: bool):
         buffAmount = 4 if self.golden else 2
         if MinionType.Murloc in other_minion.types:
             if add_power:
@@ -107,6 +107,7 @@ class MurlocWarleader(Minion):
     def on_removal(self, other_minion: Minion):
         self.adjust_murlock_power(other_minion, False)
 
+
 class NathrezimOverseer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Nathrezim Overseer",
@@ -115,6 +116,7 @@ class NathrezimOverseer(Minion):
                          base_defense=3,
                          types=[MinionType.Demon],
                          **kwargs)
+
 
 # I think there are two ways to implement murkeye
 # 1) Every time a minion is added or removed from any board, check if its a murloc and adjust power accordingly
@@ -131,7 +133,7 @@ class OldMurkEye(Minion):
                          **kwargs)
 
     def update_bonus_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        total_number_other_murlocs = own_board.count_minion_type(MinionType.Murloc) + opposing_board.count_minion_type(MinionType.Murloc) - 1 # Don't count itself
+        total_number_other_murlocs = own_board.count_minion_type(MinionType.Murloc) + opposing_board.count_minion_type(MinionType.Murloc) - 1  # Don't count itself
         bonus = total_number_other_murlocs * 2 if self.golden else total_number_other_murlocs
 
         self.attack -= self.bonus_attack
@@ -152,6 +154,7 @@ class OldMurkEye(Minion):
 #                          base_defense=1,
 #                          types=[MinionType.Mech],
 #                          **kwargs)
+
 
 class SpawnofNZoth(Minion):
     def __init__(self, **kwargs):
@@ -209,6 +212,7 @@ class SelflessHero(Minion):
                          base_deathrattle=SelflessHeroDeathrattle(),
                          **kwargs)
 
+
 class SouthseaCaptain(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Southsea Captain",
@@ -218,7 +222,7 @@ class SouthseaCaptain(Minion):
                          types=[MinionType.Pirate],
                          **kwargs)
 
-    def adjust_pirate_stats(self, other_minion: Minion, add_stats :bool):
+    def adjust_pirate_stats(self, other_minion: Minion, add_stats: bool):
         buffAmount = 2 if self.golden else 1
         if MinionType.Pirate in other_minion.types:
             if add_stats:
@@ -226,7 +230,7 @@ class SouthseaCaptain(Minion):
             else:
                 other_minion.remove_stats(buffAmount, buffAmount)
                 if other_minion.defense <= 0:
-                    other_minion.defense = 1 # Losing pirate buffs cannot kill a minion
+                    other_minion.defense = 1  # Losing pirate buffs cannot kill a minion
 
     def on_summon(self, other_minion: Minion):
         self.adjust_pirate_stats(other_minion, True)
@@ -246,6 +250,7 @@ class FreedealingGambler(Minion):
                          base_defense=3,
                          types=[MinionType.Pirate],
                          **kwargs)
+
 
 class MenagerieMug(Minion):
     def __init__(self, **kwargs):
@@ -278,7 +283,7 @@ class PackLeader(Minion):
     def on_friendly_summon(self, other_minion: Minion):
         if MinionType.Beast in other_minion.types:
             other_minion.attack += 4 if self.golden else 2
-                         
+
 
 class PartyElemental(Minion):
     def __init__(self, **kwargs):
@@ -298,11 +303,12 @@ class TormentedRitualist(Minion):
                          base_defense=3,
                          base_taunt=True,
                          **kwargs)
-                         
+
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         buff_amount = 2 if self.golden else 1
         for minion in own_board.get_minions_neighbors(self):
             minion.add_stats(buff_amount, buff_amount)
+
 
 class YoHoOgre(Minion):
     def __init__(self, **kwargs):
@@ -313,6 +319,6 @@ class YoHoOgre(Minion):
                          base_taunt=True,
                          types=[MinionType.Pirate],
                          **kwargs)
-                         
+
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         self.immediate_attack_pending = True

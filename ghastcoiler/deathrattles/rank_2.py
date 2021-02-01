@@ -4,7 +4,7 @@ import random
 from game.player_board import PlayerBoard
 from minions.base import Minion
 from deathrattles.base import Deathrattle
-from minions.tokens import DamagedGolem, Imp, BigBadWolf, Rat
+from minions.tokens import DamagedGolem, Imp, BigBadWolf
 
 
 class HarvestGolemDeathrattle(Deathrattle):
@@ -55,10 +55,10 @@ class SpawnofNZothDeathrattle(Deathrattle):
         super().__init__(name="SpawnofNZothDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        logging.debug(f"Spawn of NZoth deathrattle triggered")
+        logging.debug("Spawn of NZoth deathrattle triggered")
         bonus = 2 if minion.golden else 1
         for other_minion in own_board.get_minions():
-            other_minion.add_stats(bonus,bonus)
+            other_minion.add_stats(bonus, bonus)
 
 
 class UnstableGhoulDeathrattle(Deathrattle):
@@ -66,7 +66,7 @@ class UnstableGhoulDeathrattle(Deathrattle):
         super().__init__(name="UnstableGhoulDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        logging.debug(f"Unstable Ghoul deathrattle triggered")
+        logging.debug("Unstable Ghoul deathrattle triggered")
         damage = 2 if minion.golden else 1
         for opposing_minion in opposing_board.get_minions():
             opposing_minion.receive_damage(damage=damage, poisonous=False)
@@ -79,7 +79,7 @@ class SelflessHeroDeathrattle(Deathrattle):
         super().__init__(name="SelflessHeroDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        logging.debug(f"Selfless Hero deathrattle triggered")
+        logging.debug("Selfless Hero deathrattle triggered")
         iterations = 2 if minion.golden else 1
         for _ in range(iterations):
             unshielded_minions = [minion for minion in own_board.minions if not minion.divine_shield]

@@ -2,34 +2,36 @@ from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_1 import AcolyteOfCThun, Scallywag
 from ghastcoiler.minions.rank_2 import HarvestGolem, KaboomBot
 
+
 def test_baron_rivendare(initialized_game):
-    #TODO: Test baron and golden baron interactions with
+    # TODO: Test baron and golden baron interactions with
     # -Khadgar
     # -Bomb (ie generic deathrattle)
     # -Macaw
-    #  
     assert True
+
 
 def test_khadgar(initialized_game):
-    #TODO: Test khadgar and interactions with
+    # TODO: Test khadgar and interactions with
     # -Reborn
     # -Tokens that are buffed and then copied and re-buffed
-    #  
     assert True
 
+
 def test_scallywag(initialized_game):
-    #TODO: Test scallywag and interactions with
+    # TODO: Test scallywag and interactions with
     # -Khadgar
     # -Baron
     # -Eliza
-    #  
     assert True
 
+
 def test_deathrattle_order(initialized_game):
-    #TODO: Test order of operations with deathrattles and interactions with
+    # TODO: Test order of operations with deathrattles and interactions with
     # -reborn
     # -pirate attacks
     assert True
+
 
 def test_reborn_mechanic(initialized_game):
     attacker_board = initialized_game.player_board[0]
@@ -40,9 +42,9 @@ def test_reborn_mechanic(initialized_game):
     defender_board.add_minion(PunchingBag(attack=10))
     initialized_game.start_of_game()
     initialized_game.single_round()
-    # TODO: Fix 
-    #assert attacker_board.minions[0].name == "Damaged Golem"
-    #assert attacker_board.minions[1].name == "Harvest Golem"
+    # TODO: Fix
+    # assert attacker_board.minions[0].name == "Damaged Golem"
+    # assert attacker_board.minions[1].name == "Harvest Golem"
     assert True
 
     # Deathrattle + reborn order version 2: killing minions
@@ -73,15 +75,16 @@ def test_reborn_mechanic(initialized_game):
     initialized_game.single_round()
     assert attacker_board.minions[6].name == "Damaged Golem"
 
+
 def test_golden_tokens(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
-    
+
     attacker_board.add_minion(Scallywag(golden=True))
     defender_board.add_minion(PunchingBag(attack=10, defense=1))
     initialized_game.start_of_game()
     initialized_game.single_round()
-    
+
     pirate_token = attacker_board.minions[0]
     assert pirate_token.golden
     assert pirate_token.name == "Sky Pirate"

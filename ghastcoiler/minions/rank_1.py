@@ -53,7 +53,7 @@ class FiendishServant(Minion):
                          base_deathrattle=FiendishServantDeathrattle(),
                          **kwargs)
 
-        
+
 # class Mecharoo(Minion):
 #     def __init__(self, **kwargs):
 #         super().__init__(name="Mecharoo",
@@ -93,6 +93,7 @@ class MurlocTidehunter(Minion):
                          types=[MinionType.Murloc],
                          **kwargs)
 
+
 class RockpoolHunter(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Rockpool Hunter",
@@ -101,6 +102,7 @@ class RockpoolHunter(Minion):
                          base_defense=3,
                          types=[MinionType.Murloc],
                          **kwargs)
+
 
 class RedWhelp(Minion):
     def __init__(self, **kwargs):
@@ -199,7 +201,7 @@ class DeckSwabbie(Minion):
                          base_defense=2,
                          types=[MinionType.Pirate],
                          **kwargs)
-            
+
 
 class RefreshingAnomaly(Minion):
     def __init__(self, **kwargs):
@@ -230,4 +232,3 @@ class Sellemental(Minion):
                          base_defense=2,
                          types=[MinionType.Elemental],
                          **kwargs)
-            

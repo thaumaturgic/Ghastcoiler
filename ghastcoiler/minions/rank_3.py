@@ -5,6 +5,7 @@ from minions.base import Minion
 from minions.types import MinionType
 from deathrattles.rank_3 import InfestedWolfDeathrattle, PilotedShredderDeathrattle, RatPackDeathrattle
 
+
 class ArcaneAssistant(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Arcane Assistant",
@@ -14,6 +15,7 @@ class ArcaneAssistant(Minion):
                          types=[MinionType.Elemental],
                          **kwargs)
 
+
 class ArmoftheEmpire(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Arm of the Empire",
@@ -22,12 +24,13 @@ class ArmoftheEmpire(Minion):
                          base_defense=5,
                          **kwargs)
 
-    def on_friendly_attacked(self, friendly_minion: Minion): #TODO: IMPLEMENT AND TEST
+    def on_friendly_attacked(self, friendly_minion: Minion):  # TODO: IMPLEMENT AND TEST
         """ Whenever a friendly Taunt minion is attacked, give it +3 Attack.
         """
         buff = 6 if self.golden else 3
         if friendly_minion.taunt:
-            friendly_minion.add_stats(buff,0)
+            friendly_minion.add_stats(buff, 0)
+
 
 class BloodsailCannoneer(Minion):
     def __init__(self, **kwargs):
@@ -37,6 +40,7 @@ class BloodsailCannoneer(Minion):
                          base_defense=3,
                          types=[MinionType.Pirate],
                          **kwargs)
+
 
 class BronzeWarden(Minion):
     def __init__(self, **kwargs):
@@ -49,6 +53,7 @@ class BronzeWarden(Minion):
                          base_reborn=True,
                          **kwargs)
 
+
 class ColdlightSeer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Coldlight Seer",
@@ -57,7 +62,8 @@ class ColdlightSeer(Minion):
                          base_defense=3,
                          types=[MinionType.Murloc],
                          **kwargs)
-                         
+
+
 class CracklingCyclone(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Crackling Cyclone",
@@ -68,7 +74,8 @@ class CracklingCyclone(Minion):
                          base_divine_shield=True,
                          **kwargs)
         self.windfury = False if self.golden else True
-        self.megawindfury = True if self.golden else False #TODO: TEST
+        self.megawindfury = True if self.golden else False  # TODO: TEST
+
 
 class Crystalweaver(Minion):
     def __init__(self, **kwargs):
@@ -77,6 +84,7 @@ class Crystalweaver(Minion):
                          base_attack=5,
                          base_defense=4,
                          **kwargs)
+
 
 class DeflectoBot(Minion):
     def __init__(self, **kwargs):
@@ -88,11 +96,12 @@ class DeflectoBot(Minion):
                          types=[MinionType.Mech],
                          **kwargs)
 
-    def on_friendly_summon(self, other_minion: Minion): #TODO: TEST
+    def on_friendly_summon(self, other_minion: Minion):  # TODO: TEST
         if MinionType.Mech in other_minion.types:
             attack = 2 if self.golden else 1
             self.divine_shield = True
-            self.add_stats(attack,0)
+            self.add_stats(attack, 0)
+
 
 class FelfinNavigator(Minion):
     def __init__(self, **kwargs):
@@ -103,6 +112,7 @@ class FelfinNavigator(Minion):
                          types=[MinionType.Murloc],
                          **kwargs)
 
+
 class HangryDragon(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Hangry Dragon",
@@ -112,6 +122,7 @@ class HangryDragon(Minion):
                          types=[MinionType.Dragon],
                          **kwargs)
 
+
 class Houndmaster(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Houndmaster",
@@ -119,6 +130,7 @@ class Houndmaster(Minion):
                          base_attack=4,
                          base_defense=3,
                          **kwargs)
+
 
 class ImpGangBoss(Minion):
     def __init__(self, **kwargs):
@@ -130,7 +142,7 @@ class ImpGangBoss(Minion):
                          **kwargs)
 
     def on_receive_damage(self):
-        """Whenever this minion takes damage, summon a 1/1 Imp.""" #TODO: IMPLEMENT
+        """Whenever this minion takes damage, summon a 1/1 Imp."""  # TODO: IMPLEMENT
         pass
 
 
@@ -141,8 +153,9 @@ class InfestedWolf(Minion):
                          base_attack=3,
                          base_defense=3,
                          types=[MinionType.Beast],
-                         base_deathrattle=InfestedWolfDeathrattle(), # TODO: TEST
+                         base_deathrattle=InfestedWolfDeathrattle(),  # TODO: TEST
                          **kwargs)
+
 
 class IronSensei(Minion):
     def __init__(self, **kwargs):
@@ -153,6 +166,7 @@ class IronSensei(Minion):
                          types=[MinionType.Mech],
                          **kwargs)
 
+
 # TODO: All the busted shit this guy does
 class Khadgar(Minion):
     def __init__(self, **kwargs):
@@ -161,6 +175,7 @@ class Khadgar(Minion):
                          base_attack=2,
                          base_defense=2,
                          **kwargs)
+
 
 class MonstrousMacaw(Minion):
     def __init__(self, **kwargs):
@@ -174,18 +189,21 @@ class MonstrousMacaw(Minion):
     def on_attacked_after(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """After this attacks, trigger a random friendly minion's Deathrattle.
         """
-        #TODO: IMPLEMENT
+        # TODO: IMPLEMENT
         pass
+
 
 class PilotedShredder(Minion):
     def __init__(self, **kwargs):
+        # TODO: TEST
         super().__init__(name="Piloted Shredder",
                          rank=3,
                          base_attack=4,
                          base_defense=3,
                          types=[MinionType.Mech],
-                         base_deathrattle=PilotedShredderDeathrattle(), # TODO: TEST
+                         base_deathrattle=PilotedShredderDeathrattle(),
                          **kwargs)
+
 
 class RatPack(Minion):
     def __init__(self, **kwargs):
@@ -197,15 +215,18 @@ class RatPack(Minion):
                          base_deathrattle=RatPackDeathrattle(),
                          **kwargs)
 
+
 class ReplicatingMenace(Minion):
     def __init__(self, **kwargs):
+        # TODO: TEST
         super().__init__(name="Replicating Menace",
                          rank=3,
                          base_attack=3,
                          base_defense=1,
                          types=[MinionType.Mech],
-                         base_deathrattle=RatPackDeathrattle(), #TODO: TEST
+                         base_deathrattle=RatPackDeathrattle(),
                          **kwargs)
+
 
 class SaltyLooter(Minion):
     def __init__(self, **kwargs):
@@ -216,6 +237,7 @@ class SaltyLooter(Minion):
                          types=[MinionType.Pirate],
                          **kwargs)
 
+
 class ScrewjankClunker(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Screwjank Clunker",
@@ -224,7 +246,8 @@ class ScrewjankClunker(Minion):
                          base_defense=5,
                          types=[MinionType.Mech],
                          **kwargs)
-                         
+
+
 class SoulDevourer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Soul Devourer",
@@ -233,6 +256,7 @@ class SoulDevourer(Minion):
                          base_defense=3,
                          types=[MinionType.Demon],
                          **kwargs)
+
 
 class SoulJuggler(Minion):
     def __init__(self, **kwargs):
@@ -245,8 +269,9 @@ class SoulJuggler(Minion):
     def on_friendly_removal(self, other_minion: Minion):
         """After a friendly Demon dies, deal 3 damage to a random enemy minion.
         """
-        #TODO: 
+        # TODO:
         pass
+
 
 class SouthseaStrongarm(Minion):
     def __init__(self, **kwargs):
@@ -257,6 +282,7 @@ class SouthseaStrongarm(Minion):
                          types=[MinionType.Pirate],
                          **kwargs)
 
+
 class StasisElemental(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Stasis Elemental",
@@ -265,6 +291,7 @@ class StasisElemental(Minion):
                          base_defense=4,
                          types=[MinionType.Elemental],
                          **kwargs)
+
 
 class TwilightEmissary(Minion):
     def __init__(self, **kwargs):
@@ -275,6 +302,7 @@ class TwilightEmissary(Minion):
                          types=[MinionType.Dragon],
                          **kwargs)
 
+
 class WardenofOld(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Warden of Old",
@@ -282,4 +310,4 @@ class WardenofOld(Minion):
                          base_attack=3,
                          base_defense=3,
                          # Dont care about death rattle
-                         **kwargs)     
+                         **kwargs)

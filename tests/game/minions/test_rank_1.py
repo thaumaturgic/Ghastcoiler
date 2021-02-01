@@ -1,5 +1,8 @@
-from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant, RabidSaurolisk, ScavengingHyena, Alleycat, AcolyteOfCThun, Scallywag, VulgarHomunculus
 from ghastcoiler.minions.test_minions import PunchingBag
+from ghastcoiler.minions.rank_1 import FiendishServant, \
+    DragonspawnLieutenant, RabidSaurolisk, ScavengingHyena, \
+    Alleycat, AcolyteOfCThun, Scallywag, VulgarHomunculus
+
 
 def test_fiendish_servant_deathrattle(initialized_game):
     attacker_board = initialized_game.player_board[0]
@@ -28,6 +31,7 @@ def test_rabid_saurolisk(initialized_game):
     assert rabid_saurolisk.attack == 4
     assert rabid_saurolisk.defense == 2
 
+
 def test_scavenging_hyena(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
@@ -40,6 +44,7 @@ def test_scavenging_hyena(initialized_game):
 
     assert hyena.attack == 4
     assert hyena.defense == 3
+
 
 def test_acolyte_of_cthun(initialized_game):
     attacker_board = initialized_game.player_board[0]
@@ -60,6 +65,7 @@ def test_red_whelp(initialized_game):
     # TODO: Test start of game actions
     assert True
 
+
 def test_scallywag(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
@@ -73,13 +79,11 @@ def test_scallywag(initialized_game):
     assert defender.defense == 1
 
     # Test golden tokens
-    defender = PunchingBag(attack = 10)
+    defender = PunchingBag(attack=10)
     attacker_board.set_minions([Scallywag(golden=True)])
     defender_board.set_minions([defender])
     initialized_game.start_of_game()
     initialized_game.single_round()
     assert defender.defense == 94
 
-    #TODO: Test scallywag on scallywag
-
-    
+    # TODO: Test scallywag on scallywag

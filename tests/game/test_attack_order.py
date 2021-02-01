@@ -1,5 +1,6 @@
 from ghastcoiler.minions.test_minions import PunchingBag
-from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant, RabidSaurolisk, WrathWeaver
+from ghastcoiler.minions.rank_1 import \
+    FiendishServant, DragonspawnLieutenant, WrathWeaver
 from ghastcoiler.minions.rank_2 import HarvestGolem
 from ghastcoiler.minions.rank_3 import RatPack
 
@@ -22,7 +23,7 @@ def test_simple_attack_sequence(initialized_game):
     assert(minion is None)
 
     # Run through basic attack order twice
-    for _ in range (2):
+    for _ in range(2):
         for i in range(len(player0board.minions)):
             minion = player0board.select_attacking_minion()
             assert(minion.name == player0board.minions[i].name)
@@ -38,9 +39,11 @@ def test_simple_defender_selection(initialized_game):
     # TODO: Make sure taunts are selected over non-taunts, test other specific taunt override mechanics
     assert(True)
 
+
 def test_windfury(initialized_game):
     # TODO: test windfury mechanic
     assert(True)
+
 
 def test_minion_insertion(initialized_game):
     # Test that a newly inserted minion attacks in order correctly
@@ -60,11 +63,12 @@ def test_minion_insertion(initialized_game):
     minion = player0board.select_attacking_minion()
     assert(minion.name == "Damaged Golem")
 
+
 def test_minion_insertion_multiple(initialized_game):
     # Test that a minion inserted before the attack order doesnt disrupt attack order
     player0board = initialized_game.player_board[0]
     player1board = initialized_game.player_board[1]
-    
+
     player0board.add_minion(RatPack())
     player0board.add_minion(DragonspawnLieutenant())
 
@@ -85,7 +89,3 @@ def test_minion_insertion_multiple(initialized_game):
     minion = player0board.select_attacking_minion()
     initialized_game.attack(minion, player1board.minions[0])
     assert(minion.name == "Dragonspawn Lieutenant")
-
-
-
-    

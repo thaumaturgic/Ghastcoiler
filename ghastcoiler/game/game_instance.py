@@ -81,10 +81,9 @@ class GameInstance:
             logging.debug("Divine shield popped")
             board.divine_shield_popped()
 
-
     def cleanup_dead_minions(self, board: PlayerBoard):
         """Remove any dead minions. Return the List of minions to process any deathrattles and reborn triggers.
-        
+
         Arguments:
             board {PlayerBoard} -- Player board to check for dead minions
         """
@@ -94,9 +93,9 @@ class GameInstance:
             board.remove_minion(minion)
         return dead_minions
 
-    def resolve_extra_attacks(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard ):
+    def resolve_extra_attacks(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard):
         """Resolve any 'attacks immediately' minions and the consequences of those attacks
-        
+
         Arguments:
             attacking_player_board {PlayerBoard} -- Player board of attacking player
             defending_player_board {PlayerBoard} -- Player board of defending player
@@ -119,9 +118,9 @@ class GameInstance:
         """
         # General flow of resolving death states:
         # Resolve attacker deathrattles from left to right, multiplied by baron
-	    #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
+        #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
         # Resolve defender deathrattles from left to right, multiplied by baron
-	    #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
+        #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
 
         attacker_dead_minions = self.cleanup_dead_minions(attacking_player_board)
         defender_dead_minions = self.cleanup_dead_minions(defending_player_board)
@@ -147,15 +146,16 @@ class GameInstance:
         # Resolve reborns after deathrattles
         for minion in attacker_dead_minions:
             if minion.reborn and not minion.reborn_triggered:
-                minion.trigger_reborn(attacking_player_board, minion.position) #TODO: position
+                # TODO: position
+                minion.trigger_reborn(attacking_player_board, minion.position)
 
         for minion in defender_dead_minions:
             if minion.reborn and not minion.reborn_triggered:
-                minion.trigger_reborn(defending_player_board, minion.position) #TODO: position
+                minion.trigger_reborn(defending_player_board, minion.position)
 
         # Continue to resolve extra attacks until all are done
         while attacking_player_board.get_immediate_attack_minions() or defending_player_board.get_immediate_attack_minions():
-            #TODO: Is there a priority for resolving pirate attacks on each other? Are they queued up?
+            # TODO: Is there a priority for resolving pirate attacks on each other? Are they queued up?
             self.resolve_extra_attacks(attacking_player_board, defending_player_board)
             self.resolve_extra_attacks(defending_player_board, attacking_player_board)
 
@@ -170,9 +170,9 @@ class GameInstance:
         attacking_minion.on_attack(attacker, defender)
         defending_minion.on_attacked(defender, attacker)
 
-        #TODO: on_friendly_attacked
+        # TODO: on_friendly_attacked
 
-        logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}") 
+        logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}")
 
         self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
         self.deal_damage(defending_minion, defender, attacking_minion.attack, attacking_minion.poisonous)
@@ -181,8 +181,8 @@ class GameInstance:
             for neighbor in defender.get_minions_neighbors(defending_minion):
                 self.deal_damage(neighbor, defender, attacking_minion.attack, attacking_minion.poisonous)
 
-        #TODO: Handle overkill triggers here and other on kill events (ie wagtoggle)
-        #TODO: Handle post damage and post attack triggers like imp, patrolbot and macaw
+        # TODO: Handle overkill triggers here and other on kill events (ie wagtoggle)
+        # TODO: Handle post damage and post attack triggers like imp, patrolbot and macaw
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X
@@ -200,18 +200,18 @@ class GameInstance:
 
         if len(player0Minions) == 0:
             if len(player1Minions) == 0:
-                return 0 # No minions left on either board, game is a tie
+                return 0  # No minions left on either board, game is a tie
             else:
-                return - self.player_board[1].score() # player 1 wins
+                return - self.player_board[1].score()  # player 1 wins
         else:
-            return self.player_board[0].score() # player 0 wins
+            return self.player_board[0].score()  # player 0 wins
 
     def start_of_game(self):
-        """Do all game actions up until the first attack is do pre-game minion and hero power actions, determine who attacks first, etc. 
+        """Do all game actions up until the first attack is do pre-game minion and hero power actions, determine who attacks first, etc.
         """
         # TODO: Handle Illidan Stormrage hero power here (before whelp power triggers)
 
-        # Attacking player is determined before whelp potentially kills enemy minions. 
+        # Attacking player is determined before whelp potentially kills enemy minions.
         # aka if both boards are full, and a whelp kills an opposing minion, the opposing player can still go first with less minions
         player0minions = len(self.player_board[0].minions)
         player1minions = len(self.player_board[1].minions)
@@ -226,7 +226,7 @@ class GameInstance:
             minion.at_beginning_game(self, False, other, current)
 
     def single_round(self):
-        """Do one attack and resolve consequences. ie one step of the game 
+        """Do one attack and resolve consequences. ie one step of the game
         """
         attacker_board = self.attacking_player_board()
         defender_board = self.defending_player_board()
@@ -238,12 +238,12 @@ class GameInstance:
         attacking_minion = attacker_board.select_attacking_minion()
         defending_minion = defender_board.select_defending_minion()
         if attacking_minion and defending_minion:
-            attacks = 2 if attacking_minion.windfury else 1 #TODO: mega windfury
+            attacks = 2 if attacking_minion.windfury else 1  # TODO: mega windfury
             for _ in range(attacks):
                 if not attacking_minion.dead:
                     self.attack(attacking_minion, defending_minion)
                     self.check_deaths(self.attacking_player_board(), self.defending_player_board())
-            # Flag the minion as having attacked. 
+            # Flag the minion as having attacked.
             # It may be dead, but we have to set this after combat has resolved to maintain correct attack order...
             attacking_minion.attacked = True
         else:
@@ -258,7 +258,7 @@ class GameInstance:
             int -- Final score from player 0 perspective
         """
         self.start_of_game()
-        
+
         while not self.finished():
             self.single_round()
 

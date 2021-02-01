@@ -30,6 +30,7 @@ class Imp(Minion):
                          types=[MinionType.Demon],
                          **kwargs)
 
+
 class BigBadWolf(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Big Bad Wolf",
@@ -38,6 +39,7 @@ class BigBadWolf(Minion):
                          base_defense=2,
                          types=[MinionType.Beast],
                          **kwargs)
+
 
 class Rat(Minion):
     def __init__(self, **kwargs):
@@ -48,6 +50,7 @@ class Rat(Minion):
                          types=[MinionType.Beast],
                          **kwargs)
 
+
 class SkyPirate(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Sky Pirate",
@@ -57,6 +60,7 @@ class SkyPirate(Minion):
                          types=[MinionType.Pirate],
                          **kwargs)
 
+
 class Spider(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Spider",
@@ -65,6 +69,7 @@ class Spider(Minion):
                          base_defense=1,
                          types=[MinionType.Beast],
                          **kwargs)
+
 
 class Microbot(Minion):
     def __init__(self, **kwargs):

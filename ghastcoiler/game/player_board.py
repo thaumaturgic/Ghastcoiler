@@ -5,7 +5,7 @@ import copy
 from typing import List, Optional
 
 from minions.base import Minion
-from minions.types import MinionType
+
 
 class PlayerBoard:
     def __init__(self, player_id: int, hero: None, life_total: int, rank: int, minions: List[Minion]):
@@ -24,8 +24,8 @@ class PlayerBoard:
         self.rank = rank
         self.attack_position = 0
         self.set_minions(minions)
-        self.deathrattle_multiplier = 1 # TODO: Implement baron minion to adjust this value
-        self.token_creation_multiplier = 1 #TODO: Implement khadgar minion to adjust this value
+        self.deathrattle_multiplier = 1  # TODO: Implement baron
+        self.token_creation_multiplier = 1  # TODO: Implement khadgar
 
     def set_minions(self, minions: List[Minion]):
         """Initialize the board to the list of minions given. Used for testing
@@ -120,7 +120,7 @@ class PlayerBoard:
             eligibleAttacker = minion.attack > 0
             if not minion.attacked:
                 if minion.attack == 0:
-                    minion.attacked = True # Skip zero attack minions
+                    minion.attacked = True  # Skip zero attack minions
                     continue
                 return minion
 
@@ -133,7 +133,6 @@ class PlayerBoard:
             minion.attacked = False
 
         return self.select_attacking_minion()
-        #return None if not eligibleAttacker else self.select_attacking_minion()
 
     def generate_possible_defending_minions(self, attacks_lowest=False):
         """Generate list of minions that can be currently attacked
@@ -224,7 +223,7 @@ class PlayerBoard:
         for other_minion in self.minions:
             minion.on_removal(other_minion)
             other_minion.on_friendly_removal(minion)
-            
+
     def add_minion(self, new_minion: Minion, position: Optional[int] = None) -> Optional[Minion]:
         """Add minion to the board if there is space
 
@@ -242,7 +241,7 @@ class PlayerBoard:
             if position is None:
                 position = len(self.minions)
 
-            #TODO: Implement khadgar multiplier for tokens
+            # TODO: Implement khadgar multiplier for tokens
 
             for minion in self.minions:
                 minion.on_friendly_summon(other_minion=new_minion)

@@ -17,6 +17,7 @@ def test_simple_ending(initialized_game):
     assert(initialized_game.finished())
     assert(initialized_game.calculate_score_player_0() == -(player1board.rank + player1board.minions[0].rank))
 
+
 def test_draw(initialized_game):
     # Make sure draws are detected. Base case is empty boards
     assert(initialized_game.finished())

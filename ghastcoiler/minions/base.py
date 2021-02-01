@@ -9,32 +9,33 @@ if TYPE_CHECKING:
     from game.player_board import PlayerBoard
     from game.game_instance import GameInstance
 
+
 class Minion:
-    def __init__(self, 
-                 name: str, 
+    def __init__(self,
+                 name: str,
                  rank: int,
-                 base_attack: int, 
-                 base_defense: int, 
-                 attack: Optional[int] = None, 
-                 defense: Optional[int] = None, 
+                 base_attack: int,
+                 base_defense: int,
+                 attack: Optional[int] = None,
+                 defense: Optional[int] = None,
                  dead: bool = False,
-                 types: Optional[List[MinionType]] = None, 
+                 types: Optional[List[MinionType]] = None,
                  base_poisonous: bool = False,
                  poisonous: bool = False,
-                 base_divine_shield: bool = False, 
-                 divine_shield: bool = False, 
-                 base_taunt: bool = False, 
-                 taunt: bool = False, 
-                 base_cleave: bool = False, 
-                 cleave: bool = False, 
+                 base_divine_shield: bool = False,
+                 divine_shield: bool = False,
+                 base_taunt: bool = False,
+                 taunt: bool = False,
+                 base_cleave: bool = False,
+                 cleave: bool = False,
                  base_reborn: bool = False,
                  reborn: bool = False,
-                 base_windfury: bool = False, 
+                 base_windfury: bool = False,
                  windfury: bool = False,
-                 base_mega_windfury: bool = False, 
+                 base_mega_windfury: bool = False,
                  mega_windfury: bool = False,
                  base_deathrattle: Optional[Deathrattle] = None,
-                 deathrattles: Optional[List[Deathrattle]] = None, 
+                 deathrattles: Optional[List[Deathrattle]] = None,
                  golden: bool = False,
                  position: Optional[int] = None,
                  player_id: Optional[int] = None,
@@ -184,7 +185,7 @@ class Minion:
             self.defense -= amount
             if self.defense <= 0 or poisonous:
                 self.dead = True
-        #TODO: Return a tuple consisting of [bool shield popped, bool minion died, int overkill amount]
+        # TODO: Return a tuple consisting of [bool shield popped, bool minion died, int overkill amount]
         return popped_shield
 
     def at_beginning_game(self, game_instance: GameInstance, player_starts: bool, own_board: PlayerBoard, opposing_board: PlayerBoard):
@@ -243,7 +244,7 @@ class Minion:
 
     def on_removal(self, other_minion: Minion):
         """What the minion should do to other minion on the player board when it exits (NOT a deathrattle)
-        
+
         Arguments:
             other_minion {Minion} -- Minion entering the player board
         """
@@ -271,8 +272,8 @@ class Minion:
 
     def trigger_reborn(self, own_board: PlayerBoard, insert_position: int):
         """If the minion has reborn and has not triggered, trigger it"""
-        #TODO: Account for shifted position due to deathrattle minions entering and/or dieing
-        #IDEA: Track how many minions were inserted from friendly deathrattles, check how many are still alive when reborn is handled
+        # TODO: Account for shifted position due to deathrattle minions entering and/or dieing
+        # IDEA: Track how many minions were inserted from friendly deathrattles, check how many are still alive when reborn is handled
         if self.reborn and not self.reborn_triggered:
-            self.__init__(reborn_triggered=True, token=True, defense=1, attacked=self.attacked, golden=self.golden)  
+            self.__init__(reborn_triggered=True, token=True, defense=1, attacked=self.attacked, golden=self.golden)
             own_board.add_minion(new_minion=self, position=insert_position)
