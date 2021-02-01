@@ -16,14 +16,15 @@ We would love for others to help out with this project, while we are working out
 
 We are currently only at the beginning. There are a few initial focus points:
 
-- Reborn mechanic
-- Pirate 'attacks immediately' mechanic
-- Golden minion tokens (or golden minions in general)
-- Think about a way to dynamically create a list of all minions.
-    Will be needed for things like "Create a random demon"/"Summon a random legendary minion"/"Summon a random minion with deathrattle"
-
+- ~~Reborn mechanic~~ Reborn niche interactions with deathrattles
+- ~~Pirate 'attacks immediately' mechanic~~ Needs some more advanced tests
+- ~~Golden minion tokens (or golden minions in general)~~
+- ~~Think about a way to dynamically create a list of all minions.
+    Will be needed for things like "Create a random demon"/"Summon a random legendary minion"/"Summon a random minion with deathrattle"~~
+- Khadgar: lots of weird interactions
+- Baron: lots of weird interactions especially with khadgar
 - Add docstrings and some comments
-- Add ranks 2 to 6
+- Add ranks 3 to 6
 - Increasing the amount of useful tests
 - Figuring out some niche game mechanics
 - Add heroes with in-battle effects
