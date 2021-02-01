@@ -94,6 +94,14 @@ class PlayerBoard:
         """
         return [minion for minion in self.minions if minion.taunt and not minion.dead]
 
+    def select_dead(self):
+        """Return all minions that are dead
+
+        Returns:
+            List[Minion] -- List of all currently dead minions
+        """
+        return [minion for minion in self.minions if minion.dead]
+
     def divine_shield_popped(self):
         """Called when a divine shield pops on this board to execute possible triggers on other minions"""
         for minion in self.minions:
@@ -217,7 +225,7 @@ class PlayerBoard:
             minion.on_removal(other_minion)
             other_minion.on_friendly_removal(minion)
             
-    def add_minion(self, new_minion: Minion, position: Optional[int] = None, token: Optional[bool] = False) -> Optional[Minion]:
+    def add_minion(self, new_minion: Minion, position: Optional[int] = None) -> Optional[Minion]:
         """Add minion to the board if there is space
 
         Arguments:
@@ -234,7 +242,7 @@ class PlayerBoard:
             if position is None:
                 position = len(self.minions)
 
-            #TODO: Implement khadgar multiplier
+            #TODO: Implement khadgar multiplier for tokens
 
             for minion in self.minions:
                 minion.on_friendly_summon(other_minion=new_minion)

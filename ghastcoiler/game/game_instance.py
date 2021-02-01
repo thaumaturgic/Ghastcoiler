@@ -83,17 +83,16 @@ class GameInstance:
 
 
     def cleanup_dead_minions(self, board: PlayerBoard):
-        """Remove any dead minions, collect their deathrattles for processing
+        """Remove any dead minions. Return the List of minions to process any deathrattles and reborn triggers.
         
         Arguments:
             board {PlayerBoard} -- Player board to check for dead minions
         """
-        deathrattle_minions = []
-        for minion in [x for x in board.get_minions() if x.dead]:
-            if minion.deathrattles:
-                deathrattle_minions.append(minion)
+        dead_minions = []
+        for minion in board.select_dead():
+            dead_minions.append(minion)
             board.remove_minion(minion)
-        return deathrattle_minions
+        return dead_minions
 
     def resolve_extra_attacks(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard ):
         """Resolve any 'attacks immediately' minions and the consequences of those attacks
@@ -120,33 +119,41 @@ class GameInstance:
         """
         # General flow of resolving death states:
         # Resolve attacker deathrattles from left to right, multiplied by baron
-	    #     Resolve extra attacks after each deathrattle resolves (then check deaths)
+	    #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
         # Resolve defender deathrattles from left to right, multiplied by baron
-	    #     Resolve extra attacks after each deathrattle resolves (then check deaths)
+	    #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
 
-        # Collect pending death rattles, remove dead minions to free up board space for deathrattles
-        attacker_deathrattle_minions = self.cleanup_dead_minions(attacking_player_board)
-        defender_deathrattle_minions = self.cleanup_dead_minions(defending_player_board)
+        attacker_dead_minions = self.cleanup_dead_minions(attacking_player_board)
+        defender_dead_minions = self.cleanup_dead_minions(defending_player_board)
 
-        # Resolve death rattles and 'attacks immediately' triggers
-        for minion in attacker_deathrattle_minions:
+        # Resolve death rattles and 'attacks immediately' triggers. Attacker first, then defender
+        for minion in attacker_dead_minions:
             for deathrattle in minion.deathrattles:
                 for _ in range(attacking_player_board.deathrattle_multiplier):
-                    # Trigger death rattles in left to right order
                     deathrattle.trigger(minion, attacking_player_board, defending_player_board)
-                    # Check for any 'attack immediately' minions, ie scallywag tokens
                     self.resolve_extra_attacks(attacking_player_board, defending_player_board)
 
-        for minion in defender_deathrattle_minions:
+        # There are some DRY vibes here but for now this is fine
+        for minion in defender_dead_minions:
             for deathrattle in minion.deathrattles:
                 for _ in range(defending_player_board.deathrattle_multiplier):
                     deathrattle.trigger(minion, defending_player_board, attacking_player_board)
                     self.resolve_extra_attacks(defending_player_board, attacking_player_board)
 
-        #TODO: Resolve reborns after deathrattles
+        # Process deaths here again to see if death rattles resulted in more deaths
+        if len(attacking_player_board.select_dead()) > 0 or len(defending_player_board.select_dead()):
+            self.check_deaths(attacking_player_board, defending_player_board)
 
+        # Resolve reborns after deathrattles
+        for minion in attacker_dead_minions:
+            if minion.reborn and not minion.reborn_triggered:
+                minion.trigger_reborn(attacking_player_board, minion.position) #TODO: position
 
-        # Resolve extra attacks that arise not due to death rattles
+        for minion in defender_dead_minions:
+            if minion.reborn and not minion.reborn_triggered:
+                minion.trigger_reborn(defending_player_board, minion.position) #TODO: position
+
+        # Continue to resolve extra attacks until all are done
         while attacking_player_board.get_immediate_attack_minions() or defending_player_board.get_immediate_attack_minions():
             #TODO: Is there a priority for resolving pirate attacks on each other? Are they queued up?
             self.resolve_extra_attacks(attacking_player_board, defending_player_board)
@@ -173,7 +180,7 @@ class GameInstance:
                 self.deal_damage(neighbor, defender, attacking_minion.attack, attacking_minion.poisonous)
 
         #TODO: Handle overkill triggers here and other on kill events (ie wagtoggle)
-        #TODO: Handle post damage triggers like imp and patrolbot
+        #TODO: Handle post damage and post attack triggers like imp, patrolbot and macaw
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X
@@ -208,7 +215,7 @@ class GameInstance:
         player1minions = len(self.player_board[1].minions)
         self.player_turn = 0 if player0minions > player1minions else 1 if player1minions > player0minions else random.randint(0, 1)
 
-        # TODO: Determine red whelp trigger order. Is it random? Who has more whelps? Do whelp attacks trade off one by one? 
+        # TODO If both sides have whelps, they trade off whelp attacks from one side to the other, resolving deathrattles after each firebreath
         current = self.attacking_player_board()
         other = self.defending_player_board()
         for minion in current.get_minions():

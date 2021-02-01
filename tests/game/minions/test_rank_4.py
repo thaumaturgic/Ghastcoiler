@@ -1,5 +1,5 @@
 from ghastcoiler.minions.test_minions import PunchingBag
-from ghastcoiler.minions.rank_2 import PackLeader, KindlyGrandmother, RatPack
+from ghastcoiler.minions.rank_2 import PackLeader, KindlyGrandmother, RatPack, SouthseaCaptain, FreedealingGambler
 from ghastcoiler.minions.rank_4 import CaveHydra
 
 
@@ -22,3 +22,10 @@ def test_cave_hydra(initialized_game):
     initialized_game.single_round()
     assert defender_board.minions[6].name == "Rat"
 
+    # When a cleave kills an aura generator with a buffed minion, the damage is applied first, then the aura wears off
+    attacker_board.set_minions([CaveHydra(), PunchingBag(), PunchingBag(), PunchingBag()])
+    defender_board.set_minions([FreedealingGambler(defense=3), SouthseaCaptain(taunt=True, defense=2), FreedealingGambler(defense=3)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert defender_board.minions[0].defense == 1
+    assert defender_board.minions[1].defense == 1

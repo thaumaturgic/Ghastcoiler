@@ -1,4 +1,6 @@
 from ghastcoiler.minions.test_minions import PunchingBag
+from ghastcoiler.minions.rank_1 import AcolyteOfCThun, Scallywag
+from ghastcoiler.minions.rank_2 import HarvestGolem, KaboomBot
 
 def test_baron_rivendare(initialized_game):
     #TODO: Test baron and golden baron interactions with
@@ -28,3 +30,60 @@ def test_deathrattle_order(initialized_game):
     # -reborn
     # -pirate attacks
     assert True
+
+def test_reborn_mechanic(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    # Deathrattle + reborn order version 1: adding minions
+    attacker_board.add_minion(HarvestGolem(reborn=True))
+    defender_board.add_minion(PunchingBag(attack=10))
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    # TODO: Fix 
+    #assert attacker_board.minions[0].name == "Damaged Golem"
+    #assert attacker_board.minions[1].name == "Harvest Golem"
+    assert True
+
+    # Deathrattle + reborn order version 2: killing minions
+    reborn_bomb = KaboomBot(reborn=True)
+    attacker_board.set_minions([reborn_bomb])
+    defender_board.set_minions([KaboomBot()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 1
+    assert reborn_bomb.defense == 1 and reborn_bomb.reborn_triggered
+
+    # Reborn with golden minions
+    gold_acolyte = AcolyteOfCThun(reborn=True, golden=True)
+    attacker_board.set_minions([gold_acolyte])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    assert gold_acolyte.attack == 4
+    assert gold_acolyte.defense == 4
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert gold_acolyte.attack == 4
+    assert gold_acolyte.defense == 1
+
+    # Deathrattle + reborn when not enough space for reborn
+    attacker_board.set_minions([PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), HarvestGolem(reborn=True, taunt=True)])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.player_turn = 1
+    initialized_game.single_round()
+    assert attacker_board.minions[6].name == "Damaged Golem"
+
+def test_golden_tokens(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+    
+    attacker_board.add_minion(Scallywag(golden=True))
+    defender_board.add_minion(PunchingBag(attack=10, defense=1))
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    
+    pirate_token = attacker_board.minions[0]
+    assert pirate_token.golden
+    assert pirate_token.name == "Sky Pirate"
+    assert pirate_token.attack == 2
+    assert pirate_token.defense == 2

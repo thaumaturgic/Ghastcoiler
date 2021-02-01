@@ -237,7 +237,7 @@ class SouthseaCaptain(Minion):
                 other_minion.add_stats(buffAmount, buffAmount)
             else:
                 other_minion.remove_stats(buffAmount, buffAmount)
-                if other_minion.defense < 0:
+                if other_minion.defense <= 0:
                     other_minion.defense = 1 # Losing pirate buffs cannot kill a minion
 
     def on_summon(self, other_minion: Minion):

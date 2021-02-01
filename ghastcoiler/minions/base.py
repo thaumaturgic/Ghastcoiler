@@ -38,7 +38,8 @@ class Minion:
                  player_id: Optional[int] = None,
                  attacked: bool = False,
                  immediate_attack_pending: bool = False,
-                 token: bool = False):
+                 token: bool = False,
+                 reborn_triggered: bool = False):
         """Base minion class of which all normal minions and tokens should inherit from, and they can override certain triggers to implement custom behaviour.
         Important to note is that all the "base_*" arguments should be used in implementing the normal minions and that the non-base versions should be used
         for specific instances of the normal minions, so for the simulations itself in which case they can be different than their base type.
@@ -74,6 +75,7 @@ class Minion:
             attacked {bool} -- Has this minion been passed in the attack order this round (i.e. has it or the minion who spawned it attacked already) (default: {False})
             immediate_attack_pending {bool} -- When bonus attacks are checked, should this minion attack (default: {False})
             token {bool} -- Is this a token spawned by another minion (default: {False})
+            reborn_triggered {bool} -- If this minion has reborn, has it been triggered yet (default: {False})
         """
         self.name = name
         self.rank = rank
@@ -103,11 +105,12 @@ class Minion:
         self.attacked = attacked
         self.immediate_attack_pending = immediate_attack_pending
         self.token = token
+        self.reborn_triggered = reborn_triggered
 
-        # TODO: Think about this with reborn
         if self.golden:
             self.attack *= 2
-            self.defense *= 2
+            if not self.reborn_triggered:
+                self.defense *= 2
 
     def minion_string(self):
         """String representation of minion
@@ -245,3 +248,11 @@ class Minion:
     def shift_right(self):
         """Shift position of minion right because a minion was added to the left"""
         self.position += 1
+
+    def trigger_reborn(self, own_board: PlayerBoard, insert_position: int):
+        """If the minion has reborn and has not triggered, trigger it"""
+        #TODO: Account for shifted position due to deathrattle minions entering and/or dieing
+        #IDEA: Track how many minions were inserted from friendly deathrattles, check how many are still alive when reborn is handled
+        if self.reborn and not self.reborn_triggered:
+            self.__init__(reborn_triggered=True, token=True, defense=1, attacked=self.attacked, golden=self.golden)  
+            own_board.add_minion(new_minion=self, position=insert_position)

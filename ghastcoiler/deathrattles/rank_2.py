@@ -37,7 +37,8 @@ class KaboomBotDeathrattle(Deathrattle):
         number_bombs = 2 if minion.golden else 1
         for _ in range(number_bombs):
             opposing_minion = opposing_board.random_minion()
-            opposing_minion.receive_damage(amount=4, poisonous=False)
+            if opposing_minion:
+                opposing_minion.receive_damage(amount=4, poisonous=False)
 
 
 class KindlyGrandmotherDeathrattle(Deathrattle):

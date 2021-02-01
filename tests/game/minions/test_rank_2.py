@@ -13,6 +13,16 @@ def test_kaboombot_deathrattle(initialized_game):
     initialized_game.single_round()
     assert defender_board.minions[0].defense == 94
 
+    #TODO: Test more complicated scenarios where boom bot kills other deathrattle minions
+    attacker_board.set_minions([KaboomBot(), KaboomBot()])
+    defender_board.set_minions([KaboomBot(), KaboomBot()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(defender_board.minions) == 0
+    assert len(attacker_board.minions) == 0
+
+    #TODO: Test golden bomb, make sure it doesnt bomb already dead minions
+
 
 def test_murloc_war_leader(initialized_game):
     attacker_board = initialized_game.player_board[0]

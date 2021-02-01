@@ -42,8 +42,19 @@ def test_scavenging_hyena(initialized_game):
     assert hyena.defense == 3
 
 def test_acolyte_of_cthun(initialized_game):
-    # TODO: Test reborn
-    assert True
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_acolyte = AcolyteOfCThun()
+    defender_acolyte = AcolyteOfCThun()
+    attacker_board.add_minion(attacker_acolyte)
+    defender_board.add_minion(defender_acolyte)
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    assert attacker_acolyte.defense == 1 and attacker_acolyte.reborn_triggered
+    assert defender_acolyte.defense == 1 and defender_acolyte.reborn_triggered
+
 
 def test_red_whelp(initialized_game):
     # TODO: Test start of game actions
