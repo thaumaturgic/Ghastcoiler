@@ -50,17 +50,6 @@ class KindlyGrandmotherDeathrattle(Deathrattle):
         own_board.add_minion(BigBadWolf(golden=minion.golden, attacked=minion.attacked), position=minion.position)
 
 
-class RatPackDeathrattle(Deathrattle):
-    def __init__(self):
-        super().__init__(name="RatPackDeathrattle")
-
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        number_rats = minion.attack
-        logging.debug(f"Rat pack deathrattle triggered, creating {number_rats} rats")
-        for _ in range(number_rats):
-            own_board.add_minion(Rat(golden=minion.golden, attacked=minion.attacked), position=minion.position)
-
-
 class SpawnofNZothDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="SpawnofNZothDeathrattle")

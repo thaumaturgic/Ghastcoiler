@@ -31,6 +31,8 @@ class Minion:
                  reborn: bool = False,
                  base_windfury: bool = False, 
                  windfury: bool = False,
+                 base_mega_windfury: bool = False, 
+                 mega_windfury: bool = False,
                  base_deathrattle: Optional[Deathrattle] = None,
                  deathrattles: Optional[List[Deathrattle]] = None, 
                  golden: bool = False,
@@ -67,6 +69,8 @@ class Minion:
             reborn {bool} -- Reborn (default: {False})
             base_windfury {bool} -- Standard windfury (default: {False})
             windfury {bool} -- Windfury (default: {False})
+            base_mega_windfury {bool} -- Standard mega windfury (default: {False})
+            mega_windfury {bool} -- Mega Windfury (default: {False})
             base_deathrattle {Optional[Deathrattle]} -- Standard deathrattle (default: {None})
             deathrattles {Optional[List[Deathrattle]]} -- Additional deathrattles (default: {None})
             golden {bool} -- Golden version (default: {False})
@@ -95,6 +99,8 @@ class Minion:
         self.reborn = reborn if reborn else base_reborn
         self.base_windfury = base_windfury
         self.windfury = windfury if windfury else base_windfury
+        self.base_mega_windfury = base_mega_windfury
+        self.mega_windfury = mega_windfury if mega_windfury else base_mega_windfury
         self.base_poisonous = base_poisonous
         self.poisonous = poisonous if poisonous else base_poisonous
         self.base_deathrattles = [base_deathrattle] if base_deathrattle else []
@@ -174,6 +180,7 @@ class Minion:
             popped_shield = True
             self.divine_shield = False
         else:
+            self.on_receive_damage()
             self.defense -= amount
             if self.defense <= 0 or poisonous:
                 self.dead = True
@@ -192,12 +199,25 @@ class Minion:
         pass
 
     def on_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        """Trigger that can be implemented when the minion attacks
+        """Trigger that can be implemented before the minion attacks
+        """
+        pass
+
+    def on_attacked_after(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        """Trigger that can be implemented after the minion attacks
         """
         pass
 
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented when the minion is attacked
+        """
+        pass
+
+    def on_friendly_attacked(self, friendly_minion: Minion):
+        """Trigger for when another friendly minion on the board is attacked
+
+        Arguments:
+            friendly_minion {Minion} -- The minion that is being attacked
         """
         pass
 

@@ -1,5 +1,6 @@
 from ghastcoiler.minions.test_minions import PunchingBag
-from ghastcoiler.minions.rank_2 import PackLeader, KindlyGrandmother, RatPack, SouthseaCaptain, FreedealingGambler
+from ghastcoiler.minions.rank_2 import PackLeader, KindlyGrandmother, SouthseaCaptain, FreedealingGambler
+from ghastcoiler.minions.rank_3 import RatPack
 from ghastcoiler.minions.rank_4 import CaveHydra
 
 

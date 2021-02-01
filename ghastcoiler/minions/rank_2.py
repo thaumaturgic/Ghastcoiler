@@ -6,7 +6,7 @@ from minions.base import Minion
 from minions.types import MinionType
 
 from deathrattles.rank_2 import HarvestGolemDeathrattle, ImprisonerDeathrattle, KaboomBotDeathrattle, \
-    KindlyGrandmotherDeathrattle, RatPackDeathrattle, SpawnofNZothDeathrattle, UnstableGhoulDeathrattle, \
+    KindlyGrandmotherDeathrattle, SpawnofNZothDeathrattle, UnstableGhoulDeathrattle, \
     SelflessHeroDeathrattle
 
 
@@ -152,18 +152,6 @@ class OldMurkEye(Minion):
 #                          base_defense=1,
 #                          types=[MinionType.Mech],
 #                          **kwargs)
-
-
-class RatPack(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Rat Pack",
-                         rank=2,
-                         base_attack=2,
-                         base_defense=2,
-                         types=[MinionType.Beast],
-                         base_deathrattle=RatPackDeathrattle(),
-                         **kwargs)
-
 
 class SpawnofNZoth(Minion):
     def __init__(self, **kwargs):

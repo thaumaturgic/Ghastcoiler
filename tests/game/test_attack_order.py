@@ -1,6 +1,7 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_1 import FiendishServant, DragonspawnLieutenant, RabidSaurolisk, WrathWeaver
-from ghastcoiler.minions.rank_2 import HarvestGolem, RatPack
+from ghastcoiler.minions.rank_2 import HarvestGolem
+from ghastcoiler.minions.rank_3 import RatPack
 
 
 def test_simple_attack_sequence(initialized_game):

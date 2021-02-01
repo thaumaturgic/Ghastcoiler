@@ -170,6 +170,8 @@ class GameInstance:
         attacking_minion.on_attack(attacker, defender)
         defending_minion.on_attacked(defender, attacker)
 
+        #TODO: on_friendly_attacked
+
         logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}") 
 
         self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)

@@ -56,3 +56,21 @@ class SkyPirate(Minion):
                          base_defense=1,
                          types=[MinionType.Pirate],
                          **kwargs)
+
+class Spider(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Spider",
+                         rank=1,
+                         base_attack=1,
+                         base_defense=1,
+                         types=[MinionType.Beast],
+                         **kwargs)
+
+class Microbot(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Microbot",
+                         rank=1,
+                         base_attack=1,
+                         base_defense=1,
+                         types=[MinionType.Mech],
+                         **kwargs)
