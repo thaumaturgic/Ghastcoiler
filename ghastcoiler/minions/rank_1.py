@@ -114,6 +114,7 @@ class RedWhelp(Minion):
                          **kwargs)
 
     def at_beginning_game(self, game_instance, player_starts, own_board, opposing_board):
+        # TODO: Test this
         number_dragons = own_board.count_minion_type(MinionType.Dragon)
         for _ in range(1 + self.golden):
             minion = opposing_board.random_minion()

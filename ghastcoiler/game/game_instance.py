@@ -67,7 +67,7 @@ class GameInstance:
         draw = self.player_board[0].select_attacking_minion() is None and self.player_board[1].select_attacking_minion() is None
         return len(self.player_board[0].minions) == 0 or len(self.player_board[1].minions) == 0 or draw
 
-    def deal_damage(self, minion, board, amount, poisonous):
+    def deal_damage(self, minion, board, amount, poisonous, defer_damage_trigger: Optional[bool] = False):
         """Deal damage to minion
 
         Arguments:
@@ -75,8 +75,11 @@ class GameInstance:
             board {PlayerBoard} -- Player board of which the minion belongs to
             amount {int} -- Amount of damage dealt
             poisonous {bool} -- Whether it is poisonous damage
+            defer_damage_trigger {bool} -- Flag to trigger 'on damage' now or later. Used when minion is damaged by cleave
         """
-        divine_shield_popped = minion.receive_damage(amount, poisonous)
+        divine_shield_popped = minion.receive_damage(amount, poisonous, board, defer_damage_trigger)
+        # TODO: Detect minion killing here, notify board (ie wagtoggle)
+        # TODO: Handle overkill triggers here as well? 
         if divine_shield_popped:
             logging.debug("Divine shield popped")
             board.divine_shield_popped()
@@ -121,7 +124,8 @@ class GameInstance:
         #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
         # Resolve defender deathrattles from left to right, multiplied by baron
         #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
-
+        
+        # There are some DRY vibes here but for now this is fine
         attacker_dead_minions = self.cleanup_dead_minions(attacking_player_board)
         defender_dead_minions = self.cleanup_dead_minions(defending_player_board)
 
@@ -132,7 +136,6 @@ class GameInstance:
                     deathrattle.trigger(minion, attacking_player_board, defending_player_board)
                     self.resolve_extra_attacks(attacking_player_board, defending_player_board)
 
-        # There are some DRY vibes here but for now this is fine
         for minion in defender_dead_minions:
             for deathrattle in minion.deathrattles:
                 for _ in range(defending_player_board.deathrattle_multiplier):
@@ -167,22 +170,33 @@ class GameInstance:
             defending_minion {Minion} -- Minion that is attacked
         """
         attacker, defender = self.attacking_player_board(), self.defending_player_board()
+        logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}")
+
+        # Pre-attack triggers
         attacking_minion.on_attack(attacker, defender)
         defending_minion.on_attacked(defender, attacker)
 
-        # TODO: on_friendly_attacked
+        for minion in defender.minions:
+            if minion.position != defending_minion.position:
+                minion.on_friendly_attacked(defending_minion)
 
-        logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}")
-
-        self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
-        self.deal_damage(defending_minion, defender, attacking_minion.attack, attacking_minion.poisonous)
-
+        # Deal attack damage
         if attacking_minion.cleave:
-            for neighbor in defender.get_minions_neighbors(defending_minion):
-                self.deal_damage(neighbor, defender, attacking_minion.attack, attacking_minion.poisonous)
+            defenders = sorted(defender.get_minions_neighbors(defending_minion) + [defending_minion], key=lambda minion: minion.position)
+            for minion in defenders:
+                self.deal_damage(minion, defender, attacking_minion.attack, attacking_minion.poisonous, True)
+            self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
+
+            # Minions hit with cleave should take damage all at once.
+            # 'On damage' triggers should be handled after that, left to right
+            for minion in defenders:
+                minion.process_deferred_damage_trigger(defender)
+        else:
+            self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
+            self.deal_damage(defending_minion, defender, attacking_minion.attack, attacking_minion.poisonous)
 
         # TODO: Handle overkill triggers here and other on kill events (ie wagtoggle)
-        # TODO: Handle post damage and post attack triggers like imp, patrolbot and macaw
+        # TODO: Handle post attack triggers (macaw)
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X
@@ -206,7 +220,7 @@ class GameInstance:
         else:
             return self.player_board[0].score()  # player 0 wins
 
-    def start_of_game(self):
+    def start_of_game(self, starting_player: Optional[int] = None):
         """Do all game actions up until the first attack is do pre-game minion and hero power actions, determine who attacks first, etc.
         """
         # TODO: Handle Illidan Stormrage hero power here (before whelp power triggers)
@@ -215,7 +229,10 @@ class GameInstance:
         # aka if both boards are full, and a whelp kills an opposing minion, the opposing player can still go first with less minions
         player0minions = len(self.player_board[0].minions)
         player1minions = len(self.player_board[1].minions)
-        self.player_turn = 0 if player0minions > player1minions else 1 if player1minions > player0minions else random.randint(0, 1)
+        if starting_player is not None:
+            self.player_turn = starting_player
+        else:
+            self.player_turn = 0 if player0minions > player1minions else 1 if player1minions > player0minions else random.randint(0, 1)
 
         # TODO If both sides have whelps, they trade off whelp attacks from one side to the other, resolving deathrattles after each firebreath
         current = self.attacking_player_board()
@@ -238,7 +255,7 @@ class GameInstance:
         attacking_minion = attacker_board.select_attacking_minion()
         defending_minion = defender_board.select_defending_minion()
         if attacking_minion and defending_minion:
-            attacks = 2 if attacking_minion.windfury else 1  # TODO: mega windfury
+            attacks = 4 if attacking_minion.mega_windfury else 2 if attacking_minion.windfury else 1
             for _ in range(attacks):
                 if not attacking_minion.dead:
                     self.attack(attacking_minion, defending_minion)

@@ -3,6 +3,7 @@ import logging
 from game.player_board import PlayerBoard
 from minions.base import Minion
 from minions.types import MinionType
+from minions.tokens import Imp
 from deathrattles.rank_3 import InfestedWolfDeathrattle, PilotedShredderDeathrattle, RatPackDeathrattle
 
 
@@ -17,6 +18,8 @@ class ArcaneAssistant(Minion):
 
 
 class ArmoftheEmpire(Minion):
+    """ Whenever a friendly Taunt minion is attacked, give it +3 Attack.
+    """
     def __init__(self, **kwargs):
         super().__init__(name="Arm of the Empire",
                          rank=3,
@@ -24,12 +27,16 @@ class ArmoftheEmpire(Minion):
                          base_defense=5,
                          **kwargs)
 
-    def on_friendly_attacked(self, friendly_minion: Minion):  # TODO: IMPLEMENT AND TEST
-        """ Whenever a friendly Taunt minion is attacked, give it +3 Attack.
-        """
+    def buff_taunted_minion(self, friendly_minion: Minion):
         buff = 6 if self.golden else 3
         if friendly_minion.taunt:
             friendly_minion.add_stats(buff, 0)
+
+    def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        self.buff_taunted_minion(self)
+
+    def on_friendly_attacked(self, friendly_minion: Minion):
+        self.buff_taunted_minion(friendly_minion)
 
 
 class BloodsailCannoneer(Minion):
@@ -74,7 +81,7 @@ class CracklingCyclone(Minion):
                          base_divine_shield=True,
                          **kwargs)
         self.windfury = False if self.golden else True
-        self.megawindfury = True if self.golden else False  # TODO: TEST
+        self.mega_windfury = True if self.golden else False
 
 
 class Crystalweaver(Minion):
@@ -87,6 +94,8 @@ class Crystalweaver(Minion):
 
 
 class DeflectoBot(Minion):
+    """Whenever you summon a Mech during combat, gain +1 Attack and Divine Shield.
+    """
     def __init__(self, **kwargs):
         super().__init__(name="Deflect-o-Bot",
                          rank=3,
@@ -96,7 +105,7 @@ class DeflectoBot(Minion):
                          types=[MinionType.Mech],
                          **kwargs)
 
-    def on_friendly_summon(self, other_minion: Minion):  # TODO: TEST
+    def on_friendly_summon(self, other_minion: Minion):
         if MinionType.Mech in other_minion.types:
             attack = 2 if self.golden else 1
             self.divine_shield = True
@@ -133,6 +142,7 @@ class Houndmaster(Minion):
 
 
 class ImpGangBoss(Minion):
+    """Whenever this minion takes damage, summon a 1/1 Imp."""
     def __init__(self, **kwargs):
         super().__init__(name="Imp Gang Boss",
                          rank=3,
@@ -141,9 +151,8 @@ class ImpGangBoss(Minion):
                          types=[MinionType.Demon],
                          **kwargs)
 
-    def on_receive_damage(self):
-        """Whenever this minion takes damage, summon a 1/1 Imp."""  # TODO: IMPLEMENT
-        pass
+    def on_receive_damage(self, own_board: PlayerBoard):
+        own_board.add_minion(Imp(golden=self.golden, attacked=self.attacked), position=self.position+1)
 
 
 class InfestedWolf(Minion):

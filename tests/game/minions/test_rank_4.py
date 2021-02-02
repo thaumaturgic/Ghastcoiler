@@ -31,3 +31,8 @@ def test_cave_hydra(initialized_game):
     initialized_game.single_round()
     assert defender_board.minions[0].defense == 1
     assert defender_board.minions[1].defense == 1
+
+    # TODO: Test cleave hitting a security bot and deflecto bot (without shield). 
+    # Damage trigger should be done after damage applied to all units (ie after shield is broken)
+
+    # TODO: Test cleave hitting an imp and rover with room for only one token. Should end up with just imp

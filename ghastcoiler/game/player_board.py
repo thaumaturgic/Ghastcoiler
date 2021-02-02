@@ -87,10 +87,10 @@ class PlayerBoard:
         return len([minion for minion in self.minions if minion_type in minion.types])
 
     def select_taunts(self):
-        """Return all minions with Taunt for defending minion selection
+        """Return all living minions with Taunt
 
         Returns:
-            List[Minion] -- List of all minions with Taunt
+            List[Minion] -- List of all living minions with Taunt
         """
         return [minion for minion in self.minions if minion.taunt and not minion.dead]
 
@@ -175,6 +175,11 @@ class PlayerBoard:
         return self.minions
 
     def get_minions_neighbors(self, minion: Minion):
+        """Return a list of minions to the left and right of the minions position
+
+        Returns:
+            List[Minion] -- List of all minions next to the minion
+        """
         position = minion.position
         neighbors = []
         left_position = position - 1

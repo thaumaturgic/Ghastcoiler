@@ -86,8 +86,8 @@ class Minion:
         self.rank = rank
         self.base_attack = base_attack * 2 if golden else base_attack
         self.base_defense = base_defense * 2 if golden else base_defense
-        self.attack = attack if attack else base_attack
-        self.defense = defense if defense else base_defense
+        self.attack = attack if attack else self.base_attack
+        self.defense = defense if defense else self.base_defense
         self.dead = dead
         self.types = types if types else []
         self.base_divine_shield = base_divine_shield
@@ -113,11 +113,10 @@ class Minion:
         self.immediate_attack_pending = immediate_attack_pending
         self.token = token
         self.reborn_triggered = reborn_triggered
+        self.damage_trigger_pending = False
 
-        if self.golden:
-            self.attack *= 2
-            if not self.reborn_triggered:
-                self.defense *= 2
+        if self.reborn_triggered:
+            self.defense  = 1
 
     def minion_string(self):
         """String representation of minion
@@ -163,12 +162,13 @@ class Minion:
         self.attack -= attack
         self.defense -= defense
 
-    def receive_damage(self, amount: int, poisonous: bool):
+    def receive_damage(self, amount: int, poisonous: bool, own_board: PlayerBoard, defer_damage_trigger: Optional[bool]=False):
         """Receive amount of damage which can be poisonous
 
         Arguments:
             amount {int} -- Amount of damage to receive
             poisonous {bool} -- Whether the damage is poisonous
+            own_board {PlayerBoard} -- The board belonging to the minion taking damage
 
         Returns:
             bool -- Whether the minion has popped a shield
@@ -180,13 +180,20 @@ class Minion:
         if self.divine_shield:
             popped_shield = True
             self.divine_shield = False
-        else:
-            self.on_receive_damage()
+        else:  # Minion took damage
             self.defense -= amount
             if self.defense <= 0 or poisonous:
                 self.dead = True
+            if not defer_damage_trigger:
+                self.on_receive_damage(own_board)
+            self.damage_trigger_pending = defer_damage_trigger                
         # TODO: Return a tuple consisting of [bool shield popped, bool minion died, int overkill amount]
         return popped_shield
+
+    def process_deferred_damage_trigger(self, own_board: PlayerBoard):
+        if self.damage_trigger_pending:
+            self.on_receive_damage(own_board)
+        self.damage_trigger_pending = False
 
     def at_beginning_game(self, game_instance: GameInstance, player_starts: bool, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented to do things at the beginning of the game
@@ -226,7 +233,7 @@ class Minion:
         """Trigger that happens when this minion kills another minion"""
         pass
 
-    def on_receive_damage(self):
+    def on_receive_damage(self, own_board: PlayerBoard):
         """Trigger that happens when this minion receives damage"""
         pass
 
@@ -275,5 +282,5 @@ class Minion:
         # TODO: Account for shifted position due to deathrattle minions entering and/or dieing
         # IDEA: Track how many minions were inserted from friendly deathrattles, check how many are still alive when reborn is handled
         if self.reborn and not self.reborn_triggered:
-            self.__init__(reborn_triggered=True, token=True, defense=1, attacked=self.attacked, golden=self.golden)
+            self.__init__(reborn_triggered=True, token=True, attacked=self.attacked, golden=self.golden)
             own_board.add_minion(new_minion=self, position=insert_position)

@@ -70,8 +70,7 @@ def test_reborn_mechanic(initialized_game):
     # Deathrattle + reborn when not enough space for reborn
     attacker_board.set_minions([PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), HarvestGolem(reborn=True, taunt=True)])
     defender_board.set_minions([PunchingBag(attack=10)])
-    initialized_game.start_of_game()
-    initialized_game.player_turn = 1
+    initialized_game.start_of_game(1)
     initialized_game.single_round()
     assert attacker_board.minions[6].name == "Damaged Golem"
 
@@ -90,3 +89,8 @@ def test_golden_tokens(initialized_game):
     assert pirate_token.name == "Sky Pirate"
     assert pirate_token.attack == 2
     assert pirate_token.defense == 2
+
+def test_on_attack_trigger_order(initialized_game):
+    # TODO: Two imps attack each other, which side creates the imp first? 
+    # TODO: How does something like security bot + deflecto + bomb work
+    assert True

@@ -40,11 +40,6 @@ def test_simple_defender_selection(initialized_game):
     assert(True)
 
 
-def test_windfury(initialized_game):
-    # TODO: test windfury mechanic
-    assert(True)
-
-
 def test_minion_insertion(initialized_game):
     # Test that a newly inserted minion attacks in order correctly
     player0board = initialized_game.player_board[0]
