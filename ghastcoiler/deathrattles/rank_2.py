@@ -67,11 +67,12 @@ class UnstableGhoulDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
         logging.debug("Unstable Ghoul deathrattle triggered")
-        damage = 2 if minion.golden else 1
-        for opposing_minion in opposing_board.get_minions():
-            opposing_minion.receive_damage(damage=damage, poisonous=False)
-        for friendly_minion in own_board.get_minions():
-            friendly_minion.receive_damage(damage=damage, poisonous=False)
+        triggers = 2 if minion.golden else 1
+        for _ in range(triggers):
+            for opposing_minion in opposing_board.get_minions():
+                opposing_minion.receive_damage(1, False, opposing_board)
+            for friendly_minion in own_board.get_minions():
+                friendly_minion.receive_damage(1, False, own_board)
 
 
 class SelflessHeroDeathrattle(Deathrattle):

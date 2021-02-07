@@ -18,7 +18,7 @@ class GlyphGuardian(Minion):
                          types=[MinionType.Dragon],
                          **kwargs)
 
-    def on_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def on_attack_before(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         if self.golden:
             self.attack *= 3
         else:
@@ -140,7 +140,7 @@ class OldMurkEye(Minion):
         self.bonus_attack = bonus
         self.attack += self.bonus_attack
 
-    def on_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def on_attack_before(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         self.update_bonus_attack(own_board, opposing_board)
 
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
@@ -188,6 +188,7 @@ class UnstableGhoul(Minion):
 
 
 class WaxriderTogwaggle(Minion):
+    """Whenever a friendly Dragon kills an enemy, gain +2/+2."""
     def __init__(self, **kwargs):
         super().__init__(name="Waxrider Togwaggle",
                          rank=2,
@@ -195,12 +196,10 @@ class WaxriderTogwaggle(Minion):
                          base_defense=2,
                          **kwargs)
 
-    # def on_other_death(self, other_minion):
-    #     #TODO: Fix this
-    #     if MinionType.Dragon in other_minion.types:
-    #         added_bonus = 4 if self.golden else 2
-    #         self.attack += added_bonus
-    #         self.defense += added_bonus
+    def on_friendly_kill(self, killer_minion: Minion):
+        if MinionType.Dragon in killer_minion.types:
+            added_bonus = 4 if self.golden else 2
+            self.add_stats(added_bonus, added_bonus)
 
 
 class SelflessHero(Minion):

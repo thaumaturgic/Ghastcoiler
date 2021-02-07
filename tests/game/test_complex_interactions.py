@@ -90,7 +90,8 @@ def test_golden_tokens(initialized_game):
     assert pirate_token.attack == 2
     assert pirate_token.defense == 2
 
+
 def test_on_attack_trigger_order(initialized_game):
-    # TODO: Two imps attack each other, which side creates the imp first? 
+    # TODO: Two imps attack each other, which side creates the imp first?
     # TODO: How does something like security bot + deflecto + bomb work
     assert True

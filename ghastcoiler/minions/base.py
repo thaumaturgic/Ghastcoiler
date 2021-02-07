@@ -116,7 +116,7 @@ class Minion:
         self.damage_trigger_pending = False
 
         if self.reborn_triggered:
-            self.defense  = 1
+            self.defense = 1
 
     def minion_string(self):
         """String representation of minion
@@ -162,7 +162,7 @@ class Minion:
         self.attack -= attack
         self.defense -= defense
 
-    def receive_damage(self, amount: int, poisonous: bool, own_board: PlayerBoard, defer_damage_trigger: Optional[bool]=False):
+    def receive_damage(self, amount: int, poisonous: bool, own_board: PlayerBoard, defer_damage_trigger: Optional[bool] = False):
         """Receive amount of damage which can be poisonous
 
         Arguments:
@@ -170,11 +170,13 @@ class Minion:
             poisonous {bool} -- Whether the damage is poisonous
             own_board {PlayerBoard} -- The board belonging to the minion taking damage
 
-        Returns:
+        Returns Tuple:
             bool -- Whether the minion has popped a shield
+            bool -- Whether the attacked minion died or not
+            int -- Current health of the attacked minion (will be negative if its dead, can be used for overkill amount)
         """
         if amount <= 0:
-            return False
+            return [False, self.dead, self.defense]
 
         popped_shield = False
         if self.divine_shield:
@@ -186,9 +188,9 @@ class Minion:
                 self.dead = True
             if not defer_damage_trigger:
                 self.on_receive_damage(own_board)
-            self.damage_trigger_pending = defer_damage_trigger                
-        # TODO: Return a tuple consisting of [bool shield popped, bool minion died, int overkill amount]
-        return popped_shield
+            self.damage_trigger_pending = defer_damage_trigger
+
+        return [popped_shield, self.dead, self.defense]
 
     def process_deferred_damage_trigger(self, own_board: PlayerBoard):
         if self.damage_trigger_pending:
@@ -206,12 +208,12 @@ class Minion:
         """
         pass
 
-    def on_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def on_attack_before(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented before the minion attacks
         """
         pass
 
-    def on_attacked_after(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def on_attack_after(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented after the minion attacks
         """
         pass
@@ -231,6 +233,17 @@ class Minion:
 
     def on_kill(self):
         """Trigger that happens when this minion kills another minion"""
+        pass
+
+    def on_friendly_kill(self, killer_minion: Minion):
+        """Trigger that happens when a friendly minion kills an enemy minion
+
+        Arguments:
+            killer_minion {Minion} -- The enemy minion that was killed"""
+        pass
+
+    def on_overkill(self):
+        """Trigger that happens when this minion overkills another minion"""
         pass
 
     def on_receive_damage(self, own_board: PlayerBoard):
@@ -253,7 +266,7 @@ class Minion:
         """What the minion should do to other minion on the player board when it exits (NOT a deathrattle)
 
         Arguments:
-            other_minion {Minion} -- Minion entering the player board
+            other_minion {Minion} -- Friendly minion that is remaining on the board
         """
         pass
 
@@ -261,7 +274,7 @@ class Minion:
         """Trigger that happens when another minion on the player board dies
 
         Arguments:
-            other_minion {Minion} -- Other minion that dies
+            other_minion {Minion} -- Other minion that died
         """
         pass
 

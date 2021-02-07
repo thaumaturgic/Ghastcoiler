@@ -107,11 +107,22 @@ class PlayerBoard:
         for minion in self.minions:
             minion.on_any_minion_loses_divine_shield()
 
+    def on_friendly_kill(self, killer_minion: Minion):
+        """Called when a friendly minion kills an enemy
+        TODO: 'on_friendly_kill' is only called during attack damage, a deathrattle that kills something wont trigger this...
+
+        Arguments:
+            minion {Minion} -- Minion that dealt the killing damage
+        """
+        for minion in self.minions:
+            if minion.position != killer_minion.position:
+                minion.on_friendly_kill(killer_minion)
+
     def select_attacking_minion(self):
         """Select next minion that should attack
 
         Returns:
-            Minion -- Minion that will attack next or None if there are no minions with attack > 0
+            Minion -- Minion that will attack next or None if there are no eligible minions
         """
         # Is there at least one possible attacker on the board
         eligibleAttacker = False
@@ -167,7 +178,7 @@ class PlayerBoard:
         return possible_minions[defending_minion_index]
 
     def get_minions(self):
-        """Return a list of all minions, this will likely need to be smarter using some generator for cases where minions can die or spawn in between
+        """Return a list of all minions
 
         Returns:
             List[Minion] -- List of all minions on board
@@ -196,10 +207,7 @@ class PlayerBoard:
         Returns:
             List[Minion] -- Randomly selected minion
         """
-        minions = []
-        for minion in [x for x in self.minions if x.immediate_attack_pending]:
-            minions.append(minion)
-        return minions
+        return [x for x in self.minions if x.immediate_attack_pending]
 
     def random_minion(self):
         """Return a random minion from the player board. In some game states its possible to have a dead minion that has not been removed from the board yet.

@@ -1,9 +1,10 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_1 import \
-    MurlocTidehunter, Alleycat
+    MurlocTidehunter, Alleycat, DragonspawnLieutenant
 from ghastcoiler.minions.rank_2 import \
     GlyphGuardian, KaboomBot, MurlocWarleader, OldMurkEye, SpawnofNZoth,\
-    SelflessHero, PackLeader, TormentedRitualist, YoHoOgre
+    SelflessHero, PackLeader, TormentedRitualist, YoHoOgre, UnstableGhoul, \
+    WaxriderTogwaggle
 
 
 def test_kaboombot_deathrattle(initialized_game):
@@ -164,3 +165,32 @@ def test_yo_ho_ogre(initialized_game):
     initialized_game.start_of_game()
     initialized_game.single_round()
     assert len(attacker_board.minions) == 0 and len(defender_board.minions) == 0
+
+
+def test_unstable_ghoul(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([UnstableGhoul(), PunchingBag()])
+    defender_board.set_minions([PunchingBag(attack=6)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert defender_board.minions[0].defense == 98
+    assert attacker_board.minions[0].defense == 99
+    # TODO: Test this with security bot and golden ghoul, it should spawn 2 rovers
+
+
+def test_waxrider_togwaggle(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    waxrider = WaxriderTogwaggle()
+    attacker_board.set_minions([DragonspawnLieutenant(), PunchingBag(attack=10), waxrider])
+    defender_board.set_minions([PunchingBag(defense=1), PunchingBag(defense=1)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert waxrider.attack == 3 and waxrider.defense == 4
+    initialized_game.single_round()
+    initialized_game.single_round()
+    assert len(defender_board.minions) == 0
+    assert waxrider.attack == 3 and waxrider.defense == 4

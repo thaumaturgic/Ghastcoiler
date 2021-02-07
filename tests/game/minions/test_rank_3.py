@@ -7,7 +7,7 @@ def test_arm_of_the_empire(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
-    # Taunted creature should get buff. Non taunted creature should not. 
+    # Taunted creature should get buff. Non taunted creature should not.
     attacker_board.set_minions([PunchingBag(attack=1)])
     defender_board.set_minions([ArmoftheEmpire(), PunchingBag(taunt=True), PunchingBag()])
     initialized_game.start_of_game(0)
@@ -59,6 +59,7 @@ def test_deflectobot(initialized_game):
     attacker_board.add_minion(DeflectoBot())
     assert deflectobot.divine_shield
     assert deflectobot.attack == 4
+
 
 def test_imp_gang_boss(initialized_game):
     attacker_board = initialized_game.player_board[0]

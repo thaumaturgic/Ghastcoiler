@@ -67,7 +67,7 @@ class GameInstance:
         draw = self.player_board[0].select_attacking_minion() is None and self.player_board[1].select_attacking_minion() is None
         return len(self.player_board[0].minions) == 0 or len(self.player_board[1].minions) == 0 or draw
 
-    def deal_damage(self, minion, board, amount, poisonous, defer_damage_trigger: Optional[bool] = False):
+    def deal_attack_damage(self, defending_minion, defending_board, attacking_minion, attacking_board, defer_damage_trigger: Optional[bool] = False):
         """Deal damage to minion
 
         Arguments:
@@ -77,12 +77,21 @@ class GameInstance:
             poisonous {bool} -- Whether it is poisonous damage
             defer_damage_trigger {bool} -- Flag to trigger 'on damage' now or later. Used when minion is damaged by cleave
         """
-        divine_shield_popped = minion.receive_damage(amount, poisonous, board, defer_damage_trigger)
-        # TODO: Detect minion killing here, notify board (ie wagtoggle)
-        # TODO: Handle overkill triggers here as well? 
+        attack_result = defending_minion.receive_damage(attacking_minion.attack, attacking_minion.poisonous, defending_board, defer_damage_trigger)
+        divine_shield_popped = attack_result[0]
+        minion_killed = attack_result[1]
+        defending_minion_health = attack_result[2]
+
+        # Detect minion killing here, notify board (ie wagtoggle)
+        if minion_killed:
+            attacking_minion.on_kill()
+            attacking_board.on_friendly_kill(attacking_minion)
+            if defending_minion_health < 0:
+                attacking_minion.on_overkill()
+
         if divine_shield_popped:
             logging.debug("Divine shield popped")
-            board.divine_shield_popped()
+            defending_board.divine_shield_popped()
 
     def cleanup_dead_minions(self, board: PlayerBoard):
         """Remove any dead minions. Return the List of minions to process any deathrattles and reborn triggers.
@@ -124,7 +133,7 @@ class GameInstance:
         #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
         # Resolve defender deathrattles from left to right, multiplied by baron
         #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
-        
+
         # There are some DRY vibes here but for now this is fine
         attacker_dead_minions = self.cleanup_dead_minions(attacking_player_board)
         defender_dead_minions = self.cleanup_dead_minions(defending_player_board)
@@ -173,7 +182,7 @@ class GameInstance:
         logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}")
 
         # Pre-attack triggers
-        attacking_minion.on_attack(attacker, defender)
+        attacking_minion.on_attack_before(attacker, defender)
         defending_minion.on_attacked(defender, attacker)
 
         for minion in defender.minions:
@@ -184,19 +193,18 @@ class GameInstance:
         if attacking_minion.cleave:
             defenders = sorted(defender.get_minions_neighbors(defending_minion) + [defending_minion], key=lambda minion: minion.position)
             for minion in defenders:
-                self.deal_damage(minion, defender, attacking_minion.attack, attacking_minion.poisonous, True)
-            self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
+                self.deal_attack_damage(minion, defender, attacking_minion, attacker, True)
+            self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
 
             # Minions hit with cleave should take damage all at once.
             # 'On damage' triggers should be handled after that, left to right
             for minion in defenders:
                 minion.process_deferred_damage_trigger(defender)
         else:
-            self.deal_damage(attacking_minion, attacker, defending_minion.attack, defending_minion.poisonous)
-            self.deal_damage(defending_minion, defender, attacking_minion.attack, attacking_minion.poisonous)
+            self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
+            self.deal_attack_damage(defending_minion, defender, attacking_minion, attacker)
 
-        # TODO: Handle overkill triggers here and other on kill events (ie wagtoggle)
-        # TODO: Handle post attack triggers (macaw)
+        # TODO: Handle post attack triggers (macaw) (This trigger happens before any deathrattles)
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X
@@ -243,8 +251,7 @@ class GameInstance:
             minion.at_beginning_game(self, False, other, current)
 
     def single_round(self):
-        """Do one attack and resolve consequences. ie one step of the game
-        """
+        """Do one attack and resolve consequences. ie one step of the game"""
         attacker_board = self.attacking_player_board()
         defender_board = self.defending_player_board()
 
