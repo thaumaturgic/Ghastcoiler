@@ -197,14 +197,15 @@ class GameInstance:
             self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
 
             # Minions hit with cleave should take damage all at once.
-            # 'On damage' triggers should be handled after that, left to right
+            # 'on_receive_damage' triggers should be handled after that, left to right
             for minion in defenders:
                 minion.process_deferred_damage_trigger(defender)
         else:
             self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
             self.deal_attack_damage(defending_minion, defender, attacking_minion, attacker)
 
-        # TODO: Handle post attack triggers (macaw) (This trigger happens before any deathrattles)
+        # Post attack triggers (macaw)
+        attacking_minion.on_attack_after(attacker, defender)
 
     def calculate_score_player_0(self):
         """Calculate final score from player 0 perspective, negative is lost by X, 0 is a tie and positive is won by X

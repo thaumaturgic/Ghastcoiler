@@ -1,6 +1,7 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_2 import KaboomBot
-from ghastcoiler.minions.rank_3 import ArmoftheEmpire, CracklingCyclone, DeflectoBot, ImpGangBoss
+from ghastcoiler.minions.rank_3 import ArmoftheEmpire, CracklingCyclone,\
+    DeflectoBot, ImpGangBoss, InfestedWolf, MonstrousMacaw
 
 
 def test_arm_of_the_empire(initialized_game):
@@ -86,3 +87,50 @@ def test_imp_gang_boss(initialized_game):
         assert attacker_board.minions[1].name == "Imp"
     else:
         assert False
+
+
+def test_infested_wolf(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([InfestedWolf()])
+    defender_board.set_minions([PunchingBag(attack=3)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 2
+    assert attacker_board.minions[0].name == "Spider"
+    assert attacker_board.minions[1].name == "Spider"
+
+    attacker_board.set_minions([InfestedWolf(golden=True)])
+    defender_board.set_minions([PunchingBag(attack=6)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    for i in range(2):
+        assert attacker_board.minions[i].name == "Spider"
+        assert attacker_board.minions[i].attack == 2
+
+
+def test_monstrous_macaw(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([MonstrousMacaw(), InfestedWolf()])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    # Make sure tokens spawn in the right spot
+    assert len(attacker_board.minions) == 4
+    assert attacker_board.minions[2].name == "Spider"
+    assert attacker_board.minions[3].name == "Spider"
+
+    # Golden macaw
+    attacker_board.set_minions([MonstrousMacaw(golden=True), InfestedWolf()])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 6
+    # TODO: Test randomness of deathrattles?
+    # TODO: Test baron multiplier
+    # TODO: Test with goldrinn keeping macaw alive after it takes lethal
+    # TODO: Test order of operations with killing an opposing death rattle
+    # TODO: Test with minions with multiple deathrattles

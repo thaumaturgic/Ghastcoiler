@@ -1,5 +1,6 @@
 import logging
 
+from typing import Optional
 from game.player_board import PlayerBoard
 from minions.base import Minion
 from deathrattles.base import Deathrattle
@@ -11,7 +12,7 @@ class FiendishServantDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="FiendishServantDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         target_minion = own_board.random_minion()
         if target_minion:
             target_minion.add_stats(minion.attack, 0)
@@ -35,6 +36,7 @@ class ScallywagDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="ScallywagDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Scallyway deathrattle triggered, creating Sky Pirate")
-        own_board.add_minion(SkyPirate(golden=minion.golden, attacked=minion.attacked, immediate_attack_pending=True, token=True), position=minion.position)
+        token = SkyPirate(golden=minion.golden, attacked=minion.attacked, immediate_attack_pending=True, token=True)
+        own_board.add_minion(token, position=minion.position, to_right=macaw_trigger)

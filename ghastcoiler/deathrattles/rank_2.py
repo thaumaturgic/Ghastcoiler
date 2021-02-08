@@ -1,6 +1,7 @@
 import logging
 import random
 
+from typing import Optional
 from game.player_board import PlayerBoard
 from minions.base import Minion
 from deathrattles.base import Deathrattle
@@ -11,25 +12,25 @@ class HarvestGolemDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="HarvestGolemDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Harvest Golem deathrattle triggered, creating Damaged Golem")
-        own_board.add_minion(DamagedGolem(golden=minion.golden, attacked=minion.attacked), position=minion.position)
+        own_board.add_minion(DamagedGolem(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
 
 
 class ImprisonerDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="ImprisonerDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Imprisoner deathrattle triggered, creating Imp")
-        own_board.add_minion(Imp(golden=minion.golden, attacked=minion.attacked), position=minion.position)
+        own_board.add_minion(Imp(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
 
 
 class KaboomBotDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="KaboomBotDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         if minion.golden:
             logging.debug("Kaboom Bot (golden) deathrattle triggered, dealing 4 damage twice")
         else:
@@ -45,9 +46,9 @@ class KindlyGrandmotherDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="KindlyGrandmotherDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Kindly Grandmother deathrattle triggered, creating Big Bad Wolf")
-        own_board.add_minion(BigBadWolf(golden=minion.golden, attacked=minion.attacked), position=minion.position)
+        own_board.add_minion(BigBadWolf(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
 
 
 class SpawnofNZothDeathrattle(Deathrattle):

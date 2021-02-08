@@ -1,4 +1,5 @@
 import logging
+import random
 
 from game.player_board import PlayerBoard
 from minions.base import Minion
@@ -162,7 +163,7 @@ class InfestedWolf(Minion):
                          base_attack=3,
                          base_defense=3,
                          types=[MinionType.Beast],
-                         base_deathrattle=InfestedWolfDeathrattle(),  # TODO: TEST
+                         base_deathrattle=InfestedWolfDeathrattle(),
                          **kwargs)
 
 
@@ -195,11 +196,22 @@ class MonstrousMacaw(Minion):
                          types=[MinionType.Beast],
                          **kwargs)
 
-    def on_attacked_after(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        """After this attacks, trigger a random friendly minion's Deathrattle.
-        """
-        # TODO: IMPLEMENT
-        pass
+    def on_attack_after(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        """After this attacks, trigger a random friendly minion's Deathrattle."""
+        deathrattles = []
+        for minion in own_board.minions:
+            for deathrattle in minion.deathrattles:
+                deathrattles += [[minion, deathrattle]]
+
+        if len(deathrattles) == 0:
+            pass
+
+        triggers = 2 if self.golden else 1
+        for _ in range(triggers):
+            for _ in range(own_board.deathrattle_multiplier):
+                index = random.randint(0, len(deathrattles) - 1)
+                minion_pair = deathrattles[index]
+                minion_pair[1].trigger(minion_pair[0], own_board, opposing_board, macaw_trigger=True)
 
 
 class PilotedShredder(Minion):

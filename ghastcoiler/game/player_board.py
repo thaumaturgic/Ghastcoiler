@@ -237,7 +237,7 @@ class PlayerBoard:
             minion.on_removal(other_minion)
             other_minion.on_friendly_removal(minion)
 
-    def add_minion(self, new_minion: Minion, position: Optional[int] = None) -> Optional[Minion]:
+    def add_minion(self, new_minion: Minion, position: Optional[int] = None, to_right: Optional[bool] = False) -> Optional[Minion]:
         """Add minion to the board if there is space
 
         Arguments:
@@ -246,6 +246,7 @@ class PlayerBoard:
 
         Keyword Arguments:
             position {Optional[int]} -- Optional position to insert the minion at, if None add at the end (default: {None})
+            to_right {Optional[bool]} -- Optional flag to insert minion to right of the indicated position if possible
 
         Returns:
             Optional[Minion] -- Return the updated Minion if inserted succesfully, otherwise return None
@@ -253,6 +254,9 @@ class PlayerBoard:
         if len(self.minions) < 7:
             if position is None:
                 position = len(self.minions)
+
+            if to_right:
+                position += 1
 
             # TODO: Implement khadgar multiplier for tokens
 
