@@ -35,7 +35,7 @@ class Minion:
                  base_mega_windfury: bool = False,
                  mega_windfury: bool = False,
                  base_deathrattle: Optional[Deathrattle] = None,
-                 deathrattles: Optional[List[Deathrattle]] = None,
+                 deathrattles: Optional[Deathrattle] = None,
                  golden: bool = False,
                  position: Optional[int] = None,
                  player_id: Optional[int] = None,

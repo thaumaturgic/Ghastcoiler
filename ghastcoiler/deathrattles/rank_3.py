@@ -1,4 +1,5 @@
 import logging
+import random
 
 from typing import Optional
 from game.player_board import PlayerBoard
@@ -8,6 +9,7 @@ from deathrattles.base import Deathrattle
 
 
 class InfestedWolfDeathrattle(Deathrattle):
+    "Summon two 1/1 Spiders."
     def __init__(self):
         super().__init__(name="InfestedWolfDeathrattle")
 
@@ -18,16 +20,25 @@ class InfestedWolfDeathrattle(Deathrattle):
 
 
 class PilotedShredderDeathrattle(Deathrattle):
+    "Summon a random 2-Cost minion."
     def __init__(self):
         super().__init__(name="PilotedShredderDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Piloted Shredder deathrattle triggered, creating random 2 drop")
-        # TODO: IMPLEMENT
-        # own_board.add_minion(Spider(golden=minion.golden, attacked=minion.attacked), position=minion.position)
+        from utils.minion_utils import MinionUtils
+        # TODO: There needs to be a list of minions that cost *2 mana* that are in battlegrounds
+        # Right now I just filter for rank 2, which is not correct!
+        # One solution could be to add mana cost to all minions, or at least for just the 2 cost ones
+        rank_2_minions = [minion for minion in MinionUtils.get_all_minions() if minion.rank == 2]
+        num_minions = 2 if minion.golden else 1
+        for _ in range(num_minions):
+            new_minion = rank_2_minions[random.randint(0, len(rank_2_minions)-1)]
+            new_minion.attacked = minion.attacked
+            own_board.add_minion(new_minion, position=minion.position, to_right=macaw_trigger)
 
 
 class RatPackDeathrattle(Deathrattle):
+    "Summon a number of 1/1 Rats equal  to this minion's Attack."
     def __init__(self):
         super().__init__(name="RatPackDeathrattle")
 
@@ -39,10 +50,13 @@ class RatPackDeathrattle(Deathrattle):
 
 
 class ReplicatingMenaceDeathrattle(Deathrattle):
+    "Summon three 1/1 Microbots."
     def __init__(self):
         super().__init__(name="ReplicatingMenaceDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Replicating menace deathrattle triggered, creating 3 microbots")
+        # TODO: Handle the golden version of this deathrattle.
+        # The deathrattle being gold determines 2/2 bots, NOT the host minion
         for _ in range(3):
-            own_board.add_minion(Microbot(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+            own_board.add_minion(Microbot(attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)

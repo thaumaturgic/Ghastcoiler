@@ -5,7 +5,9 @@ from game.player_board import PlayerBoard
 from minions.base import Minion
 from minions.types import MinionType
 from minions.tokens import Imp
-from deathrattles.rank_3 import InfestedWolfDeathrattle, PilotedShredderDeathrattle, RatPackDeathrattle
+from deathrattles.rank_3 import InfestedWolfDeathrattle, \
+    PilotedShredderDeathrattle, RatPackDeathrattle, \
+    ReplicatingMenaceDeathrattle
 
 
 class ArcaneAssistant(Minion):
@@ -216,7 +218,6 @@ class MonstrousMacaw(Minion):
 
 class PilotedShredder(Minion):
     def __init__(self, **kwargs):
-        # TODO: TEST
         super().__init__(name="Piloted Shredder",
                          rank=3,
                          base_attack=4,
@@ -239,13 +240,12 @@ class RatPack(Minion):
 
 class ReplicatingMenace(Minion):
     def __init__(self, **kwargs):
-        # TODO: TEST
         super().__init__(name="Replicating Menace",
                          rank=3,
                          base_attack=3,
                          base_defense=1,
                          types=[MinionType.Mech],
-                         base_deathrattle=RatPackDeathrattle(),
+                         base_deathrattle=ReplicatingMenaceDeathrattle(),
                          **kwargs)
 
 

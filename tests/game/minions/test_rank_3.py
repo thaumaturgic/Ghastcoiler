@@ -1,7 +1,9 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_2 import KaboomBot
 from ghastcoiler.minions.rank_3 import ArmoftheEmpire, CracklingCyclone,\
-    DeflectoBot, ImpGangBoss, InfestedWolf, MonstrousMacaw
+    DeflectoBot, ImpGangBoss, InfestedWolf, MonstrousMacaw, PilotedShredder,\
+    ReplicatingMenace
+from ghastcoiler.deathrattles.rank_3 import ReplicatingMenaceDeathrattle
 
 
 def test_arm_of_the_empire(initialized_game):
@@ -134,3 +136,49 @@ def test_monstrous_macaw(initialized_game):
     # TODO: Test with goldrinn keeping macaw alive after it takes lethal
     # TODO: Test order of operations with killing an opposing death rattle
     # TODO: Test with minions with multiple deathrattles
+
+
+def test_piloted_shredder(initialized_game):
+    # Is there a better way to verify this?
+    # Are there minions shredder wont summon? IE tribes not in current game?
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([PilotedShredder()])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert attacker_board.minions[0].rank == 2
+
+    attacker_board.set_minions([PilotedShredder(golden=True)])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert attacker_board.minions[0].rank == 2
+    assert attacker_board.minions[1].rank == 2
+
+
+def test_replicating_menace(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    # Base minion test
+    attacker_board.set_minions([ReplicatingMenace()])
+    defender_board.set_minions([PunchingBag(attack=1)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    for i in range(3):
+        assert attacker_board.minions[i].name == "Microbot"
+    assert defender_board.minions[0].defense == 97
+
+    # Test multiple death rattles.
+    # They should trigger in order they're added
+    attacker_board.set_minions([KaboomBot(deathrattles=[ReplicatingMenaceDeathrattle()])])
+    defender_board.set_minions([PunchingBag(attack=2)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    for i in range(3):
+        assert attacker_board.minions[i].name == "Microbot"
+    assert defender_board.minions[0].defense == 94
