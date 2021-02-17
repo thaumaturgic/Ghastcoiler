@@ -185,6 +185,7 @@ class Khadgar(Minion):
                          rank=3,
                          base_attack=2,
                          base_defense=2,
+                         mana_cost=2,
                          **kwargs)
 
     def on_summon(self, other_minion: Minion, own_board: PlayerBoard):

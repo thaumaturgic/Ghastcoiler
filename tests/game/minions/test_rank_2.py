@@ -1,10 +1,10 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_1 import \
-    MurlocTidehunter, Alleycat, DragonspawnLieutenant
+    Alleycat, DragonspawnLieutenant, FiendishServant, MurlocTidehunter
 from ghastcoiler.minions.rank_2 import \
-    GlyphGuardian, KaboomBot, MurlocWarleader, OldMurkEye, SpawnofNZoth,\
-    SelflessHero, PackLeader, TormentedRitualist, YoHoOgre, UnstableGhoul, \
-    WaxriderTogwaggle
+    GlyphGuardian, KaboomBot, MurlocWarleader, OldMurkEye, PackLeader,\
+    RabidSaurolisk, SpawnofNZoth, SelflessHero, TormentedRitualist, \
+    UnstableGhoul, WaxriderTogwaggle, YoHoOgre
 
 
 def test_kaboombot_deathrattle(initialized_game):
@@ -92,6 +92,19 @@ def test_glyph_guardian(initialized_game):
     initialized_game.start_of_game()
     initialized_game.single_round()
     assert attacker_board.minions[0].attack == 4
+
+
+def test_rabid_saurolisk(initialized_game):
+    rabid_saurolisk = RabidSaurolisk()
+    initialized_game.player_board[0].add_minion(rabid_saurolisk)
+    assert rabid_saurolisk.attack == 3
+    assert rabid_saurolisk.defense == 1
+    initialized_game.player_board[0].add_minion(FiendishServant())
+    assert rabid_saurolisk.attack == 4
+    assert rabid_saurolisk.defense == 2
+    initialized_game.player_board[0].add_minion(DragonspawnLieutenant())
+    assert rabid_saurolisk.attack == 4
+    assert rabid_saurolisk.defense == 2
 
 
 def test_spawn_of_nzoth(initialized_game):

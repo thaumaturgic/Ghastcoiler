@@ -1,6 +1,6 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_1 import FiendishServant, \
-    DragonspawnLieutenant, RabidSaurolisk, ScavengingHyena, \
+    DragonspawnLieutenant, ScavengingHyena, \
     Alleycat, AcolyteOfCThun, Scallywag, VulgarHomunculus
 
 
@@ -17,19 +17,6 @@ def test_fiendish_servant_deathrattle(initialized_game):
     assert len(attacker_board.minions) == 1
     assert len(defender_board.minions) == 0
     assert attacker_board.minions[0].attack == 4
-
-
-def test_rabid_saurolisk(initialized_game):
-    rabid_saurolisk = RabidSaurolisk()
-    initialized_game.player_board[0].add_minion(rabid_saurolisk)
-    assert rabid_saurolisk.attack == 3
-    assert rabid_saurolisk.defense == 1
-    initialized_game.player_board[0].add_minion(FiendishServant())
-    assert rabid_saurolisk.attack == 4
-    assert rabid_saurolisk.defense == 2
-    initialized_game.player_board[0].add_minion(DragonspawnLieutenant())
-    assert rabid_saurolisk.attack == 4
-    assert rabid_saurolisk.defense == 2
 
 
 def test_scavenging_hyena(initialized_game):

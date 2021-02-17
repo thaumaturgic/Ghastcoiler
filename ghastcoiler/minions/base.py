@@ -34,11 +34,12 @@ class Minion:
                  windfury: bool = False,
                  base_mega_windfury: bool = False,
                  mega_windfury: bool = False,
+                 golden: bool = False,
                  base_deathrattle: Optional[Deathrattle] = None,
                  deathrattles: Optional[Deathrattle] = None,
-                 golden: bool = False,
                  position: Optional[int] = None,
                  player_id: Optional[int] = None,
+                 mana_cost: Optional[int] = None,
                  attacked: bool = False,
                  immediate_attack_pending: bool = False,
                  token: bool = False,
@@ -109,6 +110,7 @@ class Minion:
         self.golden = golden
         self.position = position
         self.player_id = player_id
+        self.mana_cost = mana_cost
         self.attacked = attacked
         self.immediate_attack_pending = immediate_attack_pending
         self.token = token

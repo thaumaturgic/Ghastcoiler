@@ -9,6 +9,16 @@ from deathrattles.rank_2 import HarvestGolemDeathrattle, ImprisonerDeathrattle, 
     SelflessHeroDeathrattle
 
 
+class FreedealingGambler(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Freedealing Gambler",
+                         rank=2,
+                         base_attack=3,
+                         base_defense=3,
+                         types=[MinionType.Pirate],
+                         **kwargs)
+
+
 class GlyphGuardian(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Glyph Guardian",
@@ -67,6 +77,16 @@ class KindlyGrandmother(Minion):
                          base_defense=1,
                          types=[MinionType.Beast],
                          base_deathrattle=KindlyGrandmotherDeathrattle(),
+                         mana_cost=2,
+                         **kwargs)
+
+
+class MenagerieMug(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Menagerie Mug",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=2,
                          **kwargs)
 
 
@@ -77,6 +97,17 @@ class MetaltoothLeaper(Minion):
                          base_attack=3,
                          base_defense=3,
                          types=[MinionType.Mech],
+                         **kwargs)
+
+
+class MoltenRock(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Molten Rock",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=3,
+                         base_taunt=True,
+                         types=[MinionType.Elemental],
                          **kwargs)
 
 
@@ -146,60 +177,44 @@ class OldMurkEye(Minion):
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         self.update_bonus_attack(own_board, opposing_board)
 
-# class PogoHopper(Minion):
-#     def __init__(self, **kwargs):
-#         super().__init__(name="Pogo-Hopper",
-#                          rank=2,
-#                          base_attack=1,
-#                          base_defense=1,
-#                          types=[MinionType.Mech],
-#                          **kwargs)
 
-
-class SpawnofNZoth(Minion):
+class PackLeader(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Spawn of N'Zoth",
+        super().__init__(name="Pack Leader",
                          rank=2,
                          base_attack=2,
-                         base_defense=2,
-                         base_deathrattle=SpawnofNZothDeathrattle(),
+                         base_defense=3,
                          **kwargs)
 
+    def on_friendly_summon(self, other_minion: Minion):
+        if MinionType.Beast in other_minion.types:
+            other_minion.attack += 4 if self.golden else 2
 
-class StewardofTime(Minion):
+
+class PartyElemental(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Steward of Time",
+        super().__init__(name="Party Elemental",
                          rank=2,
                          base_attack=3,
-                         base_defense=4,
-                         types=[MinionType.Dragon],
-                         **kwargs)
-
-
-class UnstableGhoul(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Unstable Ghoul",
-                         rank=2,
-                         base_attack=1,
-                         base_defense=3,
-                         base_taunt=True,
-                         base_deathrattle=UnstableGhoulDeathrattle(),
-                         **kwargs)
-
-
-class WaxriderTogwaggle(Minion):
-    """Whenever a friendly Dragon kills an enemy, gain +2/+2."""
-    def __init__(self, **kwargs):
-        super().__init__(name="Waxrider Togwaggle",
-                         rank=2,
-                         base_attack=1,
                          base_defense=2,
+                         types=[MinionType.Elemental],
                          **kwargs)
 
-    def on_friendly_kill(self, killer_minion: Minion):
-        if MinionType.Dragon in killer_minion.types:
-            added_bonus = 4 if self.golden else 2
-            self.add_stats(added_bonus, added_bonus)
+
+class RabidSaurolisk(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Rabid Saurolisk",
+                         rank=2,
+                         base_attack=3,
+                         base_defense=1,
+                         types=[MinionType.Beast],
+                         **kwargs)
+
+    def on_friendly_summon(self, other_minion):
+        if other_minion.deathrattles:
+            increase_amount = 2 if self.golden else 1
+            self.attack += increase_amount
+            self.defense += increase_amount
 
 
 class SelflessHero(Minion):
@@ -241,56 +256,23 @@ class SouthseaCaptain(Minion):
         self.adjust_pirate_stats(other_minion, False)
 
 
-class FreedealingGambler(Minion):
+class SpawnofNZoth(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Freedealing Gambler",
-                         rank=2,
-                         base_attack=3,
-                         base_defense=3,
-                         types=[MinionType.Pirate],
-                         **kwargs)
-
-
-class MenagerieMug(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Menagerie Mug",
+        super().__init__(name="Spawn of N'Zoth",
                          rank=2,
                          base_attack=2,
                          base_defense=2,
+                         base_deathrattle=SpawnofNZothDeathrattle(),
                          **kwargs)
 
 
-class MoltenRock(Minion):
+class StewardofTime(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Molten Rock",
-                         rank=2,
-                         base_attack=2,
-                         base_defense=3,
-                         base_taunt=True,
-                         types=[MinionType.Elemental],
-                         **kwargs)
-
-
-class PackLeader(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Pack Leader",
-                         rank=2,
-                         base_attack=2,
-                         base_defense=3,
-                         **kwargs)
-
-    def on_friendly_summon(self, other_minion: Minion):
-        if MinionType.Beast in other_minion.types:
-            other_minion.attack += 4 if self.golden else 2
-
-
-class PartyElemental(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Party Elemental",
+        super().__init__(name="Steward of Time",
                          rank=2,
                          base_attack=3,
-                         base_defense=2,
-                         types=[MinionType.Elemental],
+                         base_defense=4,
+                         types=[MinionType.Dragon],
                          **kwargs)
 
 
@@ -307,6 +289,33 @@ class TormentedRitualist(Minion):
         buff_amount = 2 if self.golden else 1
         for minion in own_board.get_minions_neighbors(self):
             minion.add_stats(buff_amount, buff_amount)
+
+
+class UnstableGhoul(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Unstable Ghoul",
+                         rank=2,
+                         base_attack=1,
+                         base_defense=3,
+                         base_taunt=True,
+                         base_deathrattle=UnstableGhoulDeathrattle(),
+                         mana_cost=2,
+                         **kwargs)
+
+
+class WaxriderTogwaggle(Minion):
+    """Whenever a friendly Dragon kills an enemy, gain +2/+2."""
+    def __init__(self, **kwargs):
+        super().__init__(name="Waxrider Togwaggle",
+                         rank=2,
+                         base_attack=1,
+                         base_defense=2,
+                         **kwargs)
+
+    def on_friendly_kill(self, killer_minion: Minion):
+        if MinionType.Dragon in killer_minion.types:
+            added_bonus = 4 if self.golden else 2
+            self.add_stats(added_bonus, added_bonus)
 
 
 class YoHoOgre(Minion):

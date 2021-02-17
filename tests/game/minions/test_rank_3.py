@@ -182,7 +182,7 @@ def test_monstrous_macaw(initialized_game):
 
 
 def test_piloted_shredder(initialized_game):
-    # Is there a better way to verify this?
+    # TODO: Is there a better way to verify this?
     # Are there minions shredder wont summon? IE tribes not in current game?
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
@@ -191,14 +191,14 @@ def test_piloted_shredder(initialized_game):
     defender_board.set_minions([PunchingBag(attack=10)])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert attacker_board.minions[0].rank == 2
+    assert attacker_board.minions[0].mana_cost == 2
 
     attacker_board.set_minions([PilotedShredder(golden=True)])
     defender_board.set_minions([PunchingBag(attack=10)])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert attacker_board.minions[0].rank == 2
-    assert attacker_board.minions[1].rank == 2
+    assert attacker_board.minions[0].mana_cost == 2
+    assert attacker_board.minions[1].mana_cost == 2
 
 
 def test_replicating_menace(initialized_game):

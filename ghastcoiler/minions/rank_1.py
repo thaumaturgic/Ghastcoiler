@@ -6,6 +6,17 @@ from minions.types import MinionType
 from deathrattles.rank_1 import FiendishServantDeathrattle, ScallywagDeathrattle
 
 
+class AcolyteOfCThun(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Acolyte of C'Thun",
+                         rank=1,
+                         base_attack=2,
+                         base_defense=2,
+                         base_taunt=True,
+                         base_reborn=True,
+                         **kwargs)
+
+
 class Alleycat(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Alleycat",
@@ -16,20 +27,14 @@ class Alleycat(Minion):
                          **kwargs)
 
 
-class RabidSaurolisk(Minion):
+class DeckSwabbie(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Rabid Saurolisk",
+        super().__init__(name="Deck Swabbie",
                          rank=1,
-                         base_attack=3,
-                         base_defense=1,
-                         types=[MinionType.Beast],
+                         base_attack=2,
+                         base_defense=2,
+                         types=[MinionType.Pirate],
                          **kwargs)
-
-    def on_friendly_summon(self, other_minion):
-        if other_minion.deathrattles:
-            increase_amount = 2 if self.golden else 1
-            self.attack += increase_amount
-            self.defense += increase_amount
 
 
 class DragonspawnLieutenant(Minion):
@@ -54,16 +59,6 @@ class FiendishServant(Minion):
                          **kwargs)
 
 
-# class Mecharoo(Minion):
-#     def __init__(self, **kwargs):
-#         super().__init__(name="Mecharoo",
-#                          rank=1,
-#                          base_attack=1,
-#                          base_defense=1,
-#                          types=[MinionType.Mech],
-#                          base_deathrattle=MecharooDeathrattle())
-
-
 class MicroMachine(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Micro Machine",
@@ -71,6 +66,19 @@ class MicroMachine(Minion):
                          base_attack=1,
                          base_defense=2,
                          types=[MinionType.Mech],
+                         mana_cost=2,
+                         **kwargs)
+
+
+class MicroMummy(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Micro Mummy",
+                         rank=1,
+                         base_attack=1,
+                         base_defense=2,
+                         types=[MinionType.Mech],
+                         base_reborn=True,
+                         mana_cost=2,
                          **kwargs)
 
 
@@ -91,16 +99,7 @@ class MurlocTidehunter(Minion):
                          base_attack=2,
                          base_defense=1,
                          types=[MinionType.Murloc],
-                         **kwargs)
-
-
-class RockpoolHunter(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Rockpool Hunter",
-                         rank=1,
-                         base_attack=2,
-                         base_defense=3,
-                         types=[MinionType.Murloc],
+                         mana_cost=2,
                          **kwargs)
 
 
@@ -126,84 +125,6 @@ class RedWhelp(Minion):
             game_instance.check_deaths(opposing_board, own_board)
 
 
-# class RighteousProtector(Minion):
-#     def __init__(self, **kwargs):
-#         super().__init__(name="Righteous Protector",
-#                          rank=1,
-#                          base_attack=1,
-#                          base_defense=1,
-#                          base_taunt=True,
-#                          base_divine_shield=True)
-
-
-class VulgarHomunculus(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Vulgar Homunculus",
-                         rank=1,
-                         base_attack=2,
-                         base_defense=4,
-                         types=[MinionType.Demon],
-                         base_taunt=True,
-                         **kwargs)
-
-
-class WrathWeaver(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Wrath Weaver",
-                         rank=1,
-                         base_attack=1,
-                         base_defense=3,
-                         **kwargs)
-
-
-class MicroMummy(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Micro Mummy",
-                         rank=1,
-                         base_attack=1,
-                         base_defense=2,
-                         types=[MinionType.Mech],
-                         base_reborn=True,
-                         **kwargs)
-
-
-class ScavengingHyena(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Scavenging Hyena",
-                         rank=1,
-                         base_attack=2,
-                         base_defense=2,
-                         types=[MinionType.Beast],
-                         **kwargs)
-
-    def on_friendly_removal(self, other_minion):
-        if MinionType.Beast in other_minion.types:
-            multiplier = 2 if self.golden else 1
-            self.attack += (2 * multiplier)
-            self.defense += multiplier
-
-
-class AcolyteOfCThun(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Acolyte of C'Thun",
-                         rank=1,
-                         base_attack=2,
-                         base_defense=2,
-                         base_taunt=True,
-                         base_reborn=True,
-                         **kwargs)
-
-
-class DeckSwabbie(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Deck Swabbie",
-                         rank=1,
-                         base_attack=2,
-                         base_defense=2,
-                         types=[MinionType.Pirate],
-                         **kwargs)
-
-
 class RefreshingAnomaly(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Refreshing Anomaly",
@@ -211,6 +132,17 @@ class RefreshingAnomaly(Minion):
                          base_attack=1,
                          base_defense=3,
                          types=[MinionType.Elemental],
+                         **kwargs)
+
+
+class RockpoolHunter(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Rockpool Hunter",
+                         rank=1,
+                         base_attack=2,
+                         base_defense=3,
+                         types=[MinionType.Murloc],
+                         mana_cost=2,
                          **kwargs)
 
 
@@ -225,6 +157,23 @@ class Scallywag(Minion):
                          **kwargs)
 
 
+class ScavengingHyena(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Scavenging Hyena",
+                         rank=1,
+                         base_attack=2,
+                         base_defense=2,
+                         types=[MinionType.Beast],
+                         mana_cost=2,
+                         **kwargs)
+
+    def on_friendly_removal(self, other_minion):
+        if MinionType.Beast in other_minion.types:
+            multiplier = 2 if self.golden else 1
+            self.attack += (2 * multiplier)
+            self.defense += multiplier
+
+
 class Sellemental(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Sellemental",
@@ -232,4 +181,25 @@ class Sellemental(Minion):
                          base_attack=2,
                          base_defense=2,
                          types=[MinionType.Elemental],
+                         **kwargs)
+
+
+class VulgarHomunculus(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Vulgar Homunculus",
+                         rank=1,
+                         base_attack=2,
+                         base_defense=4,
+                         types=[MinionType.Demon],
+                         base_taunt=True,
+                         mana_cost=2,
+                         **kwargs)
+
+
+class WrathWeaver(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Wrath Weaver",
+                         rank=1,
+                         base_attack=1,
+                         base_defense=3,
                          **kwargs)

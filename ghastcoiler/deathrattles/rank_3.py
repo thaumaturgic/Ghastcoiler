@@ -26,13 +26,10 @@ class PilotedShredderDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         from utils.minion_utils import MinionUtils
-        # TODO: There needs to be a list of minions that cost *2 mana* that are in battlegrounds
-        # Right now I just filter for rank 2, which is not correct!
-        # One solution could be to add mana cost to all minions, or at least for just the 2 cost ones
-        rank_2_minions = [minion for minion in MinionUtils.get_all_minions() if minion.rank == 2]
+        two_mana_minions = [minion for minion in MinionUtils.get_all_minions() if minion.mana_cost == 2]
         num_minions = 2 if minion.golden else 1
         for _ in range(num_minions):
-            new_minion = rank_2_minions[random.randint(0, len(rank_2_minions)-1)]
+            new_minion = two_mana_minions[random.randint(0, len(two_mana_minions)-1)]
             new_minion.attacked = minion.attacked
             own_board.add_minion(new_minion, position=minion.position, to_right=macaw_trigger)
 
