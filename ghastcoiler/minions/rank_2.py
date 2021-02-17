@@ -98,13 +98,13 @@ class MurlocWarleader(Minion):
             else:
                 other_minion.remove_stats(buffAmount, 0)
 
-    def on_summon(self, other_minion: Minion):
+    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
         self.adjust_murlock_power(other_minion, True)
 
     def on_friendly_summon(self, other_minion: Minion):
         self.adjust_murlock_power(other_minion, True)
 
-    def on_removal(self, other_minion: Minion):
+    def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
         self.adjust_murlock_power(other_minion, False)
 
 
@@ -231,13 +231,13 @@ class SouthseaCaptain(Minion):
                 if other_minion.defense <= 0:
                     other_minion.defense = 1  # Losing pirate buffs cannot kill a minion
 
-    def on_summon(self, other_minion: Minion):
+    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
         self.adjust_pirate_stats(other_minion, True)
 
     def on_friendly_summon(self, other_minion: Minion):
         self.adjust_pirate_stats(other_minion, True)
 
-    def on_removal(self, other_minion: Minion):
+    def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
         self.adjust_pirate_stats(other_minion, False)
 
 

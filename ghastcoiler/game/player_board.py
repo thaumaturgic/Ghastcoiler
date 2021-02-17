@@ -25,13 +25,17 @@ class PlayerBoard:
         self.attack_position = 0
         self.set_minions(minions)
         self.deathrattle_multiplier = 1  # TODO: Implement baron
-        self.token_creation_multiplier = 1  # TODO: Implement khadgar
+        self.token_creation_multiplier = 0
 
     def set_minions(self, minions: List[Minion]):
         """Initialize the board to the list of minions given. Used for testing
         """
         self.minions: List[Minion] = minions
+        self.token_creation_multiplier = 0
+
         for index, minion in enumerate(minions):
+            if minion.name == "Khadgar":
+                self.token_creation_multiplier += 2 if minion.golden else 1
             minion.position = index
             minion.player_id = self.player_id
 
@@ -234,10 +238,10 @@ class PlayerBoard:
             other_minion.shift_left()
 
         for other_minion in self.minions:
-            minion.on_removal(other_minion)
+            minion.on_removal(other_minion, self)
             other_minion.on_friendly_removal(minion)
 
-    def add_minion(self, new_minion: Minion, position: Optional[int] = None, to_right: Optional[bool] = False) -> Optional[Minion]:
+    def add_minion(self, new_minion: Minion, position: Optional[int] = None, to_right: Optional[bool] = False, allow_copy: Optional[bool] = True) -> Optional[Minion]:
         """Add minion to the board if there is space
 
         Arguments:
@@ -247,9 +251,6 @@ class PlayerBoard:
         Keyword Arguments:
             position {Optional[int]} -- Optional position to insert the minion at, if None add at the end (default: {None})
             to_right {Optional[bool]} -- Optional flag to insert minion to right of the indicated position if possible
-
-        Returns:
-            Optional[Minion] -- Return the updated Minion if inserted succesfully, otherwise return None
         """
         if len(self.minions) < 7:
             if position is None:
@@ -258,11 +259,9 @@ class PlayerBoard:
             if to_right:
                 position += 1
 
-            # TODO: Implement khadgar multiplier for tokens
-
             for minion in self.minions:
                 minion.on_friendly_summon(other_minion=new_minion)
-                new_minion.on_summon(minion)
+                new_minion.on_summon(minion, self)
 
             new_minion.position = position
             new_minion.player_id = self.player_id
@@ -270,6 +269,11 @@ class PlayerBoard:
             for minion in self.minions[position + 1:]:
                 minion.shift_right()
             logging.debug(f"Adding {new_minion.minion_string()}")
-            return new_minion
+
+            if allow_copy:
+                for _ in range(self.token_creation_multiplier):
+                    copied_minion = copy.deepcopy(new_minion)
+                    self.add_minion(copied_minion, copied_minion.position, True, False)
+
         else:
             logging.debug(f"Did not add {new_minion.minion_string()} because of a lack of space")

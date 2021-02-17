@@ -38,7 +38,7 @@ class PilotedShredderDeathrattle(Deathrattle):
 
 
 class RatPackDeathrattle(Deathrattle):
-    "Summon a number of 1/1 Rats equal  to this minion's Attack."
+    "Summon a number of 1/1 Rats equal to this minion's Attack."
     def __init__(self):
         super().__init__(name="RatPackDeathrattle")
 

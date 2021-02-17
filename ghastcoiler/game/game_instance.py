@@ -151,6 +151,8 @@ class GameInstance:
                     deathrattle.trigger(minion, defending_player_board, attacking_player_board)
                     self.resolve_extra_attacks(defending_player_board, attacking_player_board)
 
+        # TODO: Should minion death triggers be processed here? ie soul juggler?
+
         # Process deaths here again to see if death rattles resulted in more deaths
         if len(attacking_player_board.select_dead()) > 0 or len(defending_player_board.select_dead()):
             self.check_deaths(attacking_player_board, defending_player_board)

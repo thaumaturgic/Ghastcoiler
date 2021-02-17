@@ -170,7 +170,7 @@ class Minion:
             poisonous {bool} -- Whether the damage is poisonous
             own_board {PlayerBoard} -- The board belonging to the minion taking damage
 
-        Returns Tuple:
+        Returns 3 item list:
             bool -- Whether the minion has popped a shield
             bool -- Whether the attacked minion died or not
             int -- Current health of the attacked minion (will be negative if its dead, can be used for overkill amount)
@@ -250,7 +250,7 @@ class Minion:
         """Trigger that happens when this minion receives damage"""
         pass
 
-    def on_summon(self, other_minion: Minion):
+    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
         """Trigger that happens when this minion enters the board"""
         pass
 
@@ -262,11 +262,12 @@ class Minion:
         """
         pass
 
-    def on_removal(self, other_minion: Minion):
+    def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
         """What the minion should do to other minion on the player board when it exits (NOT a deathrattle)
 
         Arguments:
             other_minion {Minion} -- Friendly minion that is remaining on the board
+            own_board {PlayerBoard} -- Board the minion belongs to
         """
         pass
 

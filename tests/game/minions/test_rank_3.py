@@ -1,8 +1,9 @@
 from ghastcoiler.minions.test_minions import PunchingBag
-from ghastcoiler.minions.rank_2 import KaboomBot
+from ghastcoiler.minions.rank_1 import MicroMummy
+from ghastcoiler.minions.rank_2 import KaboomBot, PackLeader
 from ghastcoiler.minions.rank_3 import ArmoftheEmpire, CracklingCyclone,\
-    DeflectoBot, ImpGangBoss, InfestedWolf, MonstrousMacaw, PilotedShredder,\
-    ReplicatingMenace
+    DeflectoBot, ImpGangBoss, InfestedWolf, Khadgar, MonstrousMacaw,\
+    PilotedShredder, ReplicatingMenace, RatPack
 from ghastcoiler.deathrattles.rank_3 import ReplicatingMenaceDeathrattle
 
 
@@ -110,6 +111,48 @@ def test_infested_wolf(initialized_game):
     for i in range(2):
         assert attacker_board.minions[i].name == "Spider"
         assert attacker_board.minions[i].attack == 2
+
+
+def test_khadgar(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    # Simple test
+    attacker_board.set_minions([Khadgar()])
+    defender_board.set_minions([PunchingBag()])
+    attacker_board.add_minion(PunchingBag())
+    assert len(attacker_board.minions) == 3
+
+    # Test copying buffed tokens. Attack and order should be correct
+    attacker_board.set_minions([RatPack(attack=3), Khadgar(), PackLeader()])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 7
+    assert attacker_board.minions[0].attack == 3
+    # TODO: Fix order of token insertion and buffing
+    # assert attacker_board.minions[1].attack == 5
+    # assert attacker_board.minions[2].attack == 3
+    # assert attacker_board.minions[3].attack == 5
+
+    # Test reborn copying
+    attacker_board.set_minions([MicroMummy(), Khadgar()])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 3
+    assert attacker_board.minions[0].defense == 1
+    assert attacker_board.minions[1].defense == 1
+
+    # Test golden version
+    attacker_board.set_minions([Khadgar(golden=True)])
+    defender_board.set_minions([PunchingBag()])
+    attacker_board.add_minion(PunchingBag())
+    assert len(attacker_board.minions) == 4
+
+    # TODO: Test multiple khadgar interactions
+    # TODO: Test with scallywag and admiral
+    # TODO: Test with baron
 
 
 def test_monstrous_macaw(initialized_game):

@@ -179,7 +179,6 @@ class IronSensei(Minion):
                          **kwargs)
 
 
-# TODO: All the busted shit this guy does
 class Khadgar(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Khadgar",
@@ -187,6 +186,12 @@ class Khadgar(Minion):
                          base_attack=2,
                          base_defense=2,
                          **kwargs)
+
+    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
+        own_board.token_creation_multiplier += 2 if self.golden else 1
+
+    def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
+        own_board.token_creation_multiplier -= 2 if self.golden else 1
 
 
 class MonstrousMacaw(Minion):
@@ -206,13 +211,14 @@ class MonstrousMacaw(Minion):
                 deathrattles += [[minion, deathrattle]]
 
         if len(deathrattles) == 0:
-            pass
+            return
 
         triggers = 2 if self.golden else 1
         for _ in range(triggers):
             for _ in range(own_board.deathrattle_multiplier):
                 index = random.randint(0, len(deathrattles) - 1)
                 minion_pair = deathrattles[index]
+                # TODO: Multiply this with baron?
                 minion_pair[1].trigger(minion_pair[0], own_board, opposing_board, macaw_trigger=True)
 
 
