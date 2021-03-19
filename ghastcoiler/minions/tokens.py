@@ -1,15 +1,14 @@
 from minions.base import Minion
 from minions.types import MinionType
 
-# class JoEBot(Minion):
-#     def __init__(self, **kwargs):
-#         super().__init__(name="Jo-E Bot",
-#                          rank=1,
-#                          base_attack=1,
-#                          base_defense=1,
-#                          types=[MinionType.Mech],
-#                          **kwargs)
-
+class BigBadWolf(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Big Bad Wolf",
+                         rank=1,
+                         base_attack=3,
+                         base_defense=2,
+                         types=[MinionType.Beast],
+                         **kwargs)
 
 class DamagedGolem(Minion):
     def __init__(self, **kwargs):
@@ -18,6 +17,36 @@ class DamagedGolem(Minion):
                          base_attack=2,
                          base_defense=1,
                          types=[MinionType.Mech],
+                         **kwargs)
+
+
+class FieryImp(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Fiery Imp",
+                         rank=1,
+                         base_attack=3,
+                         base_defense=2,
+                         types=[MinionType.Demon],
+                         **kwargs)
+
+class GuardBot(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Guard Bot",
+                         rank=1,
+                         base_attack=2,
+                         base_defense=3,
+                         base_taunt=True,
+                         types=[MinionType.Mech],
+                         **kwargs)
+
+
+class Hyena(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Hyena",
+                         rank=1,
+                         base_attack=2,
+                         base_defense=2,
+                         types=[MinionType.Beast],
                          **kwargs)
 
 
@@ -31,13 +60,13 @@ class Imp(Minion):
                          **kwargs)
 
 
-class BigBadWolf(Minion):
+class Microbot(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Big Bad Wolf",
+        super().__init__(name="Microbot",
                          rank=1,
-                         base_attack=3,
-                         base_defense=2,
-                         types=[MinionType.Beast],
+                         base_attack=1,
+                         base_defense=1,
+                         types=[MinionType.Mech],
                          **kwargs)
 
 
@@ -48,6 +77,16 @@ class Rat(Minion):
                          base_attack=1,
                          base_defense=1,
                          types=[MinionType.Beast],
+                         **kwargs)
+
+
+class Robosaur(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Robosaur",
+                         rank=1,
+                         base_attack=8,
+                         base_defense=8,
+                         types=[MinionType.Mech],
                          **kwargs)
 
 
@@ -68,14 +107,4 @@ class Spider(Minion):
                          base_attack=1,
                          base_defense=1,
                          types=[MinionType.Beast],
-                         **kwargs)
-
-
-class Microbot(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Microbot",
-                         rank=1,
-                         base_attack=1,
-                         base_defense=1,
-                         types=[MinionType.Mech],
                          **kwargs)

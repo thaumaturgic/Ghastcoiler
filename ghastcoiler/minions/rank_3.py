@@ -31,7 +31,7 @@ class ArmoftheEmpire(Minion):
                          **kwargs)
 
     def buff_taunted_minion(self, friendly_minion: Minion):
-        buff = 6 if self.golden else 3
+        buff = 4 if self.golden else 2
         if friendly_minion.taunt:
             friendly_minion.add_stats(buff, 0)
 
@@ -337,5 +337,4 @@ class WardenofOld(Minion):
                          rank=3,
                          base_attack=3,
                          base_defense=3,
-                         # Dont care about death rattle
                          **kwargs)

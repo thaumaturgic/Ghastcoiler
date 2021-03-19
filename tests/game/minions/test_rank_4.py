@@ -1,8 +1,36 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_2 import \
     PackLeader, KindlyGrandmother, SouthseaCaptain, FreedealingGambler
-from ghastcoiler.minions.rank_3 import RatPack
-from ghastcoiler.minions.rank_4 import CaveHydra
+from ghastcoiler.minions.rank_3 import RatPack, ImpGangBoss
+from ghastcoiler.minions.rank_4 import Bigfernal, BolvarFireblood, CaveHydra, \
+    ChampionofYShaarj, DrakonidEnforcer, MechanoEgg, QirajiHarbinger, \
+    RipsnarlCaptain, RingMatron, SavannahHighmane, Siegebreaker
+
+
+def test_bigfernal(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+
+    bigfernal = Bigfernal()
+    attacker_board.set_minions([bigfernal])
+    attacker_board.add_minion(ImpGangBoss())
+
+    assert bigfernal.attack == 5
+    assert bigfernal.defense == 5
+
+
+def test_bolvar_fireblood(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    bolvar = BolvarFireblood()
+    attacker_board.set_minions([bolvar])
+    defender_board.set_minions([PunchingBag(attack=1)])
+
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    assert bolvar.attack == 3
+    assert bolvar.defense == 7
 
 
 def test_cave_hydra(initialized_game):
@@ -36,3 +64,157 @@ def test_cave_hydra(initialized_game):
     # Damage trigger should be done after damage applied to all units (ie after shield is broken)
 
     # TODO: Test cleave hitting an imp and rover with room for only one token. Should end up with just imp
+
+
+def test_champion_of_yshaarj(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    champion = ChampionofYShaarj()
+
+    attacker_board.set_minions([PunchingBag(attack=1)])
+    defender_board.set_minions([PunchingBag(taunt=True), champion])
+
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+
+    assert champion.attack == 5
+    assert champion.defense == 5
+
+
+def test_drakonid_enforcer(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    drakonid = DrakonidEnforcer()
+    attacker_board.set_minions([BolvarFireblood(), drakonid])
+    defender_board.set_minions([PunchingBag(attack=1)])
+
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    assert drakonid.attack == 5
+    assert drakonid.defense == 8
+
+
+def test_herald_of_flame(initialized_game):
+    # TODO:
+    pass
+
+
+def test_mechano_egg(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([PunchingBag(attack=10)])
+    defender_board.set_minions([MechanoEgg()])
+
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+
+    assert defender_board.minions[0].name == "Robosaur"
+    assert defender_board.minions[0].defense == 8
+    assert defender_board.minions[0].attack == 8
+
+
+def test_qiraji_harbinger(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    leftMinion = QirajiHarbinger()
+    rightMinion = PunchingBag()
+    attacker_board.set_minions([PunchingBag(attack=1, poisonous=True)])
+    defender_board.set_minions([leftMinion, PunchingBag(), rightMinion])
+
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+
+    # TODO:
+    #assert leftMinion.attack == 7 and leftMinion.defense == 7
+    #assert rightMinion.attack == 2 and rightMinion.defense == 102
+    pass
+
+
+def test_ring_matron(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([RingMatron()])
+    defender_board.set_minions([PunchingBag(attack=10)])
+
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    for i in range(2):
+        minion = attacker_board.minions[i]
+        assert minion.name == "Fiery Imp"
+        assert minion.attack == 3
+        assert minion.defense == 2
+
+
+def test_ripsnarl_captain(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    buffPirate = FreedealingGambler()
+    nonBuffPirate = RipsnarlCaptain()
+
+    attacker_board.set_minions([buffPirate, nonBuffPirate])
+    defender_board.set_minions([PunchingBag()])
+
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    assert buffPirate.attack == 5
+    assert buffPirate.defense == 5
+
+    initialized_game.single_round()
+    initialized_game.single_round()
+
+    assert nonBuffPirate.attack == 4
+    assert nonBuffPirate.defense == 5
+
+
+def test_savannah_highmane(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([SavannahHighmane()])
+    defender_board.set_minions([PunchingBag(attack=10)])
+
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    for i in range(2):
+        hyena = attacker_board.minions[i]
+        assert hyena.name == "Hyena"
+        assert hyena.attack == 2
+        assert hyena.defense == 2
+
+
+def test_security_rover(initialized_game):
+    # TODO: Test when a rover takes damage and dies that the token is in the right spot
+    pass
+
+
+def test_siegebreaker(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+    attacker_board.set_minions([Siegebreaker()])
+    defender_board.set_minions([PunchingBag(attack=10)])
+
+    imp = ImpGangBoss()
+    attacker_board.add_minion(imp)
+    assert imp.attack == 3
+    assert imp.defense == 4
+
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+
+    assert imp.attack == 2
+    assert imp.defense == 4
+
+
+def test_wildfire_elemental(initialized_game):
+    # TODO:
+    pass

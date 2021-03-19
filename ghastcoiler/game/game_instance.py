@@ -151,7 +151,7 @@ class GameInstance:
                     deathrattle.trigger(minion, defending_player_board, attacking_player_board)
                     self.resolve_extra_attacks(defending_player_board, attacking_player_board)
 
-        # TODO: Should minion death triggers be processed here? ie soul juggler?
+        # TODO: "after a friendly minion dies" triggers. ie soul juggles happen after deathrattles
 
         # Process deaths here again to see if death rattles resulted in more deaths
         if len(attacking_player_board.select_dead()) > 0 or len(defending_player_board.select_dead()):
@@ -185,8 +185,11 @@ class GameInstance:
 
         # Pre-attack triggers
         attacking_minion.on_attack_before(attacker, defender)
-        defending_minion.on_attacked(defender, attacker)
+        for minion in attacker.minions:
+            if minion.position != attacking_minion.position:
+                minion.on_friendly_attack_before(attacking_minion, attacker)
 
+        defending_minion.on_attacked(defender, attacker)
         for minion in defender.minions:
             if minion.position != defending_minion.position:
                 minion.on_friendly_attacked(defending_minion)
@@ -203,8 +206,8 @@ class GameInstance:
             for minion in defenders:
                 minion.process_deferred_damage_trigger(defender)
         else:
-            self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
             self.deal_attack_damage(defending_minion, defender, attacking_minion, attacker)
+            self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
 
         # Post attack triggers (macaw)
         attacking_minion.on_attack_after(attacker, defender)

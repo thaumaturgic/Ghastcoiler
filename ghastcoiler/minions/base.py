@@ -215,6 +215,11 @@ class Minion:
         """
         pass
 
+    def on_friendly_attack_before(self, attacking_minion: Minion, own_board: PlayerBoard):
+        """Trigger when a friendly minion attacks
+        """
+        pass
+
     def on_attack_after(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         """Trigger that can be implemented after the minion attacks
         """
