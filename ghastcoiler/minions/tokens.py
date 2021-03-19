@@ -1,6 +1,7 @@
 from minions.base import Minion
 from minions.types import MinionType
 
+
 class BigBadWolf(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Big Bad Wolf",
@@ -9,6 +10,7 @@ class BigBadWolf(Minion):
                          base_defense=2,
                          types=[MinionType.Beast],
                          **kwargs)
+
 
 class DamagedGolem(Minion):
     def __init__(self, **kwargs):
@@ -28,6 +30,7 @@ class FieryImp(Minion):
                          base_defense=2,
                          types=[MinionType.Demon],
                          **kwargs)
+
 
 class GuardBot(Minion):
     def __init__(self, **kwargs):

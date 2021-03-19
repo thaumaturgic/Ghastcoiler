@@ -130,8 +130,8 @@ def test_qiraji_harbinger(initialized_game):
     initialized_game.single_round()
 
     # TODO:
-    #assert leftMinion.attack == 7 and leftMinion.defense == 7
-    #assert rightMinion.attack == 2 and rightMinion.defense == 102
+    # assert leftMinion.attack == 7 and leftMinion.defense == 7
+    # assert rightMinion.attack == 2 and rightMinion.defense == 102
     pass
 
 

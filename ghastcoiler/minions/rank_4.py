@@ -177,7 +177,7 @@ class QirajiHarbinger(Minion):
 
     def on_friendly_removal(self, other_minion: Minion):
         if other_minion.taunt:
-            pass #  TODO
+            pass  # TODO
         pass
 
 

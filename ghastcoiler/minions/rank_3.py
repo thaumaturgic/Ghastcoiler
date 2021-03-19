@@ -21,7 +21,7 @@ class ArcaneAssistant(Minion):
 
 
 class ArmoftheEmpire(Minion):
-    """ Whenever a friendly Taunt minion is attacked, give it +3 Attack.
+    """ Whenever a friendly Taunt minion is attacked, give it +2 Attack permanently.
     """
     def __init__(self, **kwargs):
         super().__init__(name="Arm of the Empire",

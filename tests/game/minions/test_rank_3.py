@@ -16,7 +16,7 @@ def test_arm_of_the_empire(initialized_game):
     defender_board.set_minions([ArmoftheEmpire(), PunchingBag(taunt=True), PunchingBag()])
     initialized_game.start_of_game(0)
     initialized_game.single_round()
-    assert defender_board.minions[1].attack == 3
+    assert defender_board.minions[1].attack == 2
     assert defender_board.minions[2].attack == 0
 
     # It should buff itself if it is taunted
@@ -24,7 +24,7 @@ def test_arm_of_the_empire(initialized_game):
     defender_board.set_minions([ArmoftheEmpire(taunt=True)])
     initialized_game.start_of_game(0)
     initialized_game.single_round()
-    assert defender_board.minions[0].attack == 7
+    assert defender_board.minions[0].attack == 6
     assert defender_board.minions[0].defense == 4
 
 
