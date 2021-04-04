@@ -58,7 +58,7 @@ class SpawnofNZothDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
         logging.debug("Spawn of NZoth deathrattle triggered")
         bonus = 2 if minion.golden else 1
-        for other_minion in own_board.get_minions():
+        for other_minion in own_board.get_living_minions():
             other_minion.add_stats(bonus, bonus)
 
 
@@ -70,9 +70,9 @@ class UnstableGhoulDeathrattle(Deathrattle):
         logging.debug("Unstable Ghoul deathrattle triggered")
         triggers = 2 if minion.golden else 1
         for _ in range(triggers):
-            for opposing_minion in opposing_board.get_minions():
+            for opposing_minion in opposing_board.get_living_minions():
                 opposing_minion.receive_damage(1, False, opposing_board)
-            for friendly_minion in own_board.get_minions():
+            for friendly_minion in own_board.get_living_minions():
                 friendly_minion.receive_damage(1, False, own_board)
 
 

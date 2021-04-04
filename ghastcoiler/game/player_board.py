@@ -181,13 +181,13 @@ class PlayerBoard:
         defending_minion_index = random.randint(0, len(possible_minions) - 1)
         return possible_minions[defending_minion_index]
 
-    def get_minions(self):
+    def get_living_minions(self):
         """Return a list of all minions
 
         Returns:
             List[Minion] -- List of all minions on board
         """
-        return self.minions
+        return [minion for minion in self.minions if not minion.dead]
 
     def get_minions_neighbors(self, minion: Minion):
         """Return a list of minions to the left and right of the minions position
@@ -221,7 +221,7 @@ class PlayerBoard:
             Minion -- Randomly selected minion
         """
         if len(self.minions) > 0:
-            live_minions = [minion for minion in self.minions if not minion.dead]
+            live_minions = self.get_living_minions()
             position = live_minions[random.randint(0, len(live_minions) - 1)].position
             return self.minions[position]
 

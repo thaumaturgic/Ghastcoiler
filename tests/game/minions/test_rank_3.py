@@ -1,9 +1,10 @@
 from ghastcoiler.minions.test_minions import PunchingBag
+from ghastcoiler.minions.tokens import Imp
 from ghastcoiler.minions.rank_1 import MicroMummy
-from ghastcoiler.minions.rank_2 import KaboomBot, PackLeader
+from ghastcoiler.minions.rank_2 import KaboomBot, PackLeader, HarvestGolem
 from ghastcoiler.minions.rank_3 import ArmoftheEmpire, CracklingCyclone,\
     DeflectoBot, ImpGangBoss, InfestedWolf, Khadgar, MonstrousMacaw,\
-    PilotedShredder, ReplicatingMenace, RatPack
+    PilotedShredder, ReplicatingMenace, RatPack, SoulJuggler
 from ghastcoiler.deathrattles.rank_3 import ReplicatingMenaceDeathrattle
 
 
@@ -179,6 +180,13 @@ def test_monstrous_macaw(initialized_game):
     # TODO: Test with goldrinn keeping macaw alive after it takes lethal
     # TODO: Test order of operations with killing an opposing death rattle
     # TODO: Test with minions with multiple deathrattles
+    golem = HarvestGolem()
+    golem.deathrattles.append(ReplicatingMenaceDeathrattle())
+    attacker_board.set_minions([MonstrousMacaw(), golem])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert (len(attacker_board.minions) == 3 or len(attacker_board.minions) == 5)
 
 
 def test_piloted_shredder(initialized_game):
@@ -225,3 +233,45 @@ def test_replicating_menace(initialized_game):
     for i in range(3):
         assert attacker_board.minions[i].name == "Microbot"
     assert defender_board.minions[0].defense == 94
+
+
+# TODO: Verify tests
+def test_soul_juggler(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    defender = PunchingBag(attack=10)
+
+    # Simple test
+    attacker_board.set_minions([Imp(), SoulJuggler()])
+    defender_board.set_minions([defender])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert defender.defense == 96
+
+    # Test golden juggler
+    defender = PunchingBag(attack=10)
+    attacker_board.set_minions([Imp(), SoulJuggler(golden=True)])
+    defender_board.set_minions([defender])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert defender.defense == 93
+
+    # Test opposing jugglers
+    attacker_board.set_minions([Imp(taunt=True), SoulJuggler()])
+    defender_board.set_minions([Imp(taunt=True), SoulJuggler()])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    # Attacking juggler should kill defending juggler and survive
+    assert len(attacker_board.minions) == 1
+
+    # Test jugglers triggering an 'on damage' minion
+
+    # Test juggler with reborn minion.
+    # Reborn happens after juggle. Mummy should live
+    defender = PunchingBag(attack=10)
+    attacker_board.set_minions([Imp(), SoulJuggler()])
+    defender_board.set_minions([MicroMummy(defense=1)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(defender_board.minions) == 1

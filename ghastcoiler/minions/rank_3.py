@@ -294,11 +294,16 @@ class SoulJuggler(Minion):
                          base_defense=3,
                          **kwargs)
 
-    def on_friendly_removal(self, other_minion: Minion):
+    # TODO: TEST
+    def on_friendly_removal_after(self, other_minion: Minion, enemy_board: PlayerBoard):
         """After a friendly Demon dies, deal 3 damage to a random enemy minion.
         """
-        # TODO:
-        pass
+        triggers = 2 if self.golden else 1
+        if MinionType.Demon in other_minion.types:
+            for _ in range(triggers):
+                target = enemy_board.random_minion()
+                if target:
+                    target.receive_damage(3, False, enemy_board)
 
 
 class SouthseaStrongarm(Minion):

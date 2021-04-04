@@ -151,7 +151,14 @@ class GameInstance:
                     deathrattle.trigger(minion, defending_player_board, attacking_player_board)
                     self.resolve_extra_attacks(defending_player_board, attacking_player_board)
 
-        # TODO: "after a friendly minion dies" triggers. ie soul juggles happen after deathrattles
+        # Resolve "after a friendly minion dies" triggers. ie soul juggles after deathrattles
+        for minion in attacking_player_board.get_living_minions():
+            for dead_minion in attacker_dead_minions:
+                minion.on_friendly_removal_after(dead_minion, defending_player_board)
+
+        for minion in defending_player_board.get_living_minions():
+            for dead_minion in defender_dead_minions:
+                minion.on_friendly_removal_after(dead_minion, attacking_player_board)
 
         # Process deaths here again to see if death rattles resulted in more deaths
         if len(attacking_player_board.select_dead()) > 0 or len(defending_player_board.select_dead()):
@@ -251,9 +258,9 @@ class GameInstance:
         # TODO If both sides have whelps, they trade off whelp attacks from one side to the other, resolving deathrattles after each firebreath
         current = self.attacking_player_board()
         other = self.defending_player_board()
-        for minion in current.get_minions():
+        for minion in current.get_living_minions():
             minion.at_beginning_game(self, True, current, other)
-        for minion in other.get_minions():
+        for minion in other.get_living_minions():
             minion.at_beginning_game(self, False, other, current)
 
     def single_round(self):
