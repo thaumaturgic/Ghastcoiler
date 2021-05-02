@@ -1,5 +1,7 @@
 import logging
 import sys, inspect
+from threading import Thread
+from time import sleep
 
 from utils.profile import Profile
 from utils.minion_utils import MinionUtils
@@ -18,7 +20,16 @@ from deathrattles.rank_3 import ReplicatingMenaceDeathrattle
 # player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=12, rank=4, minions=[FiendishServant(), DragonspawnLieutenant(), DragonspawnLieutenant(), RedWhelp(), RedWhelp()])
 # player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=12, rank=4, minions=[DragonspawnLieutenant(), FiendishServant(), DragonspawnLieutenant(), FiendishServant()])
 
-LogReader.log_reader_test()
+#"C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn1.log"
+#"C:/Users/scott/Desktop/power_compare.log"
+#"C:\Program Files (x86)\Hearthstone\Logs\Power_old.log"
+
+# TODO: Pass a callback function? 
+logPath = "C:\Program Files (x86)\Hearthstone\Logs\Power.log"
+logreader = LogReader(logPath) 
+
+while True:
+    sleep(60)
 
 deflecto = DeflectoBot(attack=6, defense=3, deathrattles=[ReplicatingMenaceDeathrattle()])
 
