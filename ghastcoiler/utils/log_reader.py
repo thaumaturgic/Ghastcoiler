@@ -11,6 +11,8 @@ class LogReader:
     #MAIN_READY
     #MAIN_END
     COMBAT_STEP_STRING = "tag=STEP value=MAIN_READY" # TODO: Fix bug with incorrect enemy board state parsing. ie why are there two state transitions for combat start    
+    MAIN_END_STRING = "tag=STEP value=MAIN_END"
+    MAIN_START_TRIGGERS_STRING = "tag=STEP value=MAIN_START_TRIGGERS"
 
     NEW_GAME_STRING = "CREATE_GAME"
 
@@ -59,6 +61,7 @@ class LogReader:
         lineCount = 0
         turn = 1
         inShop = False
+        boardPending = False
 
         while True:
             line = fp.readline()
@@ -69,19 +72,28 @@ class LogReader:
 
             lineCount += 1
             if LogReader.GAME_STATE_STRING in line:
-                if "tag=STEP value=" in line: #or "tag=NEXT_STEP value=" in line:
+                if "tag=STEP value=" in line: # or "tag=NEXT_STEP value=" in line:
                     print(str(lineCount) + " " +line[:-1])
 
                 if LogReader.COMBAT_STEP_STRING in line and inShop:
                     print("\n" + str(lineCount) + " *** COMBAT #" + str(turn) + ": " + line[:-1])
                     turn += 1
-                    boardStateLock.acquire()
                     self.friendlyBoard, self.enemyBoard = self.get_all_minions_in_play(self.parser)
+                    boardPending = True
+
+                elif LogReader.MAIN_START_TRIGGERS_STRING in line and boardPending:
+                    # Sometimes there is a "start triggers" step before the combat board state is fully known
+                    self.friendlyBoard, self.enemyBoard = self.get_all_minions_in_play(self.parser)
+
+                elif LogReader.MAIN_END_STRING in line and boardPending:
+                    boardStateLock.acquire()
                     inShop = False
+                    boardPending = False
                     self.boardAvailable = True
                     boardStateLock.notify()
                     boardStateLock.release()
                     sleep(1)
+
                 elif LogReader.SHOP_STEP_STRING in line:
                     print("\n" + str(lineCount) + " *** SHOP   #" + str(turn) + ": " + line[:-1])
                     inShop = True
