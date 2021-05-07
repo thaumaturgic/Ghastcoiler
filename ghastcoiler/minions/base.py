@@ -13,6 +13,8 @@ if TYPE_CHECKING:
 class Minion:
     def __init__(self,
                  name: str,
+                 id: str,
+                 gold_id: str,
                  rank: int,
                  base_attack: int,
                  base_defense: int,
@@ -85,6 +87,8 @@ class Minion:
         """
         self.name = name
         self.rank = rank
+        self.id = id
+        self.gold_id = gold_id
         self.base_attack = base_attack * 2 if golden else base_attack
         self.base_defense = base_defense * 2 if golden else base_defense
         self.attack = attack if attack else self.base_attack

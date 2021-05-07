@@ -9,6 +9,8 @@ from deathrattles.rank_1 import FiendishServantDeathrattle, ScallywagDeathrattle
 class AcolyteOfCThun(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Acolyte of C'Thun",
+                         id="BGS_106",
+                         gold_id="TB_BaconUps_255",
                          rank=1,
                          base_attack=2,
                          base_defense=2,
@@ -20,6 +22,8 @@ class AcolyteOfCThun(Minion):
 class Alleycat(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Alleycat",
+                         id="CFM_315",
+                         gold_id="TB_BaconUps_093",
                          rank=1,
                          base_attack=1,
                          base_defense=1,
@@ -30,6 +34,8 @@ class Alleycat(Minion):
 class DeckSwabbie(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Deck Swabbie",
+                         id="BGS_055",
+                         gold_id="TB_BaconUps_126",
                          rank=1,
                          base_attack=2,
                          base_defense=2,
@@ -40,6 +46,8 @@ class DeckSwabbie(Minion):
 class DragonspawnLieutenant(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Dragonspawn Lieutenant",
+                         id="BGS_039",
+                         gold_id="TB_BaconUps_146",
                          rank=1,
                          base_attack=2,
                          base_defense=3,
@@ -51,6 +59,8 @@ class DragonspawnLieutenant(Minion):
 class FiendishServant(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Fiendish Servant",
+                         id="YOD_026",
+                         gold_id="TB_BaconUps_112",
                          rank=1,
                          base_attack=2,
                          base_defense=1,
@@ -62,6 +72,8 @@ class FiendishServant(Minion):
 class MicroMachine(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Micro Machine",
+                         id="BGS_027",
+                         gold_id="TB_BaconUps_094",
                          rank=1,
                          base_attack=1,
                          base_defense=2,
@@ -73,6 +85,8 @@ class MicroMachine(Minion):
 class MicroMummy(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Micro Mummy",
+                         id="ULD_217",
+                         gold_id="TB_BaconUps_250",
                          rank=1,
                          base_attack=1,
                          base_defense=2,
@@ -85,6 +99,8 @@ class MicroMummy(Minion):
 class MurlocTidecaller(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Murloc Tidecaller",
+                         id="EX1_509",
+                         gold_id="TB_BaconUps_011",
                          rank=1,
                          base_attack=1,
                          base_defense=2,
@@ -95,6 +111,8 @@ class MurlocTidecaller(Minion):
 class MurlocTidehunter(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Murloc Tidehunter",
+                         id="EX1_506",
+                         gold_id="TB_BaconUps_003",
                          rank=1,
                          base_attack=2,
                          base_defense=1,
@@ -106,6 +124,8 @@ class MurlocTidehunter(Minion):
 class RedWhelp(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Red Whelp",
+                         id="BGS_019",
+                         gold_id="TB_BaconUps_102",
                          rank=1,
                          base_attack=1,
                          base_defense=2,
@@ -128,6 +148,8 @@ class RedWhelp(Minion):
 class RefreshingAnomaly(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Refreshing Anomaly",
+                         id="BGS_116",
+                         gold_id="TB_BaconUps_167",
                          rank=1,
                          base_attack=1,
                          base_defense=3,
@@ -138,6 +160,8 @@ class RefreshingAnomaly(Minion):
 class RockpoolHunter(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Rockpool Hunter",
+                         id="UNG_073",
+                         gold_id="TB_BaconUps_061",
                          rank=1,
                          base_attack=2,
                          base_defense=3,
@@ -149,6 +173,8 @@ class RockpoolHunter(Minion):
 class Scallywag(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Scallywag",
+                         id="BGS_061",
+                         gold_id="TB_BaconUps_141",
                          rank=1,
                          base_attack=2,
                          base_defense=1,
@@ -160,6 +186,8 @@ class Scallywag(Minion):
 class ScavengingHyena(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Scavenging Hyena",
+                         id="EX1_531",
+                         gold_id="TB_BaconUps_043",
                          rank=1,
                          base_attack=2,
                          base_defense=2,
@@ -177,6 +205,8 @@ class ScavengingHyena(Minion):
 class Sellemental(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Sellemental",
+                         id="BGS_115",
+                         gold_id="TB_BaconUps_156",
                          rank=1,
                          base_attack=2,
                          base_defense=2,
@@ -187,6 +217,8 @@ class Sellemental(Minion):
 class VulgarHomunculus(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Vulgar Homunculus",
+                         id="LOOT_013",
+                         gold_id="TB_BaconUps_148",
                          rank=1,
                          base_attack=2,
                          base_defense=4,
@@ -199,6 +231,8 @@ class VulgarHomunculus(Minion):
 class WrathWeaver(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Wrath Weaver",
+                         id="BGS_004",
+                         gold_id="TB_BaconUps_079",
                          rank=1,
                          base_attack=1,
                          base_defense=3,

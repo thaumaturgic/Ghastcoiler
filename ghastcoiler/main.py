@@ -1,6 +1,6 @@
 import logging
 import sys, inspect
-from threading import Thread
+from threading import Thread, Event
 from time import sleep
 
 from utils.profile import Profile
@@ -17,19 +17,32 @@ from minions.rank_2 import YoHoOgre, TormentedRitualist, OldMurkEye, SouthseaCap
 from minions.rank_3 import InfestedWolf, MonstrousMacaw, DeflectoBot, WardenofOld, SouthseaStrongarm
 from deathrattles.rank_3 import ReplicatingMenaceDeathrattle
 
-# player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=12, rank=4, minions=[FiendishServant(), DragonspawnLieutenant(), DragonspawnLieutenant(), RedWhelp(), RedWhelp()])
-# player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=12, rank=4, minions=[DragonspawnLieutenant(), FiendishServant(), DragonspawnLieutenant(), FiendishServant()])
+#---------------------
+utils = MinionUtils()
+test = utils.get_ghastcoiler_minion("BGS_106", 1, 4, 3)
+test = utils.get_ghastcoiler_minion("BROKEN", 1, 4, 3)
+
+var = utils.get_all_minions()
+# print(len(var))
+# for minion in var:
+#     print(minion.name)
+
+#---------------------
+board_state_ready_event = Event()
 
 #"C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn1.log"
-#"C:/Users/scott/Desktop/power_compare.log"
 #"C:\Program Files (x86)\Hearthstone\Logs\Power_old.log"
-
-# TODO: Pass a callback function? 
-logPath = "C:\Program Files (x86)\Hearthstone\Logs\Power.log"
-logreader = LogReader(logPath) 
+logPath = "C:\Program Files (x86)\Hearthstone\Logs\Power_old.log"
+logreader = LogReader(logPath, board_state_ready_event) 
 
 while True:
-    sleep(60)
+    board_state_ready_event.wait()
+    print("got board state: ", logreader.board_state)
+    board_state_ready_event.clear()
+#---------------------
+
+# player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=12, rank=4, minions=[FiendishServant(), DragonspawnLieutenant(), DragonspawnLieutenant(), RedWhelp(), RedWhelp()])
+# player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=12, rank=4, minions=[DragonspawnLieutenant(), FiendishServant(), DragonspawnLieutenant(), FiendishServant()])
 
 deflecto = DeflectoBot(attack=6, defense=3, deathrattles=[ReplicatingMenaceDeathrattle()])
 
@@ -43,14 +56,6 @@ simulation = Simulation(player_board=player_board_0, opponent_board=player_board
 
 # logging.DEBUG will show all steps in combat
 logging.basicConfig(level=logging.DEBUG, format="%(message)s")
-
-# var = MinionUtils.get_all_minions()
-# print(len(var))
-# for minion in var:
-#     print(minion.name)
-
-#testMinion = RedWhelp(reborn=True, attack=999, position=5)
-#testMinion.trigger_reborn()
 
 with Profile():
     print(simulation.simulate()) # List of tuples with outcome and the frequency of that outcome
