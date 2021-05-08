@@ -13,6 +13,8 @@ from deathrattles.rank_3 import InfestedWolfDeathrattle, \
 class ArcaneAssistant(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Arcane Assistant",
+                         id="BGS_128",
+                         gold_id="TB_Baconups_203",
                          rank=3,
                          base_attack=3,
                          base_defense=3,
@@ -25,6 +27,8 @@ class ArmoftheEmpire(Minion):
     """
     def __init__(self, **kwargs):
         super().__init__(name="Arm of the Empire",
+                         id="BGS_110",
+                         gold_id="TB_BaconUps_302",
                          rank=3,
                          base_attack=4,
                          base_defense=5,
@@ -45,6 +49,8 @@ class ArmoftheEmpire(Minion):
 class BloodsailCannoneer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Bloodsail Cannoneer",
+                         id="BGS_053",
+                         gold_id="TB_BaconUps_138",
                          rank=3,
                          base_attack=4,
                          base_defense=3,
@@ -55,6 +61,8 @@ class BloodsailCannoneer(Minion):
 class BronzeWarden(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Bronze Warden",
+                         id="BGS_034",
+                         gold_id="TB_BaconUps_149",
                          rank=3,
                          base_attack=2,
                          base_defense=1,
@@ -67,6 +75,8 @@ class BronzeWarden(Minion):
 class ColdlightSeer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Coldlight Seer",
+                         id="EX1_103",
+                         gold_id="TB_BaconUps_064",
                          rank=3,
                          base_attack=2,
                          base_defense=3,
@@ -77,6 +87,8 @@ class ColdlightSeer(Minion):
 class CracklingCyclone(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Crackling Cyclone",
+                         id="BGS_119",
+                         gold_id="TB_BaconUps_159",
                          rank=3,
                          base_attack=4,
                          base_defense=1,
@@ -90,6 +102,8 @@ class CracklingCyclone(Minion):
 class Crystalweaver(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Crystalweaver",
+                         id="CFM_610",
+                         gold_id="TB_BaconUps_070",
                          rank=3,
                          base_attack=5,
                          base_defense=4,
@@ -101,6 +115,8 @@ class DeflectoBot(Minion):
     """
     def __init__(self, **kwargs):
         super().__init__(name="Deflect-o-Bot",
+                         id="BGS_071",
+                         gold_id="TB_BaconUps_123",
                          rank=3,
                          base_attack=3,
                          base_defense=2,
@@ -118,6 +134,8 @@ class DeflectoBot(Minion):
 class FelfinNavigator(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Felfin Navigator",
+                         id="BT_010",
+                         gold_id="TB_BaconUps_124",
                          rank=3,
                          base_attack=4,
                          base_defense=4,
@@ -128,6 +146,8 @@ class FelfinNavigator(Minion):
 class HangryDragon(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Hangry Dragon",
+                         id="BGS_033",
+                         gold_id="TB_BaconUps_104",
                          rank=3,
                          base_attack=4,
                          base_defense=4,
@@ -138,6 +158,8 @@ class HangryDragon(Minion):
 class Houndmaster(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Houndmaster",
+                         id="DS1_070",
+                         gold_id="TB_BaconUps_068",
                          rank=3,
                          base_attack=4,
                          base_defense=3,
@@ -148,6 +170,8 @@ class ImpGangBoss(Minion):
     """Whenever this minion takes damage, summon a 1/1 Imp."""
     def __init__(self, **kwargs):
         super().__init__(name="Imp Gang Boss",
+                         id="BRM_006",
+                         gold_id="TB_BaconUps_030",
                          rank=3,
                          base_attack=2,
                          base_defense=4,
@@ -161,6 +185,8 @@ class ImpGangBoss(Minion):
 class InfestedWolf(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Infested Wolf",
+                         id="OG_216",
+                         gold_id="TB_BaconUps_026",
                          rank=3,
                          base_attack=3,
                          base_defense=3,
@@ -172,6 +198,8 @@ class InfestedWolf(Minion):
 class IronSensei(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Iron Sensei",
+                         id="GVG_027",
+                         gold_id="TB_BaconUps_044",
                          rank=3,
                          base_attack=2,
                          base_defense=2,
@@ -182,6 +210,8 @@ class IronSensei(Minion):
 class Khadgar(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Khadgar",
+                         id="DAL_575",
+                         gold_id="TB_BaconUps_034",
                          rank=3,
                          base_attack=2,
                          base_defense=2,
@@ -198,6 +228,8 @@ class Khadgar(Minion):
 class MonstrousMacaw(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Monstrous Macaw",
+                         id="BGS_078",
+                         gold_id="TB_BaconUps_135",
                          rank=3,
                          base_attack=4,
                          base_defense=3,
@@ -226,6 +258,8 @@ class MonstrousMacaw(Minion):
 class PilotedShredder(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Piloted Shredder",
+                         id="BGS_023",
+                         gold_id="TB_BaconUps_035",
                          rank=3,
                          base_attack=4,
                          base_defense=3,
@@ -237,6 +271,8 @@ class PilotedShredder(Minion):
 class RatPack(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Rat Pack",
+                         id="CFM_316",
+                         gold_id="TB_BaconUps_027",
                          rank=3,
                          base_attack=2,
                          base_defense=2,
@@ -248,6 +284,8 @@ class RatPack(Minion):
 class ReplicatingMenace(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Replicating Menace",
+                         id="BOT_312",
+                         gold_id="TB_BaconUps_032",
                          rank=3,
                          base_attack=3,
                          base_defense=1,
@@ -259,6 +297,8 @@ class ReplicatingMenace(Minion):
 class SaltyLooter(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Salty Looter",
+                         id="BGS_081",
+                         gold_id="TB_BaconUps_143",
                          rank=3,
                          base_attack=4,
                          base_defense=4,
@@ -269,6 +309,8 @@ class SaltyLooter(Minion):
 class ScrewjankClunker(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Screwjank Clunker",
+                         id="GVG_055",
+                         gold_id="TB_BaconUps_069",
                          rank=3,
                          base_attack=2,
                          base_defense=5,
@@ -279,6 +321,8 @@ class ScrewjankClunker(Minion):
 class SoulDevourer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Soul Devourer",
+                         id="BGS_059",
+                         gold_id="TB_BaconUps_119",
                          rank=3,
                          base_attack=3,
                          base_defense=3,
@@ -289,6 +333,8 @@ class SoulDevourer(Minion):
 class SoulJuggler(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Soul Juggler",
+                         id="BGS_002",
+                         gold_id="TB_BaconUps_075",
                          rank=3,
                          base_attack=3,
                          base_defense=3,
@@ -309,6 +355,8 @@ class SoulJuggler(Minion):
 class SouthseaStrongarm(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Southsea Strongarm",
+                         id="BGS_048",
+                         gold_id="TB_BaconUps_140",
                          rank=3,
                          base_attack=4,
                          base_defense=3,
@@ -319,6 +367,8 @@ class SouthseaStrongarm(Minion):
 class StasisElemental(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Stasis Elemental",
+                         id="BGS_122",
+                         gold_id="TB_BaconUps_161",
                          rank=3,
                          base_attack=4,
                          base_defense=4,
@@ -329,6 +379,8 @@ class StasisElemental(Minion):
 class TwilightEmissary(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Twilight Emissary",
+                         id="BGS_038",
+                         gold_id="TB_BaconUps_108",
                          rank=3,
                          base_attack=4,
                          base_defense=4,
@@ -339,6 +391,8 @@ class TwilightEmissary(Minion):
 class WardenofOld(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Warden of Old",
+                         id="BGS_200",
+                         gold_id="TB_BaconUps_256",
                          rank=3,
                          base_attack=3,
                          base_defense=3,

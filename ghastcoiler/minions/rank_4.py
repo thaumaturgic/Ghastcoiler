@@ -12,6 +12,8 @@ from deathrattles.rank_4 import MechanoEggDeathrattle, RingMatronDeathrattle, \
 class AnnoyoModule(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Annoy-o-Module",
+                         id="BOT_911",
+                         gold_id="TB_BaconUps_099",
                          rank=4,
                          base_attack=2,
                          base_defense=4,
@@ -24,6 +26,8 @@ class AnnoyoModule(Minion):
 class Bigfernal(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Bigfernal",
+                         id="BGS_204",
+                         gold_id="TB_BaconUps_304",
                          rank=4,
                          base_attack=4,
                          base_defense=4,
@@ -39,6 +43,8 @@ class Bigfernal(Minion):
 class BolvarFireblood(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Bolvar, Fireblood",
+                         id="ICC_858",
+                         gold_id="TB_BaconUps_047",
                          rank=4,
                          base_attack=1,
                          base_defense=7,
@@ -51,7 +57,9 @@ class BolvarFireblood(Minion):
 
 class CaveHydra(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="CaveHydra",
+        super().__init__(name="Cave Hydra",
+                         id="LOOT_078",
+                         gold_id="TB_BaconUps_151",
                          rank=4,
                          base_attack=2,
                          base_defense=4,
@@ -63,6 +71,8 @@ class CaveHydra(Minion):
 class ChampionofYShaarj(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Champion of Y'Shaarj",
+                         id="BGS_111",
+                         gold_id="TB_BaconUps_301",
                          rank=4,
                          base_attack=4,
                          base_defense=4,
@@ -77,6 +87,8 @@ class ChampionofYShaarj(Minion):
 class CobaltScalebane(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Cobalt Scalebane",
+                         id="ICC_029",
+                         gold_id="TB_BaconUps_120",
                          rank=4,
                          base_attack=5,
                          base_defense=5,
@@ -87,6 +99,8 @@ class CobaltScalebane(Minion):
 class DefenderofArgus(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Defender of Argus",
+                         id="EX1_093",
+                         gold_id="TB_BaconUps_009",
                          rank=4,
                          base_attack=2,
                          base_defense=3,
@@ -96,6 +110,8 @@ class DefenderofArgus(Minion):
 class DrakonidEnforcer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Drakonid Enforcer",
+                         id="BGS_067",
+                         gold_id="TB_BaconUps_117",
                          rank=4,
                          base_attack=3,
                          base_defense=6,
@@ -110,6 +126,8 @@ class DrakonidEnforcer(Minion):
 class Goldgrubber(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Goldgrubber",
+                         id="BGS_066",
+                         gold_id="TB_BaconUps_130",
                          rank=4,
                          base_attack=2,
                          base_defense=2,
@@ -120,6 +138,8 @@ class Goldgrubber(Minion):
 class HeraldofFlame(Minion):  # TODO: Overkill trigger
     def __init__(self, **kwargs):
         super().__init__(name="Herald of Flame",
+                         id="BGS_032",
+                         gold_id="TB_BaconUps_103",
                          rank=4,
                          base_attack=5,
                          base_defense=6,
@@ -130,6 +150,8 @@ class HeraldofFlame(Minion):  # TODO: Overkill trigger
 class MajordomoExecutus(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Majordomo Executus",
+                         id="BGS_105",
+                         gold_id="TB_BaconUps_207",
                          rank=4,
                          base_attack=6,
                          base_defense=3,
@@ -139,6 +161,8 @@ class MajordomoExecutus(Minion):
 class MechanoEgg(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Mechano-Egg",
+                         id="BOT_537",
+                         gold_id="TB_BaconUps_039",
                          rank=4,
                          base_attack=0,
                          base_defense=5,
@@ -150,6 +174,8 @@ class MechanoEgg(Minion):
 class MenagerieJug(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Menagerie Jug",
+                         id="BGS_083",
+                         gold_id="TB_BaconUps_145",
                          rank=4,
                          base_attack=3,
                          base_defense=3,
@@ -159,6 +185,8 @@ class MenagerieJug(Minion):
 class PrimalfinLookout(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Primalfin Lookout",
+                         id="BGS_020",
+                         gold_id="TB_BaconUps_089",
                          rank=4,
                          base_attack=3,
                          base_defense=2,
@@ -170,6 +198,8 @@ class QirajiHarbinger(Minion):
     "After a friendly minion with Taunt dies, give its neighbors +2/+2."
     def __init__(self, **kwargs):
         super().__init__(name="Qiraji Harbinger",
+                         id="BGS_112",
+                         gold_id="TB_BaconUps_303",
                          rank=4,
                          base_attack=5,
                          base_defense=5,
@@ -184,6 +214,8 @@ class QirajiHarbinger(Minion):
 class RingMatron(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Ring Matron",
+                         id="DMF_533",
+                         gold_id="TB_BaconUps_309",
                          rank=4,
                          base_attack=6,
                          base_defense=4,
@@ -196,6 +228,8 @@ class RipsnarlCaptain(Minion):
     "Whenever another friendly Pirate attacks, give it +2/+2."
     def __init__(self, **kwargs):
         super().__init__(name="Ripsnarl Captain",
+                         id="BGS_056",
+                         gold_id="TB_BaconUps_139",
                          rank=4,
                          base_attack=4,
                          base_defense=5,
@@ -211,6 +245,8 @@ class RipsnarlCaptain(Minion):
 class SavannahHighmane(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Savannah Highmane",
+                         id="EX1_534",
+                         gold_id="TB_BaconUps_049",
                          rank=4,
                          base_attack=6,
                          base_defense=5,
@@ -223,6 +259,8 @@ class SecurityRover(Minion):
     "Whenever this minion takes damage, summon a 2/3 Mech with Taunt."
     def __init__(self, **kwargs):
         super().__init__(name="Security Rover",
+                         id="BOT_218",
+                         gold_id="TB_BaconUps_041",
                          rank=4,
                          base_attack=2,
                          base_defense=6,
@@ -236,6 +274,8 @@ class SecurityRover(Minion):
 class Siegebreaker(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Siegebreaker",
+                         id="EX1_185",
+                         gold_id="TB_BaconUps_053",
                          rank=4,
                          base_attack=5,
                          base_defense=8,
@@ -264,6 +304,8 @@ class Siegebreaker(Minion):
 class Toxfin(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Toxfin",
+                         id="DAL_077",
+                         gold_id="TB_BaconUps_152",
                          rank=4,
                          base_attack=1,
                          base_defense=2,
@@ -274,6 +316,8 @@ class Toxfin(Minion):
 class VirmenSensei(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Virmen Sensei",
+                         id="CFM_816",
+                         gold_id="TB_BaconUps_074",
                          rank=4,
                          base_attack=4,
                          base_defense=5,
@@ -284,6 +328,8 @@ class WildfireElemental(Minion):
     # TODO: Overkill triggers
     def __init__(self, **kwargs):
         super().__init__(name="Wildfire Elemental",
+                         id="BGS_126",
+                         gold_id="TB_BaconUps_166",
                          rank=4,
                          base_attack=7,
                          base_defense=3,

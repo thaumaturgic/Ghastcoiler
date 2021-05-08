@@ -26,7 +26,8 @@ class PilotedShredderDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         from utils.minion_utils import MinionUtils
-        two_mana_minions = [minion for minion in MinionUtils.get_all_minions() if minion.mana_cost == 2]
+        minionUtils = MinionUtils()
+        two_mana_minions = [minion for minion in minionUtils.get_all_minions() if minion.mana_cost == 2]
         num_minions = 2 if minion.golden else 1
         for _ in range(num_minions):
             new_minion = two_mana_minions[random.randint(0, len(two_mana_minions)-1)]

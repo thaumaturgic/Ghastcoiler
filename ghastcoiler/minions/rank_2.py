@@ -12,6 +12,8 @@ from deathrattles.rank_2 import HarvestGolemDeathrattle, ImprisonerDeathrattle, 
 class FreedealingGambler(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Freedealing Gambler",
+                         id="BGS_049",
+                         gold_id="TB_BaconUps_127",
                          rank=2,
                          base_attack=3,
                          base_defense=3,
@@ -22,6 +24,8 @@ class FreedealingGambler(Minion):
 class GlyphGuardian(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Glyph Guardian",
+                         id="BGS_045",
+                         gold_id="TB_BaconUps_115",
                          rank=2,
                          base_attack=2,
                          base_defense=4,
@@ -39,6 +43,8 @@ class HarvestGolem(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Harvest Golem",
                          rank=2,
+                         id="EX1_556",
+                         gold_id="TB_BaconUps_006",
                          base_attack=2,
                          base_defense=3,
                          types=[MinionType.Mech],
@@ -49,6 +55,8 @@ class HarvestGolem(Minion):
 class Imprisoner(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Imprisoner",
+                         id="BGS_014",
+                         gold_id="TB_BaconUps_113",
                          rank=2,
                          base_attack=3,
                          base_defense=3,
@@ -61,6 +69,8 @@ class Imprisoner(Minion):
 class KaboomBot(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Kaboom Bot",
+                         id="BOT_606",
+                         gold_id="TB_BaconUps_028",
                          rank=2,
                          base_attack=2,
                          base_defense=2,
@@ -72,6 +82,8 @@ class KaboomBot(Minion):
 class KindlyGrandmother(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Kindly Grandmother",
+                         id="KAR_005",
+                         gold_id="TB_BaconUps_004",
                          rank=2,
                          base_attack=1,
                          base_defense=1,
@@ -84,6 +96,8 @@ class KindlyGrandmother(Minion):
 class MenagerieMug(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Menagerie Mug",
+                         id="BGS_082",
+                         gold_id="TB_BaconUps_144",
                          rank=2,
                          base_attack=2,
                          base_defense=2,
@@ -93,6 +107,8 @@ class MenagerieMug(Minion):
 class MetaltoothLeaper(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Metaltooth Leaper",
+                         id="GVG_048",
+                         gold_id="TB_BaconUps_066",
                          rank=2,
                          base_attack=3,
                          base_defense=3,
@@ -103,6 +119,8 @@ class MetaltoothLeaper(Minion):
 class MoltenRock(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Molten Rock",
+                         id="BGS_127",
+                         gold_id="TB_Baconups_202",
                          rank=2,
                          base_attack=2,
                          base_defense=3,
@@ -114,6 +132,8 @@ class MoltenRock(Minion):
 class MurlocWarleader(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Murloc Warleader",
+                         id="EX1_507",
+                         gold_id="TB_BaconUps_008",
                          rank=2,
                          base_attack=3,
                          base_defense=3,
@@ -142,6 +162,8 @@ class MurlocWarleader(Minion):
 class NathrezimOverseer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Nathrezim Overseer",
+                         id="BGS_001",
+                         gold_id="TB_BaconUps_062",
                          rank=2,
                          base_attack=2,
                          base_defense=3,
@@ -156,7 +178,9 @@ class NathrezimOverseer(Minion):
 class OldMurkEye(Minion):
     def __init__(self, **kwargs):
         self.bonus_attack = 0
-        super().__init__(name="Old Murk Eye",
+        super().__init__(name="Old Murk-Eye",
+                         id="EX1_062",
+                         gold_id="TB_BaconUps_036",
                          rank=2,
                          base_attack=2,
                          base_defense=4,
@@ -181,8 +205,10 @@ class OldMurkEye(Minion):
 class PackLeader(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Pack Leader",
+                         id="BGS_017",
+                         gold_id="TB_BaconUps_086",
                          rank=2,
-                         base_attack=2,
+                         base_attack=3,
                          base_defense=3,
                          **kwargs)
 
@@ -194,6 +220,8 @@ class PackLeader(Minion):
 class PartyElemental(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Party Elemental",
+                         id="BGS_120",
+                         gold_id="TB_BaconUps_160",
                          rank=2,
                          base_attack=3,
                          base_defense=2,
@@ -204,6 +232,8 @@ class PartyElemental(Minion):
 class RabidSaurolisk(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Rabid Saurolisk",
+                         id="BGS_075",
+                         gold_id="TB_BaconUps_125",
                          rank=2,
                          base_attack=3,
                          base_defense=1,
@@ -220,6 +250,8 @@ class RabidSaurolisk(Minion):
 class SelflessHero(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Selfless Hero",
+                         id="OG_221",
+                         gold_id="TB_BaconUps_014",
                          rank=2,
                          base_attack=2,
                          base_defense=1,
@@ -230,6 +262,8 @@ class SelflessHero(Minion):
 class SouthseaCaptain(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Southsea Captain",
+                         id="NEW1_027",
+                         gold_id="TB_BaconUps_136",
                          rank=2,
                          base_attack=3,
                          base_defense=3,
@@ -259,6 +293,8 @@ class SouthseaCaptain(Minion):
 class SpawnofNZoth(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Spawn of N'Zoth",
+                         id="OG_256",
+                         gold_id="TB_BaconUps_025",
                          rank=2,
                          base_attack=2,
                          base_defense=2,
@@ -269,6 +305,8 @@ class SpawnofNZoth(Minion):
 class StewardofTime(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Steward of Time",
+                         id="BGS_037",
+                         gold_id="TB_BaconUps_107",
                          rank=2,
                          base_attack=3,
                          base_defense=4,
@@ -279,6 +317,8 @@ class StewardofTime(Minion):
 class TormentedRitualist(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Tormented Ritualist",
+                         id="BGS_201",
+                         gold_id="TB_BaconUps_257",
                          rank=2,
                          base_attack=2,
                          base_defense=3,
@@ -294,6 +334,8 @@ class TormentedRitualist(Minion):
 class UnstableGhoul(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Unstable Ghoul",
+                         id="FP1_024",
+                         gold_id="TB_BaconUps_118",
                          rank=2,
                          base_attack=1,
                          base_defense=3,
@@ -307,6 +349,8 @@ class WaxriderTogwaggle(Minion):
     """Whenever a friendly Dragon kills an enemy, gain +2/+2."""
     def __init__(self, **kwargs):
         super().__init__(name="Waxrider Togwaggle",
+                         id="BGS_035",
+                         gold_id="TB_BaconUps_105",
                          rank=2,
                          base_attack=1,
                          base_defense=2,
@@ -321,6 +365,8 @@ class WaxriderTogwaggle(Minion):
 class YoHoOgre(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Yo-Ho-Ogre",
+                         id="BGS_060",
+                         gold_id="TB_BaconUps_150",
                          rank=2,
                          base_attack=2,
                          base_defense=5,

@@ -3,10 +3,11 @@ import inspect
 
 # We explicitly want to import all Minion classes
 from minions.base import *  # noqa: F403
+from minions.tokens import * # noqa: F403
 from minions.rank_1 import *  # noqa: F403
-# from minions.rank_2 import *  # noqa: F403
-# from minions.rank_3 import *  # noqa: F403
-# from minions.rank_4 import *  # noqa: F403
+from minions.rank_2 import *  # noqa: F403
+from minions.rank_3 import *  # noqa: F403
+from minions.rank_4 import *  # noqa: F403
 # from minions.rank_5 import *
 # from minions.rank_6 import *
 
