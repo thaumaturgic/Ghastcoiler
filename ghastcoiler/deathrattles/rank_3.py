@@ -19,20 +19,20 @@ class InfestedWolfDeathrattle(Deathrattle):
             own_board.add_minion(Spider(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
 
 
-class PilotedShredderDeathrattle(Deathrattle):
-    "Summon a random 2-Cost minion."
-    def __init__(self):
-        super().__init__(name="PilotedShredderDeathrattle")
+# class PilotedShredderDeathrattle(Deathrattle):
+#     "Summon a random 2-Cost minion."
+#     def __init__(self):
+#         super().__init__(name="PilotedShredderDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        from utils.minion_utils import MinionUtils
-        minionUtils = MinionUtils()
-        two_mana_minions = [minion for minion in minionUtils.get_all_minions() if minion.mana_cost == 2]
-        num_minions = 2 if minion.golden else 1
-        for _ in range(num_minions):
-            new_minion = two_mana_minions[random.randint(0, len(two_mana_minions)-1)]
-            new_minion.attacked = minion.attacked
-            own_board.add_minion(new_minion, position=minion.position, to_right=macaw_trigger)
+#     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
+#         from utils.minion_utils import MinionUtils
+#         minionUtils = MinionUtils()
+#         two_mana_minions = [minion for minion in minionUtils.get_all_minions() if minion.mana_cost == 2]
+#         num_minions = 2 if minion.golden else 1
+#         for _ in range(num_minions):
+#             new_minion = two_mana_minions[random.randint(0, len(two_mana_minions)-1)]
+#             new_minion.attacked = minion.attacked
+#             own_board.add_minion(new_minion, position=minion.position, to_right=macaw_trigger)
 
 
 class RatPackDeathrattle(Deathrattle):

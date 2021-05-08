@@ -15,7 +15,8 @@ class Amalgam(Minion):
                          MinionType.Beast, 
                          MinionType.Mech, 
                          MinionType.Pirate, 
-                         MinionType.Elemental],
+                         MinionType.Elemental,
+                         MinionType.Quilboar],
                          **kwargs)
 
 

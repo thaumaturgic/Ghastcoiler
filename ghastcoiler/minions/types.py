@@ -9,3 +9,5 @@ class MinionType(Enum):
     Mech = 5
     Pirate = 6
     Elemental = 7
+    Quilboar = 8
+    # TODO: "ALL" type? 

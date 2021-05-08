@@ -55,6 +55,19 @@ class BolvarFireblood(Minion):
         self.add_stats(4 if self.golden else 2, 0)
 
 
+class Bonker(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Bonker",
+                         id="BG20_104",
+                         gold_id="BG20_104_G",
+                         rank=4,
+                         base_attack=4,
+                         base_defense=7,
+                         types=[MinionType.Quilboar],
+                         base_windfury=True,
+                         **kwargs)
+
+
 class CaveHydra(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Cave Hydra",
@@ -123,6 +136,19 @@ class DrakonidEnforcer(Minion):
         self.add_stats(stats, stats)
 
 
+class DynamicDuo(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Dynamic Duo",
+                         id="BG20_207",
+                         gold_id="BG20_207_G",
+                         rank=4,
+                         base_attack=5,
+                         base_defense=6,
+                         base_taunt=True,
+                         types=[MinionType.Quilboar],
+                         **kwargs)
+
+
 class Goldgrubber(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Goldgrubber",
@@ -132,6 +158,18 @@ class Goldgrubber(Minion):
                          base_attack=2,
                          base_defense=2,
                          types=[MinionType.Pirate],
+                         **kwargs)
+
+
+class Groundshaker(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Groundshaker",
+                         id="BG20_106",
+                         gold_id="BG20_106_G",
+                         rank=4,
+                         base_attack=2,
+                         base_defense=6,
+                         types=[MinionType.Quilboar],
                          **kwargs)
 
 
@@ -145,6 +183,24 @@ class HeraldofFlame(Minion):  # TODO: Overkill trigger
                          base_defense=6,
                          types=[MinionType.Dragon],
                          **kwargs)
+
+
+class Junkbot(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Junkbot",
+                         id="GVG_106",
+                         gold_id="TB_BaconUps_046",
+                         rank=4,
+                         base_attack=1,
+                         base_defense=5,
+                         types=[MinionType.Mech],
+                         **kwargs)
+    
+    #TODO: TEST
+    def on_friendly_removal(self, other_minion: Minion):
+        if MinionType.Mech in other_minion.types:
+            stats = 4 if self.golden else 2
+            self.add_stats(stats, stats)
 
 
 class MajordomoExecutus(Minion):

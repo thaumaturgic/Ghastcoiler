@@ -6,7 +6,7 @@ from minions.base import Minion
 from minions.types import MinionType
 from minions.tokens import Imp
 from deathrattles.rank_3 import InfestedWolfDeathrattle, \
-    PilotedShredderDeathrattle, RatPackDeathrattle, \
+    RatPackDeathrattle, \
     ReplicatingMenaceDeathrattle
 
 
@@ -46,6 +46,30 @@ class ArmoftheEmpire(Minion):
         self.buff_taunted_minion(friendly_minion)
 
 
+class Bannerboar(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Bannerboar",
+                         id="BG20_201",
+                         gold_id="BG20_201_G",
+                         rank=3,
+                         base_attack=2,
+                         base_defense=5,
+                         types=[MinionType.Quilboar],
+                         **kwargs)
+
+
+# TODO: Implement frenzy, or not since its going to get removed lol
+class BarrensBlacksmith(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Barrens Blacksmith",
+                         id="BAR_073",
+                         gold_id="TB_BaconUps_320",
+                         rank=3,
+                         base_attack=3,
+                         base_defense=5,
+                         **kwargs)
+
+
 class BloodsailCannoneer(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Bloodsail Cannoneer",
@@ -55,6 +79,18 @@ class BloodsailCannoneer(Minion):
                          base_attack=4,
                          base_defense=3,
                          types=[MinionType.Pirate],
+                         **kwargs)
+
+
+class BristlebackBrute(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Bristleback Brute",
+                         id="BG20_103",
+                         gold_id="BG20_103_G",
+                         rank=3,
+                         base_attack=3,
+                         base_defense=3,
+                         types=[MinionType.Quilboar],
                          **kwargs)
 
 
@@ -255,17 +291,29 @@ class MonstrousMacaw(Minion):
                 minion_pair[1].trigger(minion_pair[0], own_board, opposing_board, macaw_trigger=True)
 
 
-class PilotedShredder(Minion):
+class Necrolyte(Minion):
     def __init__(self, **kwargs):
-        super().__init__(name="Piloted Shredder",
-                         id="BGS_023",
-                         gold_id="TB_BaconUps_035",
+        super().__init__(name="Necrolyte",
+                         id="BG20_202",
+                         gold_id="BG20_202_G",
                          rank=3,
-                         base_attack=4,
+                         base_attack=3,
                          base_defense=3,
-                         types=[MinionType.Mech],
-                         base_deathrattle=PilotedShredderDeathrattle(),
+                         types=[MinionType.Quilboar],
                          **kwargs)
+
+
+# class PilotedShredder(Minion):
+#     def __init__(self, **kwargs):
+#         super().__init__(name="Piloted Shredder",
+#                          id="BGS_023",
+#                          gold_id="TB_BaconUps_035",
+#                          rank=3,
+#                          base_attack=4,
+#                          base_defense=3,
+#                          types=[MinionType.Mech],
+#                          base_deathrattle=PilotedShredderDeathrattle(),
+#                          **kwargs)
 
 
 class RatPack(Minion):
@@ -373,6 +421,18 @@ class StasisElemental(Minion):
                          base_attack=4,
                          base_defense=4,
                          types=[MinionType.Elemental],
+                         **kwargs)
+
+
+class Thorncaller(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Thorncaller",
+                         id="BG20_105",
+                         gold_id="BG20_105_G",
+                         rank=3,
+                         base_attack=4,
+                         base_defense=3,
+                         types=[MinionType.Quilboar],
                          **kwargs)
 
 

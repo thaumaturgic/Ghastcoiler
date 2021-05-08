@@ -121,6 +121,18 @@ class MurlocTidehunter(Minion):
                          **kwargs)
 
 
+class RazorfenGeomancer(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Razorfen Geomancer",
+                         id="BG20_100",
+                         gold_id="BG20_100_G",
+                         rank=1,
+                         base_attack=3,
+                         base_defense=1,
+                         types=[MinionType.Quilboar],
+                         **kwargs)
+
+
 class RedWhelp(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Red Whelp",
@@ -211,6 +223,18 @@ class Sellemental(Minion):
                          base_attack=2,
                          base_defense=2,
                          types=[MinionType.Elemental],
+                         **kwargs)
+
+
+class SunBaconRelaxer(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Sun-Bacon Relaxer",
+                         id="BG20_301",
+                         gold_id="BG20_301_G",
+                         rank=1,
+                         base_attack=1,
+                         base_defense=2,
+                         types=[MinionType.Quilboar],
                          **kwargs)
 
 

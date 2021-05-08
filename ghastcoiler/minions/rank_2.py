@@ -229,6 +229,17 @@ class PartyElemental(Minion):
                          **kwargs)
 
 
+class ProphetoftheBoar(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Prophet of the Boar",
+                         id="BG20_203",
+                         gold_id="BG20_203_G",
+                         rank=2,
+                         base_attack=3,
+                         base_defense=3,
+                         **kwargs)
+
+
 class RabidSaurolisk(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Rabid Saurolisk",
@@ -245,6 +256,18 @@ class RabidSaurolisk(Minion):
             increase_amount = 2 if self.golden else 1
             self.attack += increase_amount
             self.defense += increase_amount
+
+
+class Roadboar(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Roadboar",
+                         id="BG20_101",
+                         gold_id="BG20_101_G",
+                         rank=2,
+                         base_attack=2,
+                         base_defense=4,
+                         types=[MinionType.Quilboar],
+                         **kwargs)
 
 
 class SelflessHero(Minion):
@@ -329,6 +352,18 @@ class TormentedRitualist(Minion):
         buff_amount = 2 if self.golden else 1
         for minion in own_board.get_minions_neighbors(self):
             minion.add_stats(buff_amount, buff_amount)
+
+
+class ToughTusk(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Tough Tusk",
+                         id="BG20_102",
+                         gold_id="BG20_102_G",
+                         rank=2,
+                         base_attack=4,
+                         base_defense=3,
+                         types=[MinionType.Quilboar],
+                         **kwargs)
 
 
 class UnstableGhoul(Minion):
