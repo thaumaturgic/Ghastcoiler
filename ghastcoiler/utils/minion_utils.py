@@ -26,7 +26,7 @@ class MinionUtils:
     def get_ghastcoiler_minion(self, id, position, health, attack):
         minion = None
         if id in self.minions_dictionary:
-            minion = self.minions_dictionary[id](position=position, defense=health, attack=attack)
+            minion = self.minions_dictionary[id](position=position, defense=health, attack=attack) #TODO: other tags
         return minion
 
     def get_all_minions(self):

@@ -11,9 +11,11 @@ class BoardState:
     friendlyBoard: []
     #friendlyPlayerHealth
     #friendlyHero
+    #friendlyTier
     enemyBoard: []
     #enemyHero
     #enemyPlayerHealth
+    #enemyTier
     #allowedMinions: []
 
 class LogReader:

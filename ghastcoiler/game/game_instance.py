@@ -139,6 +139,8 @@ class GameInstance:
         defender_dead_minions = self.cleanup_dead_minions(defending_player_board)
 
         # Resolve death rattles and 'attacks immediately' triggers. Attacker first, then defender
+        # TODO: immediate attacks on defender side resolve before attacks deathrattles?
+        # TODO: Is there a consistent order to deathrattles??
         for minion in attacker_dead_minions:
             for deathrattle in minion.deathrattles:
                 for _ in range(attacking_player_board.deathrattle_multiplier):

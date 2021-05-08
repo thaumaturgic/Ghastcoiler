@@ -37,7 +37,25 @@ logreader = LogReader(logPath, board_state_ready_event)
 
 while True:
     board_state_ready_event.wait()
-    print("got board state: ", logreader.board_state)
+    print()
+    
+    player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=40, rank=1, minions=logreader.board_state.friendlyBoard)
+    player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=40, rank=1, minions=logreader.board_state.enemyBoard)
+
+    print("Friendly board")
+    for minion in player_board_0.minions:
+        print(minion.id, minion.name, minion.attack, "/", minion.defense)
+    print("----------------")
+
+    print("Enemy board")
+    for minion in player_board_1.minions:
+        print(minion.id, minion.name, minion.attack, "/", minion.defense)
+    print("----------------")
+
+    simulation = Simulation(player_board=player_board_0, opponent_board=player_board_1, max_simulations=10)
+
+    print(simulation.simulate())
+
     board_state_ready_event.clear()
 #---------------------
 
