@@ -188,6 +188,7 @@ class OldMurkEye(Minion):
                          **kwargs)
 
     def update_bonus_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        #TODO: Fix this with actual game import log. Minion comes with buffs already applied to attack
         total_number_other_murlocs = own_board.count_minion_type(MinionType.Murloc) + opposing_board.count_minion_type(MinionType.Murloc) - 1  # Don't count itself
         bonus = total_number_other_murlocs * 2 if self.golden else total_number_other_murlocs
 

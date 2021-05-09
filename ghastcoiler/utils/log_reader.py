@@ -8,11 +8,11 @@ from utils.minion_utils import MinionUtils
 
 @dataclass
 class BoardState:
-    friendlyBoard: []
+    friendlyBoard: [] = None
     #friendlyPlayerHealth
     #friendlyHero
     #friendlyTier
-    enemyBoard: []
+    enemyBoard: [] = None
     #enemyHero
     #enemyPlayerHealth
     #enemyTier
@@ -29,43 +29,18 @@ class LogReader:
     
     NEW_GAME_STRING = "CREATE_GAME"
 
+    LICH_KING_REBORN = "TB_BaconShop_HP_024e2"
+
     def __init__(self, log_path, board_state_ready_event):
-        self.friendlyBoard = []
-        self.enemyBoard = []
         self.parser = LogParser()
         self.board_state_ready_event = board_state_ready_event
-        self.board_state = BoardState(None,None)
         self.minion_utils = MinionUtils()
-    
+
+        self.ghastcoiler_board_state = BoardState()
+        self.entity_board_state = BoardState()
+        
         watch_file_thread = Thread(target=self.watch_file, args=(log_path, ))
         watch_file_thread.start()
-
-    def convert_to_ghastcoiler(self, board):
-        ghastcoiler_board = []
-        for minion in board:
-            ghastcoiler_minion = self.minion_utils.get_ghastcoiler_minion(
-                minion.card_id, 
-                minion.tags[GameTag.ZONE_POSITION], 
-                minion.tags[GameTag.HEALTH], 
-                minion.tags[GameTag.ATK])
-            if ghastcoiler_minion:
-                ghastcoiler_board.append(ghastcoiler_minion)
-        return ghastcoiler_board
-
-    def parse_board_state(self, friendlyBoard, enemyBoard):
-        # TODO: Parse mechanically interesting tags -> Like lich king thing too, al akir shield
-        # Card ID, Position, Attack, Health, Taunt, Poisonous, Divine Shield, Windfury, Megawindfury, Reborn, Golden, Deathrattles
-        print("Friendly minions")
-        self.print_board(friendlyBoard)
-        print("Enemy minions")
-        self.print_board(enemyBoard)
-
-        # Convert the entity tags to ghastcoiler minions before passing back
-        ghastcoiler_friendly_board = self.convert_to_ghastcoiler(friendlyBoard)
-        ghastcoiler_enemy_board =  self.convert_to_ghastcoiler(enemyBoard)
-
-        self.board_state = BoardState(ghastcoiler_friendly_board, ghastcoiler_enemy_board)
-        self.board_state_ready_event.set()
 
     def watch_file(self, file):
         while True:
@@ -90,22 +65,22 @@ class LogReader:
 
             lineCount += 1
             if LogReader.GAME_STATE_STRING in line:
-                # Log all step changes
-                if LogReader.STEP_STRING in line:
-                    print(str(lineCount) + " " + line[:-1])
+
+                # if LogReader.STEP_STRING in line:
+                #     print(str(lineCount) + " " + line[:-1])
 
                 if LogReader.COMBAT_STEP_STRING in line and inShop:
                     print("\n" + str(lineCount) + " *** COMBAT #" + str(turn) + ": " + line[:-1])
                     turn += 1
-                    self.friendlyBoard, self.enemyBoard = self.get_all_minions_in_play(self.parser)
+                    self.entity_board_state = self.scrape_board_state(self.parser)
                     boardPending = True
                 elif LogReader.MAIN_START_TRIGGERS_STRING in line and boardPending:
                     # Sometimes there is a "start triggers" step that contains the correct combat board state
-                    self.friendlyBoard, self.enemyBoard = self.get_all_minions_in_play(self.parser)
+                    self.entity_board_state = self.scrape_board_state(self.parser)
                 elif LogReader.MAIN_END_STRING in line and boardPending:
                     inShop = False
                     boardPending = False
-                    self.parse_board_state(self.friendlyBoard, self.enemyBoard)
+                    self.convert_board_state(self.entity_board_state)
                     sleep(1) # artificially slow down historical log parsing for debug
                     
                 elif LogReader.SHOP_STEP_STRING in line:
@@ -117,23 +92,80 @@ class LogReader:
 
             self.parser.read_line(line)
 
-
-    def get_all_minions_in_play(self, parser):
+    def scrape_board_state(self, parser):
         packet_tree = parser.games[len(parser.games)-1]
         exporter = EntityTreeExporter(packet_tree)
         export = exporter.export()
 
+        minions = []
+        enchantments = []
+        #entities = []
+
+        for e in export.game.entities:
+            #entities.append(e)
+
+            if e.type == CardType.ENCHANTMENT:
+                enchantments.append(e)
+            elif e.type == CardType.MINION and e.zone == Zone.PLAY:
+                minions.append(e)
+                    
+        self.apply_enchantments(enchantments, minions)
+    
         friendlyMinions = []
         enemyMinions = []
-        for e in export.game.entities:
-                if e.type == CardType.MINION and e.zone == Zone.PLAY:
-                    enemyMinions.append(e) if e.controller.is_ai else friendlyMinions.append(e)
+
+        for minion in minions:
+            enemyMinions.append(minion) if minion.controller.is_ai else friendlyMinions.append(minion)
+
         friendlyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
         enemyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
-        return friendlyMinions, enemyMinions
+        
+        state = BoardState(friendlyBoard=friendlyMinions, enemyBoard=enemyMinions)
+        return state
+
+    #TODO: Find deathrattles, modular stuff like annoy o module
+    #TODO: Parse mechanically interesting tags -> Like al akir shield
+    def apply_enchantments(self, enchantments, minions):
+        for enchantment in enchantments:
+            if GameTag.ATTACHED in enchantment.tags:
+                attached_entity_id = enchantment.tags[GameTag.ATTACHED]
+                for minion in minions:
+                    if minion.id == attached_entity_id:
+                        if enchantment.card_id == LogReader.LICH_KING_REBORN:
+                            minion.tags[GameTag.REBORN] = 1
+                        #elif enchantment.card_id == BLAH
+
+    def convert_to_ghastcoiler_minion(self, board):
+        ghastcoiler_board = []
+        for minion in board:
+            # Card ID, Position, Attack, Health, 
+            # Taunt, Poisonous, Divine Shield, Windfury, Megawindfury, Reborn, Golden, Deathrattles 
+            ghastcoiler_minion = self.minion_utils.get_ghastcoiler_minion(
+                minion.card_id, 
+                minion.tags[GameTag.ZONE_POSITION], 
+                minion.tags[GameTag.HEALTH], 
+                minion.tags[GameTag.ATK],
+                True if GameTag.REBORN in minion.tags else False
+                )
+            if ghastcoiler_minion:
+                ghastcoiler_board.append(ghastcoiler_minion)
+        return ghastcoiler_board
+
+    # Convert from entities to ghastcoiler, set the board notification event
+    def convert_board_state(self, entity_board_state):    
+        print("Friendly minions")
+        self.print_board(entity_board_state.friendlyBoard)
+        print("Enemy minions")
+        self.print_board(entity_board_state.enemyBoard)
+
+        # Convert the entity tags to ghastcoiler minions before passing back
+        ghastcoiler_friendly_board = self.convert_to_ghastcoiler_minion(entity_board_state.friendlyBoard)
+        ghastcoiler_enemy_board =  self.convert_to_ghastcoiler_minion(entity_board_state.enemyBoard)
+
+        self.ghastcoiler_board_state = BoardState(ghastcoiler_friendly_board, ghastcoiler_enemy_board)
+        self.board_state_ready_event.set()
 
     def print_board(self, board):
-        print("----------------")
         for minion in board:
             print(minion.card_id, minion.tags[GameTag.ATK], "/", minion.tags[GameTag.HEALTH])
             # for tag in minion.tags:

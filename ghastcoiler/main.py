@@ -19,8 +19,8 @@ from deathrattles.rank_3 import ReplicatingMenaceDeathrattle
 
 #---------------------
 utils = MinionUtils()
-test = utils.get_ghastcoiler_minion("BGS_106", 1, 4, 3)
-test = utils.get_ghastcoiler_minion("BROKEN", 1, 4, 3)
+test = utils.get_ghastcoiler_minion("TB_BaconUps_250", 1, 4, 3, False)
+test = utils.get_ghastcoiler_minion("BROKEN", 1, 4, 3, False)
 
 var = utils.get_all_minions()
 # print(len(var))
@@ -30,17 +30,17 @@ var = utils.get_all_minions()
 #---------------------
 board_state_ready_event = Event()
 
-#"C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn1.log"
+#"C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn15_end.log.log"
 #"C:\Program Files (x86)\Hearthstone\Logs\Power_old.log"
-logPath = "C:\Program Files (x86)\Hearthstone\Logs\Power_old.log"
+logPath = "C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn15_end.log"
 logreader = LogReader(logPath, board_state_ready_event) 
 
 while True:
     board_state_ready_event.wait()
     print()
-    
-    player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=40, rank=1, minions=logreader.board_state.friendlyBoard)
-    player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=40, rank=1, minions=logreader.board_state.enemyBoard)
+
+    player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=40, rank=1, minions=logreader.ghastcoiler_board_state.friendlyBoard)
+    player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=40, rank=1, minions=logreader.ghastcoiler_board_state.enemyBoard)
 
     print("Friendly board")
     for minion in player_board_0.minions:
@@ -52,9 +52,22 @@ while True:
         print(minion.id, minion.name, minion.attack, "/", minion.defense)
     print("----------------")
 
-    simulation = Simulation(player_board=player_board_0, opponent_board=player_board_1, max_simulations=10)
+    games = 100
+    try:
+        simulation = Simulation(player_board=player_board_0, opponent_board=player_board_1, max_simulations=games)
 
-    print(simulation.simulate())
+        wins, losses, ties = 0.0, 0.0, 0.0
+        for result in simulation.simulate():
+            if result[0] > 0:
+                wins += result[1]
+            elif result[0] < 0:
+                losses += result[1]
+            else:
+                ties += result[1]
+
+        print("Win ", 100*wins/games, "Tie ", 100*ties/games, "Loss ", 100*losses/games)
+    except Exception as e:
+        print(e)
 
     board_state_ready_event.clear()
 #---------------------
