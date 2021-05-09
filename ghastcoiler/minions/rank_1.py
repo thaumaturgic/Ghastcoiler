@@ -149,8 +149,9 @@ class RedWhelp(Minion):
         number_dragons = own_board.count_minion_type(MinionType.Dragon)
         for _ in range(1 + self.golden):
             minion = opposing_board.random_minion()
-            game_instance.deal_damage(minion, opposing_board, number_dragons, False)
-            logging.debug(f"{self.minion_string()} deals {number_dragons} damage to {minion.minion_string()}")
+            if minion:
+                minion.receive_damage(number_dragons, False, opposing_board)
+                logging.debug(f"{self.minion_string()} deals {number_dragons} damage to {minion.minion_string()}")
         if player_starts:
             game_instance.check_deaths(own_board, opposing_board)
         else:

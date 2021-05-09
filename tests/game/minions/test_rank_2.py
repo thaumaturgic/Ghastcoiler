@@ -123,12 +123,21 @@ def test_selfless_hero(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
+    # Base case
     hero = SelflessHero()
     attacker_board.set_minions([hero, SpawnofNZoth(), SpawnofNZoth(), SpawnofNZoth()])
     hero.dead = True
     initialized_game.check_deaths(attacker_board, defender_board)
     shielded_minions = sum(1 for minion in attacker_board.minions if minion.divine_shield)
     assert shielded_minions == 1
+
+    # Empty board
+    hero = SelflessHero()
+    attacker_board.set_minions([hero])
+    hero.dead = True
+    initialized_game.check_deaths(attacker_board, defender_board)
+    shielded_minions = sum(1 for minion in attacker_board.minions if minion.divine_shield)
+    assert shielded_minions == 0
 
     # Test golden hero
     golden_hero = SelflessHero(golden=True)

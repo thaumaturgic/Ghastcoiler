@@ -84,6 +84,6 @@ class SelflessHeroDeathrattle(Deathrattle):
         logging.debug("Selfless Hero deathrattle triggered")
         iterations = 2 if minion.golden else 1
         for _ in range(iterations):
-            unshielded_minions = [minion for minion in own_board.minions if not minion.divine_shield]
-            board_index = unshielded_minions[random.randint(0, len(unshielded_minions) - 1)].position
-            own_board.minions[board_index].divine_shield = True
+            unshielded_minions = [minion for minion in own_board.get_living_minions() if not minion.divine_shield]
+            if len(unshielded_minions) > 0:
+                unshielded_minions[random.randint(0, len(unshielded_minions)-1)].divine_shield = True
