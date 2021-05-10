@@ -173,6 +173,20 @@ class Tabbycat(Minion):
                          types=[MinionType.Beast],
                          **kwargs)
 
+
+class Voidwalker(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Voidwalker",
+                         id="CS2_065",
+                         gold_id="TB_BaconUps_059t",
+                         rank=1,
+                         base_attack=1,
+                         base_defense=3,
+                         base_taunt=True,
+                         types=[MinionType.Demon],
+                         **kwargs)
+
+
 class WaterDroplet(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Water Droplet",

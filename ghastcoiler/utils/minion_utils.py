@@ -8,8 +8,8 @@ from minions.rank_1 import *  # noqa: F403
 from minions.rank_2 import *  # noqa: F403
 from minions.rank_3 import *  # noqa: F403
 from minions.rank_4 import *  # noqa: F403
-# from minions.rank_5 import *
-# from minions.rank_6 import *
+from minions.rank_5 import *  # noqa: F403
+from minions.rank_6 import *  # noqa: F403
 
 def is_minion_class(class_object):
         return inspect.isclass(class_object) and issubclass(class_object, Minion) and (class_object is not Minion)
