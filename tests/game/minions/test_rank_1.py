@@ -30,7 +30,7 @@ def test_scavenging_hyena(initialized_game):
     initialized_game.check_deaths(attacker_board, defender_board)
 
     assert hyena.attack == 4
-    assert hyena.defense == 3
+    assert hyena.health == 3
 
 
 def test_acolyte_of_cthun(initialized_game):
@@ -44,8 +44,8 @@ def test_acolyte_of_cthun(initialized_game):
     initialized_game.start_of_game()
     initialized_game.single_round()
 
-    assert attacker_acolyte.defense == 1 and attacker_acolyte.reborn_triggered
-    assert defender_acolyte.defense == 1 and defender_acolyte.reborn_triggered
+    assert attacker_acolyte.health == 1 and attacker_acolyte.reborn_triggered
+    assert defender_acolyte.health == 1 and defender_acolyte.reborn_triggered
 
 
 def test_red_whelp(initialized_game):
@@ -63,7 +63,7 @@ def test_scallywag(initialized_game):
     defender_board.add_minion(defender)
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender.defense == 1
+    assert defender.health == 1
 
     # Test golden tokens
     defender = PunchingBag(attack=10)
@@ -71,6 +71,6 @@ def test_scallywag(initialized_game):
     defender_board.set_minions([defender])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender.defense == 94
+    assert defender.health == 94
 
     # TODO: Test scallywag on scallywag

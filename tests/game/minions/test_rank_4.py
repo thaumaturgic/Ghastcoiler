@@ -15,7 +15,7 @@ def test_bigfernal(initialized_game):
     attacker_board.add_minion(ImpGangBoss())
 
     assert bigfernal.attack == 5
-    assert bigfernal.defense == 5
+    assert bigfernal.health == 5
 
 
 def test_bolvar_fireblood(initialized_game):
@@ -30,7 +30,7 @@ def test_bolvar_fireblood(initialized_game):
     initialized_game.single_round()
 
     assert bolvar.attack == 3
-    assert bolvar.defense == 7
+    assert bolvar.health == 7
 
 
 def test_cave_hydra(initialized_game):
@@ -54,11 +54,11 @@ def test_cave_hydra(initialized_game):
 
     # When a cleave kills an aura generator with a buffed minion, the damage is applied first, then the aura wears off
     attacker_board.set_minions([CaveHydra(), PunchingBag(), PunchingBag(), PunchingBag()])
-    defender_board.set_minions([FreedealingGambler(defense=3), SouthseaCaptain(taunt=True, defense=2), FreedealingGambler(defense=3)])
+    defender_board.set_minions([FreedealingGambler(health=3), SouthseaCaptain(taunt=True, health=2), FreedealingGambler(health=3)])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender_board.minions[0].defense == 1
-    assert defender_board.minions[1].defense == 1
+    assert defender_board.minions[0].health == 1
+    assert defender_board.minions[1].health == 1
 
     # TODO: Test cleave hitting a security bot and deflecto bot (without shield).
     # Damage trigger should be done after damage applied to all units (ie after shield is broken)
@@ -79,7 +79,7 @@ def test_champion_of_yshaarj(initialized_game):
     initialized_game.single_round()
 
     assert champion.attack == 5
-    assert champion.defense == 5
+    assert champion.health == 5
 
 
 def test_drakonid_enforcer(initialized_game):
@@ -94,7 +94,7 @@ def test_drakonid_enforcer(initialized_game):
     initialized_game.single_round()
 
     assert drakonid.attack == 5
-    assert drakonid.defense == 8
+    assert drakonid.health == 8
 
 
 def test_herald_of_flame(initialized_game):
@@ -113,7 +113,7 @@ def test_mechano_egg(initialized_game):
     initialized_game.single_round()
 
     assert defender_board.minions[0].name == "Robosaur"
-    assert defender_board.minions[0].defense == 8
+    assert defender_board.minions[0].health == 8
     assert defender_board.minions[0].attack == 8
 
 
@@ -130,8 +130,8 @@ def test_qiraji_harbinger(initialized_game):
     initialized_game.single_round()
 
     # TODO:
-    # assert leftMinion.attack == 7 and leftMinion.defense == 7
-    # assert rightMinion.attack == 2 and rightMinion.defense == 102
+    # assert leftMinion.attack == 7 and leftMinion.health == 7
+    # assert rightMinion.attack == 2 and rightMinion.health == 102
     pass
 
 
@@ -149,7 +149,7 @@ def test_ring_matron(initialized_game):
         minion = attacker_board.minions[i]
         assert minion.name == "Fiery Imp"
         assert minion.attack == 3
-        assert minion.defense == 2
+        assert minion.health == 2
 
 
 def test_ripsnarl_captain(initialized_game):
@@ -166,13 +166,13 @@ def test_ripsnarl_captain(initialized_game):
     initialized_game.single_round()
 
     assert buffPirate.attack == 5
-    assert buffPirate.defense == 5
+    assert buffPirate.health == 5
 
     initialized_game.single_round()
     initialized_game.single_round()
 
     assert nonBuffPirate.attack == 4
-    assert nonBuffPirate.defense == 5
+    assert nonBuffPirate.health == 5
 
 
 def test_savannah_highmane(initialized_game):
@@ -189,7 +189,7 @@ def test_savannah_highmane(initialized_game):
         hyena = attacker_board.minions[i]
         assert hyena.name == "Hyena"
         assert hyena.attack == 2
-        assert hyena.defense == 2
+        assert hyena.health == 2
 
 
 def test_security_rover(initialized_game):
@@ -206,13 +206,13 @@ def test_siegebreaker(initialized_game):
     imp = ImpGangBoss()
     attacker_board.add_minion(imp)
     assert imp.attack == 3
-    assert imp.defense == 4
+    assert imp.health == 4
 
     initialized_game.start_of_game()
     initialized_game.single_round()
 
     assert imp.attack == 2
-    assert imp.defense == 4
+    assert imp.health == 4
 
 
 def test_wildfire_elemental(initialized_game):

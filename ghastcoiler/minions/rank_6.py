@@ -16,7 +16,7 @@ class Amalgadon(Minion):
                          gold_id="TB_BaconUps_121",
                          rank=6,
                          base_attack=6,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Murloc, MinionType.Dragon, MinionType.Demon, MinionType.Beast, MinionType.Mech, MinionType.Pirate, MinionType.Elemental, MinionType.Quilboar],
                          **kwargs)
 
@@ -28,7 +28,7 @@ class CaptainFlatTusk(Minion):
                          gold_id="BG20_206_G",
                          rank=6,
                          base_attack=9,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -40,7 +40,7 @@ class Charlga(Minion):
                          gold_id="BG20_303_G",
                          rank=6,
                          base_attack=7,
-                         base_defense=7,
+                         base_health=7,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -53,7 +53,7 @@ class DreadAdmiralEliza(Minion):
                          gold_id="TB_BaconUps_134",
                          rank=6,
                          base_attack=6,
-                         base_defense=7,
+                         base_health=7,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -65,7 +65,7 @@ class FoeReaper4000(Minion):
                          gold_id="TB_BaconUps_153",
                          rank=6,
                          base_attack=6,
-                         base_defense=9,
+                         base_health=9,
                          base_cleave=True,
                          types=[MinionType.Mech],
                          **kwargs)
@@ -79,7 +79,7 @@ class GentleDjinni(Minion):
                          gold_id="TB_BaconUps_165",
                          rank=6,
                          base_attack=4,
-                         base_defense=5,
+                         base_health=5,
                          base_deathrattle=GentleDjinniDeathrattle(),
                          types=[MinionType.Elemental],
                          **kwargs)
@@ -93,7 +93,7 @@ class Ghastcoiler(Minion):
                          gold_id="TB_BaconUps_057",
                          rank=6,
                          base_attack=7,
-                         base_defense=7,
+                         base_health=7,
                          base_deathrattle=GhastcoilerDeathrattle(),
                          types=[MinionType.Beast],
                          **kwargs)
@@ -107,7 +107,7 @@ class GoldrinntheGreatWolf(Minion):
                          gold_id="TB_BaconUps_085",
                          rank=6,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          base_deathrattle=GoldrinntheGreatWolfDeathrattle(),
                          types=[MinionType.Beast],
                          **kwargs)
@@ -121,7 +121,7 @@ class ImpMama(Minion):
                          gold_id="TB_BaconUps_116",
                          rank=6,
                          base_attack=6,
-                         base_defense=10,
+                         base_health=10,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -133,7 +133,7 @@ class KalecgosArcaneAspect(Minion):
                          gold_id="TB_BaconUps_109",
                          rank=6,
                          base_attack=4,
-                         base_defense=12,
+                         base_health=12,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -146,7 +146,7 @@ class KangorsApprentice(Minion):
                          gold_id="TB_BaconUps_087",
                          rank=6,
                          base_attack=4,
-                         base_defense=8,
+                         base_health=8,
                          base_deathrattle=KangorsApprenticeDeathrattle(),
                          **kwargs)
 
@@ -158,7 +158,7 @@ class LieutenantGarr(Minion):
                          gold_id="TB_BaconUps_163",
                          rank=6,
                          base_attack=8,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -170,7 +170,7 @@ class LilRag(Minion):
                          gold_id="TB_BaconUps_200",
                          rank=6,
                          base_attack=6,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -182,7 +182,7 @@ class Maexxna(Minion):
                          gold_id="TB_BaconUps_155",
                          rank=6,
                          base_attack=2,
-                         base_defense=8,
+                         base_health=8,
                          base_poisonous=True,
                          types=[MinionType.Beast],
                          **kwargs)
@@ -196,7 +196,7 @@ class NadinatheRed(Minion):
                          gold_id="TB_BaconUps_154",
                          rank=6,
                          base_attack=7,
-                         base_defense=4,
+                         base_health=4,
                          base_deathrattle=NadinatheRedDeathrattle(),
                          **kwargs)
 
@@ -209,7 +209,7 @@ class TheTideRazor(Minion):
                          gold_id="TB_BaconUps_137",
                          rank=6,
                          base_attack=6,
-                         base_defense=4,
+                         base_health=4,
                          base_deathrattle=TheTideRazorDeathrattle(),
                          **kwargs)
 
@@ -222,7 +222,7 @@ class ZappSlywick(Minion):
                          gold_id="TB_BaconUps_091",
                          rank=6,
                          base_attack=7,
-                         base_defense=10,
+                         base_health=10,
                          base_windfury=True,
                          **kwargs)
         self.windfury = False if self.golden else True

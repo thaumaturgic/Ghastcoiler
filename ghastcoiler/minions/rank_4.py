@@ -16,7 +16,7 @@ class AnnoyoModule(Minion):
                          gold_id="TB_BaconUps_099",
                          rank=4,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Mech],
                          base_taunt=True,
                          base_divine_shield=True,
@@ -30,7 +30,7 @@ class Bigfernal(Minion):
                          gold_id="TB_BaconUps_304",
                          rank=4,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -47,7 +47,7 @@ class BolvarFireblood(Minion):
                          gold_id="TB_BaconUps_047",
                          rank=4,
                          base_attack=1,
-                         base_defense=7,
+                         base_health=7,
                          base_divine_shield=True,
                          **kwargs)
 
@@ -62,7 +62,7 @@ class Bonker(Minion):
                          gold_id="BG20_104_G",
                          rank=4,
                          base_attack=4,
-                         base_defense=7,
+                         base_health=7,
                          types=[MinionType.Quilboar],
                          base_windfury=True,
                          **kwargs)
@@ -75,7 +75,7 @@ class CaveHydra(Minion):
                          gold_id="TB_BaconUps_151",
                          rank=4,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Beast],
                          base_cleave=True,
                          **kwargs)
@@ -88,7 +88,7 @@ class ChampionofYShaarj(Minion):
                          gold_id="TB_BaconUps_301",
                          rank=4,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          **kwargs)
 
     def on_friendly_attacked(self, friendly_minion: Minion):
@@ -104,7 +104,7 @@ class CobaltScalebane(Minion):
                          gold_id="TB_BaconUps_120",
                          rank=4,
                          base_attack=5,
-                         base_defense=5,
+                         base_health=5,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -116,7 +116,7 @@ class DefenderofArgus(Minion):
                          gold_id="TB_BaconUps_009",
                          rank=4,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          **kwargs)
 
 
@@ -127,7 +127,7 @@ class DrakonidEnforcer(Minion):
                          gold_id="TB_BaconUps_117",
                          rank=4,
                          base_attack=3,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -143,7 +143,7 @@ class DynamicDuo(Minion):
                          gold_id="BG20_207_G",
                          rank=4,
                          base_attack=5,
-                         base_defense=6,
+                         base_health=6,
                          base_taunt=True,
                          types=[MinionType.Quilboar],
                          **kwargs)
@@ -156,7 +156,7 @@ class Goldgrubber(Minion):
                          gold_id="TB_BaconUps_130",
                          rank=4,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -168,7 +168,7 @@ class Groundshaker(Minion):
                          gold_id="BG20_106_G",
                          rank=4,
                          base_attack=2,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -180,7 +180,7 @@ class HeraldofFlame(Minion):  # TODO: Overkill trigger
                          gold_id="TB_BaconUps_103",
                          rank=4,
                          base_attack=5,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -192,7 +192,7 @@ class Junkbot(Minion):
                          gold_id="TB_BaconUps_046",
                          rank=4,
                          base_attack=1,
-                         base_defense=5,
+                         base_health=5,
                          types=[MinionType.Mech],
                          **kwargs)
     
@@ -210,7 +210,7 @@ class MajordomoExecutus(Minion):
                          gold_id="TB_BaconUps_207",
                          rank=4,
                          base_attack=6,
-                         base_defense=3,
+                         base_health=3,
                          **kwargs)
 
 
@@ -221,7 +221,7 @@ class MechanoEgg(Minion):
                          gold_id="TB_BaconUps_039",
                          rank=4,
                          base_attack=0,
-                         base_defense=5,
+                         base_health=5,
                          types=[MinionType.Mech],
                          base_deathrattle=MechanoEggDeathrattle(),
                          **kwargs)
@@ -234,7 +234,7 @@ class MenagerieJug(Minion):
                          gold_id="TB_BaconUps_145",
                          rank=4,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          **kwargs)
 
 
@@ -245,7 +245,7 @@ class PrimalfinLookout(Minion):
                          gold_id="TB_BaconUps_089",
                          rank=4,
                          base_attack=3,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Murloc],
                          **kwargs)
 
@@ -258,7 +258,7 @@ class QirajiHarbinger(Minion):
                          gold_id="TB_BaconUps_303",
                          rank=4,
                          base_attack=5,
-                         base_defense=5,
+                         base_health=5,
                          **kwargs)
 
     def on_friendly_removal(self, other_minion: Minion):
@@ -274,7 +274,7 @@ class RingMatron(Minion):
                          gold_id="TB_BaconUps_309",
                          rank=4,
                          base_attack=6,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Demon],
                          base_deathrattle=RingMatronDeathrattle(),
                          **kwargs)
@@ -288,7 +288,7 @@ class RipsnarlCaptain(Minion):
                          gold_id="TB_BaconUps_139",
                          rank=4,
                          base_attack=4,
-                         base_defense=5,
+                         base_health=5,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -305,7 +305,7 @@ class SavannahHighmane(Minion):
                          gold_id="TB_BaconUps_049",
                          rank=4,
                          base_attack=6,
-                         base_defense=5,
+                         base_health=5,
                          types=[MinionType.Beast],
                          base_deathrattle=SavannahHighmaneDeathrattle(),
                          **kwargs)
@@ -319,7 +319,7 @@ class SecurityRover(Minion):
                          gold_id="TB_BaconUps_041",
                          rank=4,
                          base_attack=2,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Mech],
                          **kwargs)
 
@@ -334,7 +334,7 @@ class Siegebreaker(Minion):
                          gold_id="TB_BaconUps_053",
                          rank=4,
                          base_attack=5,
-                         base_defense=8,
+                         base_health=8,
                          base_taunt=True,
                          types=[MinionType.Demon],
                          **kwargs)
@@ -364,7 +364,7 @@ class Toxfin(Minion):
                          gold_id="TB_BaconUps_152",
                          rank=4,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Murloc],
                          **kwargs)
 
@@ -376,7 +376,7 @@ class VirmenSensei(Minion):
                          gold_id="TB_BaconUps_074",
                          rank=4,
                          base_attack=4,
-                         base_defense=5,
+                         base_health=5,
                          **kwargs)
 
 
@@ -388,6 +388,6 @@ class WildfireElemental(Minion):
                          gold_id="TB_BaconUps_166",
                          rank=4,
                          base_attack=7,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Elemental],
                          **kwargs)

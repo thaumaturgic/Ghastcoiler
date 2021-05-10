@@ -44,12 +44,12 @@ while True:
 
     print("Friendly board")
     for minion in player_board_0.minions:
-        print(minion.id, minion.name, minion.attack, "/", minion.defense)
+        print(minion.id, minion.name, minion.attack, "/", minion.health)
     print("----------------")
 
     print("Enemy board")
     for minion in player_board_1.minions:
-        print(minion.id, minion.name, minion.attack, "/", minion.defense)
+        print(minion.id, minion.name, minion.attack, "/", minion.health)
     print("----------------")
 
     games = 100
@@ -72,8 +72,8 @@ while True:
     board_state_ready_event.clear()
 #---------------------s
 
-board_0_minions = [deflecto, MicroMummy(), OldMurkEye(), WardenofOld(attack=4), RockpoolHunter(attack=4, defense=4), MicroMummy(), RockpoolHunter()]
-board_1_minions = [Scallywag(attack=4, defense=3), SouthseaStrongarm(attack=6, defense=5), TormentedRitualist(), SouthseaCaptain(attack=6,defense=6), StewardofTime(), SouthseaCaptain(attack=4,defense=4), HarvestGolem()]
+board_0_minions = [deflecto, MicroMummy(), OldMurkEye(), WardenofOld(attack=4), RockpoolHunter(attack=4, health=4), MicroMummy(), RockpoolHunter()]
+board_1_minions = [Scallywag(attack=4, health=3), SouthseaStrongarm(attack=6, health=5), TormentedRitualist(), SouthseaCaptain(attack=6,health=6), StewardofTime(), SouthseaCaptain(attack=4,health=4), HarvestGolem()]
 
 player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=12, rank=4, minions=board_0_minions)
 player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=12, rank=4, minions=board_1_minions)

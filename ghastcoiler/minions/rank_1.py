@@ -13,7 +13,7 @@ class AcolyteOfCThun(Minion):
                          gold_id="TB_BaconUps_255",
                          rank=1,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          base_taunt=True,
                          base_reborn=True,
                          **kwargs)
@@ -26,7 +26,7 @@ class Alleycat(Minion):
                          gold_id="TB_BaconUps_093",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -38,7 +38,7 @@ class DeckSwabbie(Minion):
                          gold_id="TB_BaconUps_126",
                          rank=1,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -50,7 +50,7 @@ class DragonspawnLieutenant(Minion):
                          gold_id="TB_BaconUps_146",
                          rank=1,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Dragon],
                          base_taunt=True,
                          **kwargs)
@@ -63,7 +63,7 @@ class FiendishServant(Minion):
                          gold_id="TB_BaconUps_112",
                          rank=1,
                          base_attack=2,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Demon],
                          base_deathrattle=FiendishServantDeathrattle(),
                          **kwargs)
@@ -76,7 +76,7 @@ class MicroMachine(Minion):
                          gold_id="TB_BaconUps_094",
                          rank=1,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Mech],
                          mana_cost=2,
                          **kwargs)
@@ -89,7 +89,7 @@ class MicroMummy(Minion):
                          gold_id="TB_BaconUps_250",
                          rank=1,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Mech],
                          base_reborn=True,
                          mana_cost=2,
@@ -103,7 +103,7 @@ class MurlocTidecaller(Minion):
                          gold_id="TB_BaconUps_011",
                          rank=1,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Murloc],
                          **kwargs)
 
@@ -115,7 +115,7 @@ class MurlocTidehunter(Minion):
                          gold_id="TB_BaconUps_003",
                          rank=1,
                          base_attack=2,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Murloc],
                          mana_cost=2,
                          **kwargs)
@@ -128,7 +128,7 @@ class RazorfenGeomancer(Minion):
                          gold_id="BG20_100_G",
                          rank=1,
                          base_attack=3,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -140,7 +140,7 @@ class RedWhelp(Minion):
                          gold_id="TB_BaconUps_102",
                          rank=1,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -165,7 +165,7 @@ class RefreshingAnomaly(Minion):
                          gold_id="TB_BaconUps_167",
                          rank=1,
                          base_attack=1,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -177,7 +177,7 @@ class RockpoolHunter(Minion):
                          gold_id="TB_BaconUps_061",
                          rank=1,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Murloc],
                          mana_cost=2,
                          **kwargs)
@@ -190,7 +190,7 @@ class Scallywag(Minion):
                          gold_id="TB_BaconUps_141",
                          rank=1,
                          base_attack=2,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Pirate],
                          base_deathrattle=ScallywagDeathrattle(),
                          **kwargs)
@@ -203,7 +203,7 @@ class ScavengingHyena(Minion):
                          gold_id="TB_BaconUps_043",
                          rank=1,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Beast],
                          mana_cost=2,
                          **kwargs)
@@ -212,7 +212,7 @@ class ScavengingHyena(Minion):
         if MinionType.Beast in other_minion.types:
             multiplier = 2 if self.golden else 1
             self.attack += (2 * multiplier)
-            self.defense += multiplier
+            self.health += multiplier
 
 
 class Sellemental(Minion):
@@ -222,7 +222,7 @@ class Sellemental(Minion):
                          gold_id="TB_BaconUps_156",
                          rank=1,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -234,7 +234,7 @@ class SunBaconRelaxer(Minion):
                          gold_id="BG20_301_G",
                          rank=1,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -246,7 +246,7 @@ class VulgarHomunculus(Minion):
                          gold_id="TB_BaconUps_148",
                          rank=1,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Demon],
                          base_taunt=True,
                          mana_cost=2,
@@ -260,5 +260,5 @@ class WrathWeaver(Minion):
                          gold_id="TB_BaconUps_079",
                          rank=1,
                          base_attack=1,
-                         base_defense=3,
+                         base_health=3,
                          **kwargs)

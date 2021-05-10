@@ -17,9 +17,9 @@ class Minion:
                  gold_id: str,
                  rank: int,
                  base_attack: int,
-                 base_defense: int,
+                 base_health: int,
                  attack: Optional[int] = None,
-                 defense: Optional[int] = None,
+                 health: Optional[int] = None,
                  dead: bool = False,
                  types: Optional[List[MinionType]] = None,
                  base_poisonous: bool = False,
@@ -54,11 +54,11 @@ class Minion:
             name {str} -- Name of the minion
             rank {int} -- Rank of the minion
             base_attack {int} -- Base attack of the non-golden version
-            base_defense {int} -- Base defense of the non-golden version
+            base_health {int} -- Base health of the non-golden version
 
         Keyword Arguments:
             attack {Optional[int]} -- Optional overwritten attack (default: {None})
-            defense {Optional[int]} -- Optional overwritten defense (default: {None})
+            health {Optional[int]} -- Optional overwritten health (default: {None})
             dead {bool} -- Has the minion been killed (default: {False})
             types {Optional[List[MinionType]]} -- Optional list of MinionTypes (default: {None})
             base_poisonous {bool} -- Standard poisonous (default: {False})
@@ -90,9 +90,9 @@ class Minion:
         self.id = id
         self.gold_id = gold_id
         self.base_attack = base_attack * 2 if golden else base_attack
-        self.base_defense = base_defense * 2 if golden else base_defense
+        self.base_health = base_health * 2 if golden else base_health
         self.attack = attack if attack else self.base_attack
-        self.defense = defense if defense else self.base_defense
+        self.health = health if health else self.base_health
         self.dead = dead
         self.types = types if types else []
         self.base_divine_shield = base_divine_shield
@@ -122,7 +122,7 @@ class Minion:
         self.damage_trigger_pending = False
 
         if self.reborn_triggered:
-            self.defense = 1
+            self.health = 1
 
     def minion_string(self):
         """String representation of minion
@@ -143,7 +143,7 @@ class Minion:
             attributes += "[Cl]"
         if self.reborn:
             attributes += "[Re]"
-        return_string = f"{self.attack}/{self.defense} {''.join(attributes)} ({self.name})"
+        return_string = f"{self.attack}/{self.health} {''.join(attributes)} ({self.name})"
         positional_part = f"<P{self.player_id} {self.position}> "
         return_string = positional_part + return_string
         return return_string
@@ -156,17 +156,17 @@ class Minion:
         """
         return self.minion_string()
 
-    def add_stats(self, attack: int, defense: int):
-        """Add minion attack/defense
+    def add_stats(self, attack: int, health: int):
+        """Add minion attack/health
         """
         self.attack += attack
-        self.defense += defense
+        self.health += health
 
-    def remove_stats(self, attack: int, defense: int):
-        """Remove minion attack/defense
+    def remove_stats(self, attack: int, health: int):
+        """Remove minion attack/health
         """
         self.attack -= attack
-        self.defense -= defense
+        self.health -= health
 
     def receive_damage(self, amount: int, poisonous: bool, own_board: PlayerBoard, defer_damage_trigger: Optional[bool] = False):
         """Receive amount of damage which can be poisonous
@@ -182,21 +182,21 @@ class Minion:
             int -- Current health of the attacked minion (will be negative if its dead, can be used for overkill amount)
         """
         if amount <= 0:
-            return [False, self.dead, self.defense]
+            return [False, self.dead, self.health]
 
         popped_shield = False
         if self.divine_shield:
             popped_shield = True
             self.divine_shield = False
         else:  # Minion took damage
-            self.defense -= amount
-            if self.defense <= 0 or poisonous:
+            self.health -= amount
+            if self.health <= 0 or poisonous:
                 self.dead = True
             if not defer_damage_trigger:
                 self.on_receive_damage(own_board)
             self.damage_trigger_pending = defer_damage_trigger
 
-        return [popped_shield, self.dead, self.defense]
+        return [popped_shield, self.dead, self.health]
 
     def process_deferred_damage_trigger(self, own_board: PlayerBoard):
         if self.damage_trigger_pending:

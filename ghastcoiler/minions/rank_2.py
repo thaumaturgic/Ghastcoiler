@@ -16,7 +16,7 @@ class FreedealingGambler(Minion):
                          gold_id="TB_BaconUps_127",
                          rank=2,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -28,7 +28,7 @@ class GlyphGuardian(Minion):
                          gold_id="TB_BaconUps_115",
                          rank=2,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -46,7 +46,7 @@ class HarvestGolem(Minion):
                          id="EX1_556",
                          gold_id="TB_BaconUps_006",
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Mech],
                          base_deathrattle=HarvestGolemDeathrattle(),
                          **kwargs)
@@ -59,7 +59,7 @@ class Imprisoner(Minion):
                          gold_id="TB_BaconUps_113",
                          rank=2,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Demon],
                          base_taunt=True,
                          base_deathrattle=ImprisonerDeathrattle(),
@@ -73,7 +73,7 @@ class KaboomBot(Minion):
                          gold_id="TB_BaconUps_028",
                          rank=2,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Mech],
                          base_deathrattle=KaboomBotDeathrattle(),
                          **kwargs)
@@ -86,7 +86,7 @@ class KindlyGrandmother(Minion):
                          gold_id="TB_BaconUps_004",
                          rank=2,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Beast],
                          base_deathrattle=KindlyGrandmotherDeathrattle(),
                          mana_cost=2,
@@ -100,7 +100,7 @@ class MenagerieMug(Minion):
                          gold_id="TB_BaconUps_144",
                          rank=2,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          **kwargs)
 
 
@@ -111,7 +111,7 @@ class MetaltoothLeaper(Minion):
                          gold_id="TB_BaconUps_066",
                          rank=2,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Mech],
                          **kwargs)
 
@@ -123,7 +123,7 @@ class MoltenRock(Minion):
                          gold_id="TB_Baconups_202",
                          rank=2,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          base_taunt=True,
                          types=[MinionType.Elemental],
                          **kwargs)
@@ -136,7 +136,7 @@ class MurlocWarleader(Minion):
                          gold_id="TB_BaconUps_008",
                          rank=2,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Murloc],
                          **kwargs)
 
@@ -166,7 +166,7 @@ class NathrezimOverseer(Minion):
                          gold_id="TB_BaconUps_062",
                          rank=2,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -183,7 +183,7 @@ class OldMurkEye(Minion):
                          gold_id="TB_BaconUps_036",
                          rank=2,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Murloc],
                          **kwargs)
 
@@ -210,7 +210,7 @@ class PackLeader(Minion):
                          gold_id="TB_BaconUps_086",
                          rank=2,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          **kwargs)
 
     def on_friendly_summon(self, other_minion: Minion):
@@ -225,7 +225,7 @@ class PartyElemental(Minion):
                          gold_id="TB_BaconUps_160",
                          rank=2,
                          base_attack=3,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -237,7 +237,7 @@ class ProphetoftheBoar(Minion):
                          gold_id="BG20_203_G",
                          rank=2,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          **kwargs)
 
 
@@ -248,7 +248,7 @@ class RabidSaurolisk(Minion):
                          gold_id="TB_BaconUps_125",
                          rank=2,
                          base_attack=3,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -256,7 +256,7 @@ class RabidSaurolisk(Minion):
         if other_minion.deathrattles:
             increase_amount = 2 if self.golden else 1
             self.attack += increase_amount
-            self.defense += increase_amount
+            self.health += increase_amount
 
 
 class Roadboar(Minion):
@@ -266,7 +266,7 @@ class Roadboar(Minion):
                          gold_id="BG20_101_G",
                          rank=2,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -278,7 +278,7 @@ class SelflessHero(Minion):
                          gold_id="TB_BaconUps_014",
                          rank=2,
                          base_attack=2,
-                         base_defense=1,
+                         base_health=1,
                          base_deathrattle=SelflessHeroDeathrattle(),
                          **kwargs)
 
@@ -290,7 +290,7 @@ class SouthseaCaptain(Minion):
                          gold_id="TB_BaconUps_136",
                          rank=2,
                          base_attack=3,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -301,8 +301,8 @@ class SouthseaCaptain(Minion):
                 other_minion.add_stats(buffAmount, buffAmount)
             else:
                 other_minion.remove_stats(buffAmount, buffAmount)
-                if other_minion.defense <= 0:
-                    other_minion.defense = 1  # Losing pirate buffs cannot kill a minion
+                if other_minion.health <= 0:
+                    other_minion.health = 1  # Losing pirate buffs cannot kill a minion
 
     def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
         self.adjust_pirate_stats(other_minion, True)
@@ -321,7 +321,7 @@ class SpawnofNZoth(Minion):
                          gold_id="TB_BaconUps_025",
                          rank=2,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          base_deathrattle=SpawnofNZothDeathrattle(),
                          **kwargs)
 
@@ -333,7 +333,7 @@ class StewardofTime(Minion):
                          gold_id="TB_BaconUps_107",
                          rank=2,
                          base_attack=3,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -345,7 +345,7 @@ class TormentedRitualist(Minion):
                          gold_id="TB_BaconUps_257",
                          rank=2,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          base_taunt=True,
                          **kwargs)
 
@@ -362,7 +362,7 @@ class ToughTusk(Minion):
                          gold_id="BG20_102_G",
                          rank=2,
                          base_attack=4,
-                         base_defense=3,
+                         base_health=3,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -374,7 +374,7 @@ class UnstableGhoul(Minion):
                          gold_id="TB_BaconUps_118",
                          rank=2,
                          base_attack=1,
-                         base_defense=3,
+                         base_health=3,
                          base_taunt=True,
                          base_deathrattle=UnstableGhoulDeathrattle(),
                          mana_cost=2,
@@ -389,7 +389,7 @@ class WaxriderTogwaggle(Minion):
                          gold_id="TB_BaconUps_105",
                          rank=2,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          **kwargs)
 
     def on_friendly_kill(self, killer_minion: Minion):
@@ -405,7 +405,7 @@ class YoHoOgre(Minion):
                          gold_id="TB_BaconUps_150",
                          rank=2,
                          base_attack=2,
-                         base_defense=5,
+                         base_health=5,
                          base_taunt=True,
                          types=[MinionType.Pirate],
                          **kwargs)

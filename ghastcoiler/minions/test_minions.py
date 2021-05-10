@@ -10,5 +10,5 @@ class PunchingBag(Minion):
                          gold_id="",
                          rank=1,
                          base_attack=0,
-                         base_defense=100,
+                         base_health=100,
                          **kwargs)

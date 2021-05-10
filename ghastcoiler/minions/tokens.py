@@ -8,7 +8,7 @@ class Amalgam(Minion):
                          gold_id="",
                          rank=1,
                          base_attack=1,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Murloc, 
                          MinionType.Dragon, 
                          MinionType.Demon, 
@@ -27,7 +27,7 @@ class BigBadWolf(Minion):
                          gold_id="TB_BaconUps_004t",
                          rank=1,
                          base_attack=3,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -39,7 +39,7 @@ class DamagedGolem(Minion):
                          gold_id="TB_BaconUps_006t",
                          rank=1,
                          base_attack=2,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Mech],
                          **kwargs)
 
@@ -51,7 +51,7 @@ class FieryImp(Minion):
                          gold_id="TB_BaconUps_309t",
                          rank=1,
                          base_attack=3,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -63,7 +63,7 @@ class GuardBot(Minion):
                          gold_id="TB_BaconUps_041t",
                          rank=1,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          base_taunt=True,
                          types=[MinionType.Mech],
                          **kwargs)
@@ -76,7 +76,7 @@ class Hyena(Minion):
                          gold_id="TB_BaconUps_049t",
                          rank=1,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -88,7 +88,7 @@ class Imp(Minion):
                          gold_id="TB_BaconUps_030t",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -100,7 +100,7 @@ class Microbot(Minion):
                          gold_id="TB_BaconUps_032t",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Mech],
                          **kwargs)
 
@@ -111,9 +111,11 @@ class MurlocScout(Minion):
                          gold_id="TB_BaconUps_003t",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Murloc],
                          **kwargs)
+
+# TODO: Plant {"artist":"Zoltan Boros","attack":1,"cardClass":"NEUTRAL","cost":1,"dbfId":41067,"health":1,"id":"UNG_999t2t1","name":"Plant","set":"UNGORO","type":"MINION"},
 
 class Rat(Minion):
     def __init__(self, **kwargs):
@@ -122,7 +124,7 @@ class Rat(Minion):
                          gold_id="TB_BaconUps_027t",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -134,7 +136,7 @@ class Robosaur(Minion):
                          gold_id="TB_BaconUps_039t",
                          rank=1,
                          base_attack=8,
-                         base_defense=8,
+                         base_health=8,
                          types=[MinionType.Mech],
                          **kwargs)
 
@@ -146,7 +148,7 @@ class SkyPirate(Minion):
                          gold_id="TB_BaconUps_141t",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -158,7 +160,7 @@ class Spider(Minion):
                          gold_id="TB_BaconUps_026t",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -169,7 +171,7 @@ class Tabbycat(Minion):
                          gold_id="TB_BaconUps_093t",
                          rank=1,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -181,7 +183,7 @@ class Voidwalker(Minion):
                          gold_id="TB_BaconUps_059t",
                          rank=1,
                          base_attack=1,
-                         base_defense=3,
+                         base_health=3,
                          base_taunt=True,
                          types=[MinionType.Demon],
                          **kwargs)
@@ -194,6 +196,6 @@ class WaterDroplet(Minion):
                          gold_id="",
                          rank=1,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          types=[MinionType.Elemental],
                          **kwargs)

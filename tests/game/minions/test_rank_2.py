@@ -15,7 +15,7 @@ def test_kaboombot_deathrattle(initialized_game):
     defender_board.add_minion(PunchingBag(attack=2))
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender_board.minions[0].defense == 94
+    assert defender_board.minions[0].health == 94
 
     # TODO: Test more complicated scenarios where boom bot kills other deathrattle minions
     attacker_board.set_minions([KaboomBot(), KaboomBot()])
@@ -98,13 +98,13 @@ def test_rabid_saurolisk(initialized_game):
     rabid_saurolisk = RabidSaurolisk()
     initialized_game.player_board[0].add_minion(rabid_saurolisk)
     assert rabid_saurolisk.attack == 3
-    assert rabid_saurolisk.defense == 1
+    assert rabid_saurolisk.health == 1
     initialized_game.player_board[0].add_minion(FiendishServant())
     assert rabid_saurolisk.attack == 4
-    assert rabid_saurolisk.defense == 2
+    assert rabid_saurolisk.health == 2
     initialized_game.player_board[0].add_minion(DragonspawnLieutenant())
     assert rabid_saurolisk.attack == 4
-    assert rabid_saurolisk.defense == 2
+    assert rabid_saurolisk.health == 2
 
 
 def test_spawn_of_nzoth(initialized_game):
@@ -115,8 +115,8 @@ def test_spawn_of_nzoth(initialized_game):
     attacker_board.set_minions([spawn, MurlocTidehunter(), MurlocTidehunter()])
     spawn.dead = True
     initialized_game.check_deaths(attacker_board, defender_board)
-    assert attacker_board.minions[0].attack == 3 and attacker_board.minions[0].defense == 2
-    assert attacker_board.minions[1].attack == 3 and attacker_board.minions[1].defense == 2
+    assert attacker_board.minions[0].attack == 3 and attacker_board.minions[0].health == 2
+    assert attacker_board.minions[1].attack == 3 and attacker_board.minions[1].health == 2
 
 
 def test_selfless_hero(initialized_game):
@@ -164,8 +164,8 @@ def test_tormented_ritualist(initialized_game):
     defender_board.set_minions([Alleycat(), TormentedRitualist(), Alleycat()])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender_board.minions[0].attack == 2 and defender_board.minions[0].defense == 2
-    assert defender_board.minions[2].attack == 2 and defender_board.minions[2].defense == 2
+    assert defender_board.minions[0].attack == 2 and defender_board.minions[0].health == 2
+    assert defender_board.minions[2].attack == 2 and defender_board.minions[2].health == 2
     # TODO: Test when no minions are to the left and/or right
 
 
@@ -178,8 +178,8 @@ def test_yo_ho_ogre(initialized_game):
     defender_board.set_minions([YoHoOgre(), PunchingBag()])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert attacker_board.minions[0].defense == 98
-    assert attacker_board.minions[1].defense == 98
+    assert attacker_board.minions[0].health == 98
+    assert attacker_board.minions[1].health == 98
 
     # Two pirates, they should kill each other in repeated attacks in one round
     attacker_board.set_minions([YoHoOgre()])
@@ -197,8 +197,8 @@ def test_unstable_ghoul(initialized_game):
     defender_board.set_minions([PunchingBag(attack=6)])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender_board.minions[0].defense == 98
-    assert attacker_board.minions[0].defense == 99
+    assert defender_board.minions[0].health == 98
+    assert attacker_board.minions[0].health == 99
     # TODO: Test this with security bot and golden ghoul, it should spawn 2 rovers
 
 
@@ -208,11 +208,11 @@ def test_waxrider_togwaggle(initialized_game):
 
     waxrider = WaxriderTogwaggle()
     attacker_board.set_minions([DragonspawnLieutenant(), PunchingBag(attack=10), waxrider])
-    defender_board.set_minions([PunchingBag(defense=1), PunchingBag(defense=1)])
+    defender_board.set_minions([PunchingBag(health=1), PunchingBag(health=1)])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert waxrider.attack == 3 and waxrider.defense == 4
+    assert waxrider.attack == 3 and waxrider.health == 4
     initialized_game.single_round()
     initialized_game.single_round()
     assert len(defender_board.minions) == 0
-    assert waxrider.attack == 3 and waxrider.defense == 4
+    assert waxrider.attack == 3 and waxrider.health == 4

@@ -26,7 +26,7 @@ def test_arm_of_the_empire(initialized_game):
     initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert defender_board.minions[0].attack == 6
-    assert defender_board.minions[0].defense == 4
+    assert defender_board.minions[0].health == 4
 
 
 def test_crackling_cyclone(initialized_game):
@@ -34,19 +34,19 @@ def test_crackling_cyclone(initialized_game):
     defender_board = initialized_game.player_board[1]
 
     # Mega wind fury should attack 4 times
-    attacker_board.set_minions([CracklingCyclone(golden=True, defense=4)])
+    attacker_board.set_minions([CracklingCyclone(golden=True, health=4)])
     defender_board.set_minions([PunchingBag(attack=1)])
     initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert not attacker_board.minions[0].divine_shield
-    assert attacker_board.minions[0].defense == 1
+    assert attacker_board.minions[0].health == 1
 
     # Wind fury should attack 2 times
     attacker_board.set_minions([CracklingCyclone()])
     defender_board.set_minions([PunchingBag()])
     initialized_game.start_of_game(0)
     initialized_game.single_round()
-    assert defender_board.minions[0].defense == 92
+    assert defender_board.minions[0].health == 92
 
 
 def test_deflectobot(initialized_game):
@@ -59,7 +59,7 @@ def test_deflectobot(initialized_game):
     initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert not deflectobot.divine_shield
-    assert deflectobot.defense == 2
+    assert deflectobot.health == 2
 
     attacker_board.add_minion(DeflectoBot())
     assert deflectobot.divine_shield
@@ -142,8 +142,8 @@ def test_khadgar(initialized_game):
     initialized_game.start_of_game()
     initialized_game.single_round()
     assert len(attacker_board.minions) == 3
-    assert attacker_board.minions[0].defense == 1
-    assert attacker_board.minions[1].defense == 1
+    assert attacker_board.minions[0].health == 1
+    assert attacker_board.minions[1].health == 1
 
     # Test golden version
     attacker_board.set_minions([Khadgar(golden=True)])
@@ -221,7 +221,7 @@ def test_replicating_menace(initialized_game):
 
     for i in range(3):
         assert attacker_board.minions[i].name == "Microbot"
-    assert defender_board.minions[0].defense == 97
+    assert defender_board.minions[0].health == 97
 
     # Test multiple death rattles.
     # They should trigger in order they're added
@@ -232,7 +232,7 @@ def test_replicating_menace(initialized_game):
 
     for i in range(3):
         assert attacker_board.minions[i].name == "Microbot"
-    assert defender_board.minions[0].defense == 94
+    assert defender_board.minions[0].health == 94
 
 
 # TODO: Verify tests
@@ -247,7 +247,7 @@ def test_soul_juggler(initialized_game):
     defender_board.set_minions([defender])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender.defense == 96
+    assert defender.health == 96
 
     # Test golden juggler
     defender = PunchingBag(attack=10)
@@ -255,7 +255,7 @@ def test_soul_juggler(initialized_game):
     defender_board.set_minions([defender])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert defender.defense == 93
+    assert defender.health == 93
 
     # Test opposing jugglers
     attacker_board.set_minions([Imp(taunt=True), SoulJuggler()])
@@ -271,7 +271,7 @@ def test_soul_juggler(initialized_game):
     # Reborn happens after juggle. Mummy should live
     defender = PunchingBag(attack=10)
     attacker_board.set_minions([Imp(), SoulJuggler()])
-    defender_board.set_minions([MicroMummy(defense=1)])
+    defender_board.set_minions([MicroMummy(health=1)])
     initialized_game.start_of_game()
     initialized_game.single_round()
     assert len(defender_board.minions) == 1

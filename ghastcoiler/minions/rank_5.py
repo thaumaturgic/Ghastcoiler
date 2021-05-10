@@ -14,7 +14,7 @@ class AgamaggantheGreatBoar(Minion):
                          gold_id="BG20_205_G",
                          rank=5,
                          base_attack=6,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -26,7 +26,7 @@ class AggemThorncurse(Minion):
                          gold_id="BG20_302_G",
                          rank=5,
                          base_attack=3,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -38,7 +38,7 @@ class AnnihilanBattlemaster(Minion):
                          gold_id="TB_BaconUps_083",
                          rank=5,
                          base_attack=3,
-                         base_defense=1,
+                         base_health=1,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -51,7 +51,7 @@ class BaronRivendare(Minion):
                          gold_id="TB_BaconUps_055",
                          rank=5,
                          base_attack=1,
-                         base_defense=7,
+                         base_health=7,
                          **kwargs)
 
 
@@ -62,7 +62,7 @@ class BrannBronzebeard(Minion):
                          gold_id="TB_BaconUps_045",
                          rank=5,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          **kwargs)
 
 
@@ -74,7 +74,7 @@ class BristlebackKnight(Minion):
                          gold_id="BG20_204_G",
                          rank=5,
                          base_attack=4,
-                         base_defense=8,
+                         base_health=8,
                          base_divine_shield=True,
                          base_windfury=True,
                          types=[MinionType.Quilboar],
@@ -90,7 +90,7 @@ class CapnHoggarr(Minion):
                          gold_id="TB_BaconUps_133",
                          rank=5,
                          base_attack=6,
-                         base_defense=6,
+                         base_health=6,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -102,7 +102,7 @@ class DeadlySpore(Minion):
                          gold_id="TB_BaconUps_251",
                          rank=5,
                          base_attack=1,
-                         base_defense=1,
+                         base_health=1,
                          base_poisonous=True,
                          **kwargs)
 
@@ -114,7 +114,7 @@ class FacelessTaverngoer(Minion):
                          gold_id="TB_BaconUps_305",
                          rank=5,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          **kwargs)
 
 
@@ -126,7 +126,7 @@ class IronhideDirehorn(Minion):
                          gold_id="TB_BaconUps_051",
                          rank=5,
                          base_attack=7,
-                         base_defense=7,
+                         base_health=7,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -139,7 +139,7 @@ class KingBagurgle(Minion):
                          gold_id="TB_BaconUps_100",
                          rank=5,
                          base_attack=6,
-                         base_defense=3,
+                         base_health=3,
                          base_deathrattle=KingBagurgleDeathrattle(),
                          types=[MinionType.Murloc],
                          **kwargs)
@@ -152,7 +152,7 @@ class LightfangEnforcer(Minion):
                          gold_id="TB_BaconUps_082",
                          rank=5,
                          base_attack=2,
-                         base_defense=2,
+                         base_health=2,
                          **kwargs)
 
 
@@ -164,7 +164,7 @@ class MalGanis(Minion):
                          gold_id="TB_BaconUps_083",
                          rank=5,
                          base_attack=9,
-                         base_defense=7,
+                         base_health=7,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -177,7 +177,7 @@ class MamaBear(Minion):
                          gold_id="TB_BaconUps_090",
                          rank=5,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -189,7 +189,7 @@ class Murozond(Minion):
                          gold_id="TB_BaconUps_110",
                          rank=5,
                          base_attack=5,
-                         base_defense=5,
+                         base_health=5,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -201,7 +201,7 @@ class MythraxtheUnraveler(Minion):
                          gold_id="TB_BaconUps_258",
                          rank=5,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          **kwargs)
 
 
@@ -212,7 +212,7 @@ class NatPagleExtremeAngler(Minion):
                          gold_id="TB_BaconUps_132",
                          rank=5,
                          base_attack=8,
-                         base_defense=5,
+                         base_health=5,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -224,7 +224,7 @@ class NomiKitchenNightmare(Minion):
                          gold_id="TB_BaconUps_201",
                          rank=5,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          **kwargs)
 
 
@@ -235,7 +235,7 @@ class RazorgoretheUntamed(Minion):
                          gold_id="TB_BaconUps_106",
                          rank=5,
                          base_attack=2,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -248,7 +248,7 @@ class SeabreakerGoliath(Minion):
                          gold_id="TB_BaconUps_142",
                          rank=5,
                          base_attack=6,
-                         base_defense=7,
+                         base_health=7,
                          base_windfury=True,
                          types=[MinionType.Pirate],
                          **kwargs)
@@ -262,7 +262,7 @@ class SneedsOldShredder(Minion):
                          gold_id="TB_BaconUps_080",
                          rank=5,
                          base_attack=5,
-                         base_defense=7,
+                         base_health=7,
                          types=[MinionType.Mech],
                          base_deathrattle=SneedsOldShredderDeathrattle(),
                          **kwargs)
@@ -275,7 +275,7 @@ class StrongshellScavenger(Minion):
                          gold_id="TB_BaconUps_072",
                          rank=5,
                          base_attack=2,
-                         base_defense=3,
+                         base_health=3,
                          **kwargs)
 
 
@@ -286,7 +286,7 @@ class TavernTempest(Minion):
                          gold_id="TB_BaconUps_162",
                          rank=5,
                          base_attack=4,
-                         base_defense=4,
+                         base_health=4,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -299,7 +299,7 @@ class Voidlord(Minion):
                          gold_id="TB_BaconUps_059",
                          rank=5,
                          base_attack=3,
-                         base_defense=1,
+                         base_health=1,
                          base_deathrattle=VoidlordDeathrattle(),
                          types=[MinionType.Demon],
                          **kwargs)
