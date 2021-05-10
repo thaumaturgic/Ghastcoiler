@@ -71,6 +71,7 @@ while True:
 
     board_state_ready_event.clear()
 #---------------------s
+deflecto = DeflectoBot(attack=6, defense=3, deathrattles=[ReplicatingMenaceDeathrattle()])
 
 board_0_minions = [deflecto, MicroMummy(), OldMurkEye(), WardenofOld(attack=4), RockpoolHunter(attack=4, health=4), MicroMummy(), RockpoolHunter()]
 board_1_minions = [Scallywag(attack=4, health=3), SouthseaStrongarm(attack=6, health=5), TormentedRitualist(), SouthseaCaptain(attack=6,health=6), StewardofTime(), SouthseaCaptain(attack=4,health=4), HarvestGolem()]
