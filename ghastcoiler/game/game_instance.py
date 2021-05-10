@@ -258,6 +258,7 @@ class GameInstance:
             self.player_turn = 0 if player0minions > player1minions else 1 if player1minions > player0minions else random.randint(0, 1)
 
         # TODO If both sides have whelps, they trade off whelp attacks from one side to the other, resolving deathrattles after each firebreath
+        # Golden whelp will fire both before yielding to other dragons. Deaths are checked after golden dragon finishes
         current = self.attacking_player_board()
         other = self.defending_player_board()
         for minion in current.get_living_minions():

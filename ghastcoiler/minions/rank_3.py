@@ -23,8 +23,7 @@ class ArcaneAssistant(Minion):
 
 
 class ArmoftheEmpire(Minion):
-    """ Whenever a friendly Taunt minion is attacked, give it +2 Attack permanently.
-    """
+    """ Whenever a friendly Taunt minion is attacked, give it +2 Attack permanently."""
     def __init__(self, **kwargs):
         super().__init__(name="Arm of the Empire",
                          id="BGS_110",
@@ -147,8 +146,7 @@ class Crystalweaver(Minion):
 
 
 class DeflectoBot(Minion):
-    """Whenever you summon a Mech during combat, gain +1 Attack and Divine Shield.
-    """
+    """Whenever you summon a Mech during combat, gain +1 Attack and Divine Shield."""
     def __init__(self, **kwargs):
         super().__init__(name="Deflect-o-Bot",
                          id="BGS_071",

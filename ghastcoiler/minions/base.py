@@ -294,8 +294,8 @@ class Minion:
         """Trigger that happens after another minion on the player board dies """
         pass
 
-    def on_any_minion_loses_divine_shield(self):
-        """Trigger that happens when a minion loses divine shield"""
+    def on_friendly_minion_loses_divine_shield(self):
+        """Trigger that happens when a friendly minion loses divine shield"""
         pass
 
     def shift_left(self):

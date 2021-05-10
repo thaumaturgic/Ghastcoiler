@@ -109,7 +109,7 @@ class PlayerBoard:
     def divine_shield_popped(self):
         """Called when a divine shield pops on this board to execute possible triggers on other minions"""
         for minion in self.minions:
-            minion.on_any_minion_loses_divine_shield()
+            minion.on_friendly_minion_loses_divine_shield()
 
     def on_friendly_kill(self, killer_minion: Minion):
         """Called when a friendly minion kills an enemy

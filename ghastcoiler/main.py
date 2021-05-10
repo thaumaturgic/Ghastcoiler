@@ -30,9 +30,9 @@ var = utils.get_all_minions()
 #---------------------
 board_state_ready_event = Event()
 
-#"C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn15_end.log.log"
+#"C:/Users/scott/Desktop/hearthstone_games/Power_game_5_turn15_end.log"
 #"C:\Program Files (x86)\Hearthstone\Logs\Power_old.log"
-logPath = "C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn15_end.log"
+logPath = "C:/Users/scott/Desktop/hearthstone_games/Power_game_5_turn15_end.log"
 logreader = LogReader(logPath, board_state_ready_event) 
 
 while True:
@@ -70,12 +70,7 @@ while True:
         print(e)
 
     board_state_ready_event.clear()
-#---------------------
-
-# player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=12, rank=4, minions=[FiendishServant(), DragonspawnLieutenant(), DragonspawnLieutenant(), RedWhelp(), RedWhelp()])
-# player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=12, rank=4, minions=[DragonspawnLieutenant(), FiendishServant(), DragonspawnLieutenant(), FiendishServant()])
-
-deflecto = DeflectoBot(attack=6, defense=3, deathrattles=[ReplicatingMenaceDeathrattle()])
+#---------------------s
 
 board_0_minions = [deflecto, MicroMummy(), OldMurkEye(), WardenofOld(attack=4), RockpoolHunter(attack=4, defense=4), MicroMummy(), RockpoolHunter()]
 board_1_minions = [Scallywag(attack=4, defense=3), SouthseaStrongarm(attack=6, defense=5), TormentedRitualist(), SouthseaCaptain(attack=6,defense=6), StewardofTime(), SouthseaCaptain(attack=4,defense=4), HarvestGolem()]

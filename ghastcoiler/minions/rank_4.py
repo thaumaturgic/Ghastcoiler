@@ -51,7 +51,7 @@ class BolvarFireblood(Minion):
                          base_divine_shield=True,
                          **kwargs)
 
-    def on_any_minion_loses_divine_shield(self):
+    def on_friendly_minion_loses_divine_shield(self):
         self.add_stats(4 if self.golden else 2, 0)
 
 
@@ -131,7 +131,7 @@ class DrakonidEnforcer(Minion):
                          types=[MinionType.Dragon],
                          **kwargs)
 
-    def on_any_minion_loses_divine_shield(self):
+    def on_friendly_minion_loses_divine_shield(self):
         stats = 4 if self.golden else 2
         self.add_stats(stats, stats)
 
