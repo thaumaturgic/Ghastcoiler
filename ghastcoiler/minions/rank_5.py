@@ -264,7 +264,7 @@ class SneedsOldShredder(Minion):
                          base_attack=5,
                          base_defense=7,
                          types=[MinionType.Mech],
-                         base_deathrattle=[SneedsOldShredderDeathrattle()],
+                         base_deathrattle=SneedsOldShredderDeathrattle(),
                          **kwargs)
 
 
@@ -300,7 +300,7 @@ class Voidlord(Minion):
                          rank=5,
                          base_attack=3,
                          base_defense=1,
-                         base_deathrattle=[VoidlordDeathrattle()],
+                         base_deathrattle=VoidlordDeathrattle(),
                          types=[MinionType.Demon],
                          **kwargs)
                                                       

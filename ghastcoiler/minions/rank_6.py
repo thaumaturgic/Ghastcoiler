@@ -80,7 +80,7 @@ class GentleDjinni(Minion):
                          rank=6,
                          base_attack=4,
                          base_defense=5,
-                         base_deathrattle=[GentleDjinniDeathrattle()],
+                         base_deathrattle=GentleDjinniDeathrattle(),
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -94,7 +94,7 @@ class Ghastcoiler(Minion):
                          rank=6,
                          base_attack=7,
                          base_defense=7,
-                         base_deathrattle=[GhastcoilerDeathrattle()],
+                         base_deathrattle=GhastcoilerDeathrattle(),
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -108,7 +108,7 @@ class GoldrinntheGreatWolf(Minion):
                          rank=6,
                          base_attack=4,
                          base_defense=4,
-                         base_deathrattle=[GoldrinntheGreatWolfDeathrattle()],
+                         base_deathrattle=GoldrinntheGreatWolfDeathrattle(),
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -147,7 +147,7 @@ class KangorsApprentice(Minion):
                          rank=6,
                          base_attack=4,
                          base_defense=8,
-                         base_deathrattle=[KangorsApprenticeDeathrattle()],
+                         base_deathrattle=KangorsApprenticeDeathrattle(),
                          **kwargs)
 
 
@@ -197,7 +197,7 @@ class NadinatheRed(Minion):
                          rank=6,
                          base_attack=7,
                          base_defense=4,
-                         base_deathrattle=[NadinatheRedDeathrattle()],
+                         base_deathrattle=NadinatheRedDeathrattle(),
                          **kwargs)
 
 
@@ -210,7 +210,7 @@ class TheTideRazor(Minion):
                          rank=6,
                          base_attack=6,
                          base_defense=4,
-                         base_deathrattle=[TheTideRazorDeathrattle()],
+                         base_deathrattle=TheTideRazorDeathrattle(),
                          **kwargs)
 
 
