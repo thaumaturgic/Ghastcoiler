@@ -4,8 +4,8 @@ import random
 from typing import Optional
 from game.player_board import PlayerBoard
 from minions.base import Minion
+from minions.types import MinionType
 from deathrattles.base import Deathrattle
-
 
 class GentleDjinniDeathrattle(Deathrattle):
     "Summon another random Elemental and add a copy of it to your hand."

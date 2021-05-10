@@ -4,8 +4,10 @@ import random
 from typing import Optional
 from game.player_board import PlayerBoard
 from minions.base import Minion
+from minions.types import MinionType
 from minions.tokens import Voidwalker
 from deathrattles.base import Deathrattle
+
 
 
 class KingBagurgleDeathrattle(Deathrattle):
