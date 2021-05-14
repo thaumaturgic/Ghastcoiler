@@ -24,10 +24,17 @@ class MinionUtils:
             self.minions_dictionary[minion.gold_id] = minion_class[1]
 
     # Method to return a ghastcoiler minion using ID and parsed board parameters
-    def get_ghastcoiler_minion(self, id, position, health, attack, reborn):
+    def get_ghastcoiler_minion(self, id, position, health, attack, reborn, taunt, divine_shield, poisonous, golden):
         minion = None
         if id in self.minions_dictionary:
-            minion = self.minions_dictionary[id](position=position, health=health, attack=attack, reborn=reborn) #TODO: other tags
+            minion = self.minions_dictionary[id](position=position, 
+            health=health, 
+            attack=attack, 
+            reborn=reborn,
+            taunt=taunt,
+            divine_shield=divine_shield,
+            poisonous=poisonous,
+            golden=golden) #TODO: other tags
         return minion
 
     def get_all_minions(self):

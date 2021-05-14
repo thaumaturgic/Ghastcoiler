@@ -177,6 +177,7 @@ class NathrezimOverseer(Minion):
 # Currently method #2 is implemented
 class OldMurkEye(Minion):
     def __init__(self, **kwargs):
+        self.number_murlocs = 0
         super().__init__(name="Old Murk-Eye",
                          id="EX1_062",
                          gold_id="TB_BaconUps_036",

@@ -28,6 +28,7 @@ class LogReader:
     MAIN_END_STRING = "tag=STEP value=MAIN_END"
     
     NEW_GAME_STRING = "CREATE_GAME"
+    GAME_END_STRING = "tag=STEP value=FINAL_WRAPUP"
 
     LICH_KING_REBORN = "TB_BaconShop_HP_024e2"
 
@@ -81,14 +82,15 @@ class LogReader:
                     inShop = False
                     boardPending = False
                     self.convert_board_state(self.entity_board_state)
-                    sleep(1) # artificially slow down historical log parsing for debug
-                    
+                    sleep(2) # artificially slow down historical log parsing for debug
                 elif LogReader.SHOP_STEP_STRING in line:
                     print("\n" + str(lineCount) + " *** SHOP   #" + str(turn) + ": " + line[:-1])
                     inShop = True
                 elif LogReader.NEW_GAME_STRING in line:
                     print("\n*** New Game ***")
                     turn = 1
+                elif LogReader.GAME_END_STRING in line:
+                    print("\n*** Game Over ***")
 
             self.parser.read_line(line)
 
@@ -125,12 +127,20 @@ class LogReader:
 
     #TODO: Find deathrattles, modular stuff like annoy o module
     #TODO: Parse mechanically interesting tags -> Like al akir shield
+    # Microbot death rattle = "BOT_312e" 
+    # Annoy o module = 
+    # Living Spores = UNG_999t2
     def apply_enchantments(self, enchantments, minions):
         for enchantment in enchantments:
             if GameTag.ATTACHED in enchantment.tags:
                 attached_entity_id = enchantment.tags[GameTag.ATTACHED]
                 for minion in minions:
                     if minion.id == attached_entity_id:
+                        # DEBUG: Collect all the parsed enchantments for a given minion entity for inspection
+                        if hasattr(minion, 'enchantments'):
+                            minion.enchantments.append(enchantment)
+                        else:
+                            minion.enchantments = [enchantment]
                         if enchantment.card_id == LogReader.LICH_KING_REBORN:
                             minion.tags[GameTag.REBORN] = 1
                         #elif enchantment.card_id == BLAH
@@ -140,23 +150,35 @@ class LogReader:
         for minion in board:
             # Card ID, Position, Attack, Health, 
             # Taunt, Poisonous, Divine Shield, Windfury, Megawindfury, Reborn, Golden, Deathrattles 
+
+            if GameTag.WINDFURY in minion.tags:
+                windfury = True if minion.tags[GameTag.WINDFURY] == 1 else False
+                mega_windfury = True if minion.tags[GameTag.WINDFURY] == 3 else False
+                
             ghastcoiler_minion = self.minion_utils.get_ghastcoiler_minion(
                 minion.card_id, 
                 minion.tags[GameTag.ZONE_POSITION], 
                 minion.tags[GameTag.HEALTH], 
                 minion.tags[GameTag.ATK],
-                True if GameTag.REBORN in minion.tags else False
+                True if GameTag.REBORN in minion.tags else False,
+                #windfury,
+                #megawindfury,
+                True if GameTag.TAUNT in minion.tags else False,
+                True if GameTag.DIVINE_SHIELD in minion.tags else False,
+                True if GameTag.POISONOUS in minion.tags else False,
+                True if GameTag.PREMIUM in minion.tags else False  #Golden
                 )
             if ghastcoiler_minion:
                 ghastcoiler_board.append(ghastcoiler_minion)
         return ghastcoiler_board
 
     # Convert from entities to ghastcoiler, set the board notification event
-    def convert_board_state(self, entity_board_state):    
-        print("Friendly minions")
-        self.print_board(entity_board_state.friendlyBoard)
+    def convert_board_state(self, entity_board_state):
         print("Enemy minions")
         self.print_board(entity_board_state.enemyBoard)
+        
+        print("Friendly minions")
+        self.print_board(entity_board_state.friendlyBoard)
 
         # Convert the entity tags to ghastcoiler minions before passing back
         ghastcoiler_friendly_board = self.convert_to_ghastcoiler_minion(entity_board_state.friendlyBoard)
