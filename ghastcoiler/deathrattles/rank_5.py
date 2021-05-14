@@ -16,7 +16,7 @@ class KingBagurgleDeathrattle(Deathrattle):
         super().__init__(name="KingBagurgleDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        for other_minion in own_board:
+        for other_minion in own_board.minions:
             if MinionType.Murloc in other_minion.types and other_minion != minion:
                 stats = 4 if minion.golden else 2
                 other_minion.add_stats(stats,stats)

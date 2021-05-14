@@ -177,7 +177,6 @@ class NathrezimOverseer(Minion):
 # Currently method #2 is implemented
 class OldMurkEye(Minion):
     def __init__(self, **kwargs):
-        self.bonus_attack = 0
         super().__init__(name="Old Murk-Eye",
                          id="EX1_062",
                          gold_id="TB_BaconUps_036",
@@ -187,14 +186,16 @@ class OldMurkEye(Minion):
                          types=[MinionType.Murloc],
                          **kwargs)
 
-    def update_bonus_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
-        #TODO: Fix this with actual game import log. Minion comes with buffs already applied to attack
-        total_number_other_murlocs = own_board.count_minion_type(MinionType.Murloc) + opposing_board.count_minion_type(MinionType.Murloc) - 1  # Don't count itself
-        bonus = total_number_other_murlocs * 2 if self.golden else total_number_other_murlocs
+    def at_beginning_game(self, game_instance, player_starts, own_board, opposing_board):
+        self.number_murlocs = opposing_board.count_minion_type(MinionType.Murloc) + own_board.count_minion_type(MinionType.Murloc) - 1
 
-        self.attack -= self.bonus_attack
-        self.bonus_attack = bonus
-        self.attack += self.bonus_attack
+    def update_bonus_attack(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        murlocs_current = own_board.count_minion_type(MinionType.Murloc) + opposing_board.count_minion_type(MinionType.Murloc) - 1  # Don't count itself
+        murlocs_change = murlocs_current - self.number_murlocs
+        bonus = murlocs_change * 2 if self.golden else murlocs_change
+        
+        self.attack += bonus
+        self.number_murlocs = murlocs_current
 
     def on_attack_before(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         self.update_bonus_attack(own_board, opposing_board)

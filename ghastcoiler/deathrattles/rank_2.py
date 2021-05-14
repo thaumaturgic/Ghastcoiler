@@ -55,7 +55,7 @@ class SpawnofNZothDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="SpawnofNZothDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Spawn of NZoth deathrattle triggered")
         bonus = 2 if minion.golden else 1
         for other_minion in own_board.get_living_minions():
@@ -66,7 +66,7 @@ class UnstableGhoulDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="UnstableGhoulDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Unstable Ghoul deathrattle triggered")
         triggers = 2 if minion.golden else 1
         for _ in range(triggers):
@@ -80,7 +80,7 @@ class SelflessHeroDeathrattle(Deathrattle):
     def __init__(self):
         super().__init__(name="SelflessHeroDeathrattle")
 
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard):
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Selfless Hero deathrattle triggered")
         iterations = 2 if minion.golden else 1
         for _ in range(iterations):
