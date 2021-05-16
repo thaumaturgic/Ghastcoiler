@@ -1,22 +1,22 @@
 from hslog.parser import LogParser, GameTag
 from hslog.export import EntityTreeExporter
 from hearthstone.entities import Zone, CardType
-from threading import Thread, Condition
 from time import sleep
 from dataclasses import dataclass
 from utils.minion_utils import MinionUtils
+from heroes.hero_types import HeroType
 
 @dataclass
 class BoardState:
     friendlyBoard: [] = None
     #friendlyPlayerHealth
-    #friendlyHero
-    #friendlyTier
+    friendlyHero: HeroType = None
+    #friendlyTechLevel
     enemyBoard: [] = None
-    #enemyHero
+    enemyHero: HeroType = None
     #enemyPlayerHealth
-    #enemyTier
-    #allowedMinions: []
+    #enemyTechLevel
+    #allowedMinionTypes: []
 
 class LogReader:
     GAME_STATE_STRING = "GameState"
@@ -27,68 +27,68 @@ class LogReader:
     MAIN_START_TRIGGERS_STRING = "tag=STEP value=MAIN_START_TRIGGERS"
     MAIN_END_STRING = "tag=STEP value=MAIN_END"
     
+    # Game start/end tags
     NEW_GAME_STRING = "CREATE_GAME"
     GAME_END_STRING = "tag=STEP value=FINAL_WRAPUP"
 
+    # Hero power related entity IDs
     LICH_KING_REBORN = "TB_BaconShop_HP_024e2"
+    ALAKIR = "TB_BaconShop_HP_086"
 
-    def __init__(self, log_path, board_state_ready_event):
+    ENEMY_PLAYER_NAME = "Bob's Tavern"
+
+    def __init__(self, log_path):
         self.parser = LogParser()
-        self.board_state_ready_event = board_state_ready_event
         self.minion_utils = MinionUtils()
 
-        self.ghastcoiler_board_state = BoardState()
         self.entity_board_state = BoardState()
         
-        watch_file_thread = Thread(target=self.watch_file, args=(log_path, ))
-        watch_file_thread.start()
+        self.lineCount = 0
+        self.turn = 1
+        self.inShop = False
+        self.boardPending = False
 
-    def watch_file(self, file):
         while True:
             try:
-                logfile = open(file, 'r', encoding="utf-8")
-                if logfile:
+                self.logfile = open(log_path, 'r', encoding="utf-8")
+                if self.logfile:
                     break
             except:
                 sleep(1)
 
-        lineCount = 0
-        turn = 1
-        inShop = False
-        boardPending = False
-
+    def watch_log_file_for_combat_state(self):
         while True:
-            line = logfile.readline()
+            line = self.logfile.readline()
         
             if not line:
                 sleep(0.5)
                 continue
 
-            lineCount += 1
+            self.lineCount += 1
             if LogReader.GAME_STATE_STRING in line:
 
+                # Debug: Print every step change
                 # if LogReader.STEP_STRING in line:
                 #     print(str(lineCount) + " " + line[:-1])
 
-                if LogReader.COMBAT_STEP_STRING in line and inShop:
-                    print("\n" + str(lineCount) + " *** COMBAT #" + str(turn) + ": " + line[:-1])
-                    turn += 1
+                if LogReader.COMBAT_STEP_STRING in line and self.inShop:
+                    print("\n" + str(self.lineCount) + " *** COMBAT #" + str(self.turn) + ": " + line[:-1])
+                    self.turn += 1
                     self.entity_board_state = self.scrape_board_state(self.parser)
-                    boardPending = True
-                elif LogReader.MAIN_START_TRIGGERS_STRING in line and boardPending:
+                    self.boardPending = True
+                elif LogReader.MAIN_START_TRIGGERS_STRING in line and self.boardPending:
                     # Sometimes there is a "start triggers" step that contains the correct combat board state
                     self.entity_board_state = self.scrape_board_state(self.parser)
-                elif LogReader.MAIN_END_STRING in line and boardPending:
-                    inShop = False
-                    boardPending = False
-                    self.convert_board_state(self.entity_board_state)
-                    sleep(2) # artificially slow down historical log parsing for debug
+                elif LogReader.MAIN_END_STRING in line and self.boardPending:
+                    self.inShop = False
+                    self.boardPending = False
+                    return self.convert_board_state(self.entity_board_state)
                 elif LogReader.SHOP_STEP_STRING in line:
-                    print("\n" + str(lineCount) + " *** SHOP   #" + str(turn) + ": " + line[:-1])
-                    inShop = True
+                    print("\n" + str(self.lineCount) + " *** SHOP   #" + str(self.turn) + ": " + line[:-1])
+                    self.inShop = True
                 elif LogReader.NEW_GAME_STRING in line:
                     print("\n*** New Game ***")
-                    turn = 1
+                    self.turn = 1
                 elif LogReader.GAME_END_STRING in line:
                     print("\n*** Game Over ***")
 
@@ -101,28 +101,39 @@ class LogReader:
 
         minions = []
         enchantments = []
-        #entities = []
+        hero_powers = []
+        entities = []
 
         for e in export.game.entities:
-            #entities.append(e)
-
+            entities.append(e)
             if e.type == CardType.ENCHANTMENT:
                 enchantments.append(e)
-            elif e.type == CardType.MINION and e.zone == Zone.PLAY:
-                minions.append(e)
+
+            if e.zone == Zone.PLAY:    
+                if e.type == CardType.HERO_POWER:
+                    hero_powers.append(e)
+                elif e.type == CardType.MINION:
+                    minions.append(e)
                     
-        self.apply_enchantments(enchantments, minions)
-    
+        self.attach_enchantments(enchantments, minions)
+        
         friendlyMinions = []
         enemyMinions = []
 
         for minion in minions:
+            if GameTag.ATK not in minion.tags:
+                # Minions with 0 power dont have an ATK tag. Make sure it exists here
+                minion.tags[GameTag.ATK] = 0 
+
             enemyMinions.append(minion) if minion.controller.is_ai else friendlyMinions.append(minion)
 
         friendlyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
         enemyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
         
         state = BoardState(friendlyBoard=friendlyMinions, enemyBoard=enemyMinions)
+        self.apply_hero_powers(state, hero_powers)
+        # TODO: Find player tech levels
+        # TODO: Find player health levels
         return state
 
     #TODO: Find deathrattles, modular stuff like annoy o module
@@ -130,7 +141,7 @@ class LogReader:
     # Microbot death rattle = "BOT_312e" 
     # Annoy o module = 
     # Living Spores = UNG_999t2
-    def apply_enchantments(self, enchantments, minions):
+    def attach_enchantments(self, enchantments, minions):
         for enchantment in enchantments:
             if GameTag.ATTACHED in enchantment.tags:
                 attached_entity_id = enchantment.tags[GameTag.ATTACHED]
@@ -144,13 +155,17 @@ class LogReader:
                         if enchantment.card_id == LogReader.LICH_KING_REBORN:
                             minion.tags[GameTag.REBORN] = 1
                         #elif enchantment.card_id == BLAH
-
+    
+    def apply_hero_powers(self, state: BoardState, hero_powers):
+        for hero_power in hero_powers:
+            if hero_power.card_id == LogReader.ALAKIR:
+                # Find which player is al akir
+                # Find the first minion in their board and give it windfury, taunt, divine shield
+                print(hero_power) #TODO
+        
     def convert_to_ghastcoiler_minion(self, board):
         ghastcoiler_board = []
         for minion in board:
-            # Card ID, Position, Attack, Health, 
-            # Taunt, Poisonous, Divine Shield, Windfury, Megawindfury, Reborn, Golden, Deathrattles 
-
             if GameTag.WINDFURY in minion.tags:
                 windfury = True if minion.tags[GameTag.WINDFURY] == 1 else False
                 mega_windfury = True if minion.tags[GameTag.WINDFURY] == 3 else False
@@ -161,8 +176,9 @@ class LogReader:
                 minion.tags[GameTag.HEALTH], 
                 minion.tags[GameTag.ATK],
                 True if GameTag.REBORN in minion.tags else False,
-                #windfury,
-                #megawindfury,
+                # windfury,
+                # megawindfury,
+                # Deathrattles 
                 True if GameTag.TAUNT in minion.tags else False,
                 True if GameTag.DIVINE_SHIELD in minion.tags else False,
                 True if GameTag.POISONOUS in minion.tags else False,
@@ -172,7 +188,7 @@ class LogReader:
                 ghastcoiler_board.append(ghastcoiler_minion)
         return ghastcoiler_board
 
-    # Convert from entities to ghastcoiler, set the board notification event
+    # Convert from entities to ghastcoiler
     def convert_board_state(self, entity_board_state):
         print("Enemy minions")
         self.print_board(entity_board_state.enemyBoard)
@@ -184,8 +200,7 @@ class LogReader:
         ghastcoiler_friendly_board = self.convert_to_ghastcoiler_minion(entity_board_state.friendlyBoard)
         ghastcoiler_enemy_board =  self.convert_to_ghastcoiler_minion(entity_board_state.enemyBoard)
 
-        self.ghastcoiler_board_state = BoardState(ghastcoiler_friendly_board, ghastcoiler_enemy_board)
-        self.board_state_ready_event.set()
+        return BoardState(friendlyBoard = ghastcoiler_friendly_board, enemyBoard = ghastcoiler_enemy_board)
 
     def print_board(self, board):
         for minion in board:
