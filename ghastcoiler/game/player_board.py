@@ -33,11 +33,12 @@ class PlayerBoard:
         self.minions: List[Minion] = minions
         self.token_creation_multiplier = 0
 
-        for index, minion in enumerate(minions):
-            if minion.name == "Khadgar":
-                self.token_creation_multiplier += 2 if minion.golden else 1
-            minion.position = index
-            minion.player_id = self.player_id
+        if minions:
+            for index, minion in enumerate(minions):
+                if minion.name == "Khadgar":
+                    self.token_creation_multiplier += 2 if minion.golden else 1
+                minion.position = index
+                minion.player_id = self.player_id
 
     def copy(self):
         """Deep copy PlayerBoard instance to not carry state over multiple simulations

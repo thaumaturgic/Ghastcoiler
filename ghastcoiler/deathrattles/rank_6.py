@@ -33,7 +33,7 @@ class GoldrinntheGreatWolfDeathrattle(Deathrattle):
         super().__init__(name="GoldrinntheGreatWolfDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        for other_minion in own_board:
+        for other_minion in own_board.minions:
             if MinionType.Beast in other_minion.types:
                 if other_minion == minion and not macaw_trigger:
                     continue
@@ -56,7 +56,7 @@ class NadinatheRedDeathrattle(Deathrattle):
         super().__init__(name="NadinatheRedDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        for other_minion in own_board:
+        for other_minion in own_board.minions:
             if MinionType.Dragon in other_minion.types:
                 other_minion.divine_shield = True
 
