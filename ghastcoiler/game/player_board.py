@@ -150,16 +150,12 @@ class PlayerBoard:
 
         return self.select_attacking_minion()
 
-    def generate_possible_defending_minions(self, attacks_lowest=False):
+    def generate_possible_defending_minions(self):
         """Generate list of minions that can be currently attacked
-
-        Keyword Arguments:
-            attacks_lowest {bool} -- Whether we should ignore taunts and select the lowest attack units (default: {False})
 
         Returns:
             List[Minion] -- List of minions that can be attacked
         """
-        # TODO: Rank 6 windfury guy
         possible_minions = self.select_taunts()
         if len(possible_minions) == 0:
             possible_minions = [minion for minion in self.minions if not minion.dead]
@@ -174,13 +170,24 @@ class PlayerBoard:
         Returns:
             Minion -- Minion that will be attacked or None if the board is empty
         """
-        # TODO: Rank 6 windfury guy
         if len(self.minions) == 0:
             return None
 
-        possible_minions = self.generate_possible_defending_minions()
-        defending_minion_index = random.randint(0, len(possible_minions) - 1)
-        return possible_minions[defending_minion_index]
+        if attacks_lowest:
+            lowest_attack = 0
+            lowest_attack_minions = []
+            for minion in self.minions:
+                if minion.attack < lowest_attack:
+                    lowest_attack = minion.attack
+                    lowest_attack_minions.clear()
+                    lowest_attack_minions.append(minion)
+                elif minion.attack == lowest_attack:
+                    lowest_attack_minions.append(minion)
+            return lowest_attack_minions[random.randint(0, len(lowest_attack_minions) - 1)]
+        else:
+            possible_minions = self.generate_possible_defending_minions()
+            defending_minion_index = random.randint(0, len(possible_minions) - 1)
+            return possible_minions[defending_minion_index]
 
     def get_living_minions(self):
         """Return a list of all minions
@@ -219,7 +226,7 @@ class PlayerBoard:
         For example, while a bomb or soul juggler has triggered. In these cases we want to not target already dead units
 
         Returns:
-            Minion -- Randomly selected minion
+            Minion -- Randomly selected minion, or None
         """
         if len(self.minions) > 0:
             live_minions = self.get_living_minions()

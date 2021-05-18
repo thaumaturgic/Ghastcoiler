@@ -120,6 +120,7 @@ class Minion:
         self.token = token
         self.reborn_triggered = reborn_triggered
         self.damage_trigger_pending = False
+        self.attacks_lowest_power = False
 
         if self.reborn_triggered:
             self.health = 1

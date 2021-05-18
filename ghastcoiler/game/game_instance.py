@@ -276,7 +276,7 @@ class GameInstance:
         self.log_current_game()
         logging.debug('-----------------')
         attacking_minion = attacker_board.select_attacking_minion()
-        defending_minion = defender_board.select_defending_minion()
+        defending_minion = defender_board.select_defending_minion(False if not attacking_minion else attacking_minion.attacks_lowest_power)
         if attacking_minion and defending_minion:
             attacks = 4 if attacking_minion.mega_windfury else 2 if attacking_minion.windfury else 1
             for _ in range(attacks):

@@ -121,8 +121,12 @@ def test_the_thede_razor(initialized_game):
 
 def test_zapp_slywick(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    zapp = ZappSlywick()
-    attacker_board.set_minions([zapp])
-    # TODO: Implement
-    assert True
+    target = PunchingBag()
+    defender_board.set_minions([target, PunchingBag(attack=1, taunt=True)])
+
+    attacker_board.set_minions([ZappSlywick()])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert target.health == 86

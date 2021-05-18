@@ -225,7 +225,6 @@ class TheTideRazor(Minion):
 
 
 class ZappSlywick(Minion):
-    #TODO: Attack override
     def __init__(self, **kwargs):
         super().__init__(name="Zapp Slywick",
                          id="BGS_022",
@@ -236,5 +235,5 @@ class ZappSlywick(Minion):
                          base_windfury=True,
                          **kwargs)
         self.windfury = False if self.golden else True
-        self.mega_windfury = True if self.golden else False                         
-                                                                                                                         
+        self.mega_windfury = True if self.golden else False
+        self.attacks_lowest_power = True
