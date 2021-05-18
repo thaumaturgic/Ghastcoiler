@@ -223,8 +223,9 @@ class PlayerBoard:
         """
         if len(self.minions) > 0:
             live_minions = self.get_living_minions()
-            position = live_minions[random.randint(0, len(live_minions) - 1)].position
-            return self.minions[position]
+            if len(live_minions) > 0:
+                position = live_minions[random.randint(0, len(live_minions) - 1)].position
+                return self.minions[position]
 
     def remove_minion(self, minion: Minion):
         """Remove minion from board

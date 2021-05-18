@@ -164,8 +164,8 @@ class MalGanis(Minion):
     #TODO: Aura
     def __init__(self, **kwargs):
         super().__init__(name="Mal'Ganis",
-                         id="BGS_010",
-                         gold_id="TB_BaconUps_083",
+                         id="GVG_021",
+                         gold_id="TB_BaconUps_060",
                          rank=5,
                          base_attack=9,
                          base_health=7,

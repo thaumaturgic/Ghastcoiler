@@ -44,12 +44,15 @@ def test_king_bagurgle(initialized_game):
     defender_board.set_minions([PunchingBag(attack=10)])
 
     murloc = KingBagurgle()
-    attacker_board.set_minions([KingBagurgle(), murloc])
+    non_murloc = IronhideDirehorn()
+    attacker_board.set_minions([KingBagurgle(), murloc, non_murloc])
     
     initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert murloc.attack == 8
     assert murloc.health == 5
+    assert non_murloc.attack == 7
+    assert non_murloc.health == 7
 
 
 def test_malganis(initialized_game):
