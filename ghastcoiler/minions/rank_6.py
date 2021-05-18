@@ -46,7 +46,6 @@ class Charlga(Minion):
 
 
 class DreadAdmiralEliza(Minion):
-    #TODO: On attack trigger, on friendly attack trigger
     def __init__(self, **kwargs):
         super().__init__(name="Dread Admiral Eliza",
                          id="BGS_047",
@@ -56,6 +55,19 @@ class DreadAdmiralEliza(Minion):
                          base_health=7,
                          types=[MinionType.Pirate],
                          **kwargs)
+
+    def buff_board(self, own_board: PlayerBoard):
+        attack = 4 if self.golden else 2
+        health = 2 if self.golden else 1
+        for minion in own_board.minions:
+            minion.add_stats(attack, health)
+        
+    def on_attack_before(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        self.buff_board(own_board)
+
+    def on_friendly_attack_before(self, attacking_minion: Minion, own_board: PlayerBoard):
+        if MinionType.Pirate in attacking_minion.types:
+            self.buff_board(own_board)
 
 
 class FoeReaper4000(Minion):
@@ -100,7 +112,6 @@ class Ghastcoiler(Minion):
 
 
 class GoldrinntheGreatWolf(Minion):
-    #TODO: Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="Goldrinn, the Great Wolf",
                          id="BGS_018",
@@ -189,7 +200,6 @@ class Maexxna(Minion):
 
 
 class NadinatheRed(Minion):
-    #TODO: Test Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="Nadina the Red",
                          id="BGS_040",

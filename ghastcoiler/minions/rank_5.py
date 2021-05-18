@@ -67,7 +67,6 @@ class BrannBronzebeard(Minion):
 
 
 class BristlebackKnight(Minion):
-    #TODO: Implement frenzy trigger
     def __init__(self, **kwargs):
         super().__init__(name="Bristleback Knight",
                          id="BG20_204",
@@ -81,6 +80,12 @@ class BristlebackKnight(Minion):
                          **kwargs)
         self.windfury = False if self.golden else True
         self.mega_windfury = True if self.golden else False
+        self.frenzy_triggered = False
+
+    def on_receive_damage(self, own_board: PlayerBoard):
+        if not self.frenzy_triggered:
+            self.divine_shield = True
+            self.frenzy_triggered = True
 
 
 class CapnHoggarr(Minion):
@@ -132,7 +137,6 @@ class IronhideDirehorn(Minion):
 
 
 class KingBagurgle(Minion):
-    #TODO: Test Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="King Bagurgle",
                          id="BGS_030",
@@ -170,7 +174,6 @@ class MalGanis(Minion):
 
 
 class MamaBear(Minion):
-    #TODO: Summon triggers
     def __init__(self, **kwargs):
         super().__init__(name="Mama Bear",
                          id="BGS_021",
@@ -180,6 +183,11 @@ class MamaBear(Minion):
                          base_health=4,
                          types=[MinionType.Beast],
                          **kwargs)
+
+    def on_friendly_summon(self, other_minion: Minion):
+        if MinionType.Beast in other_minion.types:
+            stats = 8 if self.golden else 4
+            other_minion.add_stats(stats, stats)
 
 
 class Murozond(Minion):
@@ -292,7 +300,6 @@ class TavernTempest(Minion):
 
 
 class Voidlord(Minion):
-    #TODO: Test Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="Voidlord",
                          id="LOOT_368",
@@ -303,4 +310,3 @@ class Voidlord(Minion):
                          base_deathrattle=VoidlordDeathrattle(),
                          types=[MinionType.Demon],
                          **kwargs)
-                                                      
