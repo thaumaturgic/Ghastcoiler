@@ -250,6 +250,7 @@ class Khadgar(Minion):
                          base_attack=2,
                          base_health=2,
                          mana_cost=2,
+                         legendary=True,
                          **kwargs)
 
     def on_summon(self, other_minion: Minion, own_board: PlayerBoard):

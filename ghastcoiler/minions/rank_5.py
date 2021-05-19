@@ -15,6 +15,7 @@ class AgamaggantheGreatBoar(Minion):
                          rank=5,
                          base_attack=6,
                          base_health=6,
+                         legendary=True,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -27,6 +28,7 @@ class AggemThorncurse(Minion):
                          rank=5,
                          base_attack=3,
                          base_health=6,
+                         legendary=True,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -52,6 +54,7 @@ class BaronRivendare(Minion):
                          rank=5,
                          base_attack=1,
                          base_health=7,
+                         legendary=True,
                          **kwargs)
 
 
@@ -63,6 +66,7 @@ class BrannBronzebeard(Minion):
                          rank=5,
                          base_attack=2,
                          base_health=4,
+                         legendary=True,
                          **kwargs)
 
 
@@ -96,6 +100,7 @@ class CapnHoggarr(Minion):
                          rank=5,
                          base_attack=6,
                          base_health=6,
+                         legendary=True,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -144,6 +149,7 @@ class KingBagurgle(Minion):
                          rank=5,
                          base_attack=6,
                          base_health=3,
+                         legendary=True,
                          base_deathrattle=KingBagurgleDeathrattle(),
                          types=[MinionType.Murloc],
                          **kwargs)
@@ -169,6 +175,7 @@ class MalGanis(Minion):
                          rank=5,
                          base_attack=9,
                          base_health=7,
+                         legendary=True,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -198,6 +205,7 @@ class Murozond(Minion):
                          rank=5,
                          base_attack=5,
                          base_health=5,
+                         legendary=True,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -210,6 +218,7 @@ class MythraxtheUnraveler(Minion):
                          rank=5,
                          base_attack=4,
                          base_health=4,
+                         legendary=True,
                          **kwargs)
 
 
@@ -221,6 +230,7 @@ class NatPagleExtremeAngler(Minion):
                          rank=5,
                          base_attack=8,
                          base_health=5,
+                         legendary=True,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -233,6 +243,7 @@ class NomiKitchenNightmare(Minion):
                          rank=5,
                          base_attack=4,
                          base_health=4,
+                         legendary=True,
                          **kwargs)
 
 
@@ -244,6 +255,7 @@ class RazorgoretheUntamed(Minion):
                          rank=5,
                          base_attack=2,
                          base_health=4,
+                         legendary=True,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -273,6 +285,7 @@ class SneedsOldShredder(Minion):
                          base_health=7,
                          types=[MinionType.Mech],
                          base_deathrattle=SneedsOldShredderDeathrattle(),
+                         legendary=True,
                          **kwargs)
 
 

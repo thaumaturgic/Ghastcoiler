@@ -49,6 +49,7 @@ class BolvarFireblood(Minion):
                          base_attack=1,
                          base_health=7,
                          base_divine_shield=True,
+                         legendary=True,
                          **kwargs)
 
     def on_friendly_minion_loses_divine_shield(self):
@@ -211,6 +212,7 @@ class MajordomoExecutus(Minion):
                          rank=4,
                          base_attack=6,
                          base_health=3,
+                         legendary=True,
                          **kwargs)
 
 

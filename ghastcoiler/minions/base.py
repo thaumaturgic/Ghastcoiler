@@ -45,7 +45,8 @@ class Minion:
                  attacked: bool = False,
                  immediate_attack_pending: bool = False,
                  token: bool = False,
-                 reborn_triggered: bool = False):
+                 reborn_triggered: bool = False,
+                 legendary: bool = False):
         """Base minion class of which all normal minions and tokens should inherit from, and they can override certain triggers to implement custom behaviour.
         Important to note is that all the "base_*" arguments should be used in implementing the normal minions and that the non-base versions should be used
         for specific instances of the normal minions, so for the simulations itself in which case they can be different than their base type.
@@ -121,6 +122,7 @@ class Minion:
         self.reborn_triggered = reborn_triggered
         self.damage_trigger_pending = False
         self.attacks_lowest_power = False
+        self.legendary = legendary
 
         if self.reborn_triggered:
             self.health = 1

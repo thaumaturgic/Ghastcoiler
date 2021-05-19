@@ -1,3 +1,4 @@
+import random
 from minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_2 import KindlyGrandmother
 from ghastcoiler.minions.rank_5 import BaronRivendare, BristlebackKnight, \
@@ -88,11 +89,24 @@ def test_seabreaker_goliath(initialized_game):
 
 def test_sneeds_old_shredder(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    sneeds = SneedsOldShredder()
-    attacker_board.set_minions([sneeds])
-    # TODO: Implement
-    assert True
+    test_runs = 100
+    for _ in range(test_runs):
+        attacker_board.rank += 1
+        if attacker_board.rank == 7:
+            # No legendary minions at rank 1
+            attacker_board.rank = 2 
+
+        attacker_board.set_minions([SneedsOldShredder(golden=random.randint(0,1))])
+        defender_board.set_minions([PunchingBag(attack=20)])
+        
+        initialized_game.start_of_game()
+        initialized_game.single_round()
+
+        for minion in attacker_board.minions:
+            assert minion.legendary
+            assert minion.rank <= attacker_board.rank
 
 
 def test_voidlord(initialized_game):

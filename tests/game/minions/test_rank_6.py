@@ -3,6 +3,7 @@ from ghastcoiler.minions.rank_6 import Amalgadon, DreadAdmiralEliza, \
     GentleDjinni, Ghastcoiler, GoldrinntheGreatWolf, ImpMama, \
     KangorsApprentice, NadinatheRed, TheTideRazor, ZappSlywick
 from minions.types import MinionType
+import random
 
 
 def test_amalgadon(initialized_game):
@@ -42,20 +43,44 @@ def test_dread_admiral_eliza(initialized_game):
 
 def test_gentle_djinni(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    djinni = GentleDjinni()
-    attacker_board.set_minions([djinni])
-    # TODO: Implement
-    assert True
+    test_runs = 100
+    for _ in range(test_runs):
+        attacker_board.rank += 1
+        if attacker_board.rank == 7:
+            attacker_board.rank = 1
+
+        attacker_board.set_minions([GentleDjinni(golden=random.randint(0,1))])
+        defender_board.set_minions([PunchingBag(attack=20)])
+        
+        initialized_game.start_of_game()
+        initialized_game.single_round()
+
+        for minion in attacker_board.minions:
+            assert MinionType.Elemental in minion.types
+            assert minion.rank <= attacker_board.rank
 
 
 def test_ghastcoiler(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    ghastcoiler = Ghastcoiler()
-    attacker_board.set_minions([ghastcoiler])
-    # TODO: Implement
-    assert True
+    test_runs = 100
+    for _ in range(test_runs):
+        attacker_board.rank += 1
+        if attacker_board.rank == 7:
+            attacker_board.rank = 1
+
+        attacker_board.set_minions([Ghastcoiler(golden=random.randint(0,1))])
+        defender_board.set_minions([PunchingBag(attack=20)])
+        
+        initialized_game.start_of_game()
+        initialized_game.single_round()
+
+        for minion in attacker_board.minions:
+            assert len(minion.deathrattles) > 0
+            assert minion.rank <= attacker_board.rank
 
 
 def test_goldrinn_the_great_wolf(initialized_game):
@@ -110,13 +135,25 @@ def test_nadina_the_red(initialized_game):
     assert genie.divine_shield == False
 
 
-def test_the_thede_razor(initialized_game):
+def test_the_tide_razor(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    boat = TheTideRazor()
-    attacker_board.set_minions([boat])
-    # TODO: Implement
-    assert True
+    test_runs = 100
+    for _ in range(test_runs):
+        attacker_board.rank += 1
+        if attacker_board.rank == 7:
+            attacker_board.rank = 1
+
+        attacker_board.set_minions([TheTideRazor(golden=random.randint(0,1))])
+        defender_board.set_minions([PunchingBag(attack=20)])
+        
+        initialized_game.start_of_game()
+        initialized_game.single_round()
+
+        for minion in attacker_board.minions:
+            assert MinionType.Pirate in minion.types
+            assert minion.rank <= attacker_board.rank
 
 
 def test_zapp_slywick(initialized_game):

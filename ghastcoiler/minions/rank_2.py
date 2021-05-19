@@ -184,6 +184,7 @@ class OldMurkEye(Minion):
                          rank=2,
                          base_attack=2,
                          base_health=4,
+                         legendary=True,
                          types=[MinionType.Murloc],
                          **kwargs)
 
@@ -392,6 +393,7 @@ class WaxriderTogwaggle(Minion):
                          rank=2,
                          base_attack=1,
                          base_health=2,
+                         legendary=True,
                          **kwargs)
 
     def on_friendly_kill(self, killer_minion: Minion):

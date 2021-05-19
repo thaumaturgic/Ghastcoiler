@@ -1,5 +1,6 @@
 from typing import Optional
-
+import copy
+import random
 
 class Deathrattle:
     def __init__(self, name):
@@ -20,3 +21,14 @@ class Deathrattle:
             macaw_trigger {bool} -- Is this deathrattle being triggered by macaw. Used for token spawn position
         """
         pass
+
+    @staticmethod
+    def spawn_random_minions(spawning_minion, own_board, minions_to_spawn: int, criteria, triggered_from_macaw: bool):
+        from utils.minion_utils import MinionUtils        
+        minions = MinionUtils().get_minions(criteria)
+
+        # TODO: Test the details of this implementation, especially with macaw and attack order etc
+        for i in range(minions_to_spawn):
+            new_minion = copy.deepcopy(minions[random.randint(0, len(minions) - 1)])
+            new_minion.attacked = spawning_minion.attacked
+            own_board.add_minion(new_minion, position=spawning_minion.position + i, to_right=triggered_from_macaw)

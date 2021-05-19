@@ -29,6 +29,7 @@ class CaptainFlatTusk(Minion):
                          rank=6,
                          base_attack=9,
                          base_health=6,
+                         legendary=True,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -41,6 +42,7 @@ class Charlga(Minion):
                          rank=6,
                          base_attack=7,
                          base_health=7,
+                         legendary=True,
                          types=[MinionType.Quilboar],
                          **kwargs)
 
@@ -53,6 +55,7 @@ class DreadAdmiralEliza(Minion):
                          rank=6,
                          base_attack=6,
                          base_health=7,
+                         legendary=True,
                          types=[MinionType.Pirate],
                          **kwargs)
 
@@ -79,6 +82,7 @@ class FoeReaper4000(Minion):
                          base_attack=6,
                          base_health=9,
                          base_cleave=True,
+                         legendary=True,
                          types=[MinionType.Mech],
                          **kwargs)
 
@@ -119,6 +123,7 @@ class GoldrinntheGreatWolf(Minion):
                          rank=6,
                          base_attack=4,
                          base_health=4,
+                         legendary=True,
                          base_deathrattle=GoldrinntheGreatWolfDeathrattle(),
                          types=[MinionType.Beast],
                          **kwargs)
@@ -145,6 +150,7 @@ class KalecgosArcaneAspect(Minion):
                          rank=6,
                          base_attack=4,
                          base_health=12,
+                         legendary=True,
                          types=[MinionType.Dragon],
                          **kwargs)
 
@@ -170,6 +176,7 @@ class LieutenantGarr(Minion):
                          rank=6,
                          base_attack=8,
                          base_health=1,
+                         legendary=True,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -182,6 +189,7 @@ class LilRag(Minion):
                          rank=6,
                          base_attack=6,
                          base_health=6,
+                         legendary=True,
                          types=[MinionType.Elemental],
                          **kwargs)
 
@@ -195,6 +203,7 @@ class Maexxna(Minion):
                          base_attack=2,
                          base_health=8,
                          base_poisonous=True,
+                         legendary=True,
                          types=[MinionType.Beast],
                          **kwargs)
 
@@ -207,6 +216,7 @@ class NadinatheRed(Minion):
                          rank=6,
                          base_attack=7,
                          base_health=4,
+                         legendary=True,
                          base_deathrattle=NadinatheRedDeathrattle(),
                          **kwargs)
 
@@ -233,6 +243,7 @@ class ZappSlywick(Minion):
                          base_attack=7,
                          base_health=10,
                          base_windfury=True,
+                         legendary=True,
                          **kwargs)
         self.windfury = False if self.golden else True
         self.mega_windfury = True if self.golden else False

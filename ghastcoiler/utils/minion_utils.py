@@ -37,14 +37,16 @@ class MinionUtils:
             golden=golden) #TODO: other tags
         return minion
 
-    def get_all_minions(self):
-        """Returns a List of all implemented minions initialized to their base state
+    def get_minions(self, criteria = None):
+        """Returns a List of minions initialized to their base state that meet the given criteria
 
         Returns:
-            Minion[] -- Collection of all defined minions
+            Minion[] -- List of instantiated minions that match the given criteria
         """
         # TODO: Consider filtering out minion tribes that are not present in current game
         minions_instantiated = []
         for minion_class in self.minion_classes:
-            minions_instantiated.append(minion_class[1]())
+            minion = minion_class[1]()
+            if (not criteria) or (criteria and criteria(minion)):
+                minions_instantiated.append(minion)
         return minions_instantiated
