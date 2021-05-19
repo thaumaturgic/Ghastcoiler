@@ -51,8 +51,8 @@ class Bannerboar(Minion):
                          id="BG20_201",
                          gold_id="BG20_201_G",
                          rank=3,
-                         base_attack=2,
-                         base_health=5,
+                         base_attack=1,
+                         base_health=4,
                          types=[MinionType.Quilboar],
                          **kwargs)
 

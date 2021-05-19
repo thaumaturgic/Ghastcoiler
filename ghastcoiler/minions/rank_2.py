@@ -239,7 +239,7 @@ class ProphetoftheBoar(Minion):
                          id="BG20_203",
                          gold_id="BG20_203_G",
                          rank=2,
-                         base_attack=3,
+                         base_attack=2,
                          base_health=3,
                          **kwargs)
 
@@ -268,7 +268,7 @@ class Roadboar(Minion):
                          id="BG20_101",
                          gold_id="BG20_101_G",
                          rank=2,
-                         base_attack=2,
+                         base_attack=1,
                          base_health=4,
                          types=[MinionType.Quilboar],
                          **kwargs)

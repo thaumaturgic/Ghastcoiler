@@ -40,8 +40,8 @@ class Charlga(Minion):
                          id="BG20_303",
                          gold_id="BG20_303_G",
                          rank=6,
-                         base_attack=7,
-                         base_health=7,
+                         base_attack=4,
+                         base_health=4,
                          legendary=True,
                          types=[MinionType.Quilboar],
                          **kwargs)
