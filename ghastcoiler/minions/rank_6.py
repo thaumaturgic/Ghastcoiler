@@ -1,4 +1,5 @@
 import logging
+import random
 
 from game.player_board import PlayerBoard
 
@@ -88,7 +89,6 @@ class FoeReaper4000(Minion):
 
 
 class GentleDjinni(Minion):
-    #TODO: Test Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="Gentle Djinni",
                          id="BGS_121",
@@ -102,7 +102,6 @@ class GentleDjinni(Minion):
 
 
 class Ghastcoiler(Minion):
-    #TODO: Test Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="Ghastcoiler",
                          id="BGS_008",
@@ -130,7 +129,6 @@ class GoldrinntheGreatWolf(Minion):
 
 
 class ImpMama(Minion):
-    #TODO: On damage trigger
     def __init__(self, **kwargs):
         super().__init__(name="Imp Mama",
                          id="BGS_044",
@@ -140,6 +138,18 @@ class ImpMama(Minion):
                          base_health=10,
                          types=[MinionType.Demon],
                          **kwargs)
+
+    def on_receive_damage(self, own_board: PlayerBoard):
+        from utils.minion_utils import MinionUtils 
+        disallowed_demons = ["Amalgam", "Fiery Imp", "Imp", "Imp Mama", "Voidwalker"]
+        select_demons = lambda x: (MinionType.Demon in x.types) and \
+            (x.rank <= own_board.rank) and \
+            (x.name not in disallowed_demons)
+
+        demons = MinionUtils().get_minions(select_demons)
+        demon = demons[random.randint(0,len(demons)-1)]
+        demon.taunt = True
+        own_board.add_minion(demon, self.position, True)
 
 
 class KalecgosArcaneAspect(Minion):
@@ -222,7 +232,6 @@ class NadinatheRed(Minion):
 
 
 class TheTideRazor(Minion):
-    #TODO:Test Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="The Tide Razor",
                          id="BGS_079",
