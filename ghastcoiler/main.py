@@ -22,8 +22,8 @@ from deathrattles.rank_3 import ReplicatingMenaceDeathrattle
 def main():
     #---------------------
     utils = MinionUtils()
-    test = utils.get_ghastcoiler_minion("TB_BaconUps_250", 1, 4, 3, True, True, True, True, True)
-    test = utils.get_ghastcoiler_minion("BROKEN", 1, 4, 3, False, True, False, True, True)
+    test = utils.get_ghastcoiler_minion("TB_BaconUps_250", 1, 4, 3, True, True, False, False, True, True, True)
+    test = utils.get_ghastcoiler_minion("BROKEN", 1, 4, 3, False, True, False, False, False, True, True)
 
     var = sorted(utils.get_minions(), key = lambda x: x.rank)
     # print(len(var))
@@ -64,7 +64,7 @@ def main():
         #     print("break")
 
         try:
-            games = 10000
+            games = 100
             game_state = (player_board_0, player_board_1)
 
             start = time.time()

@@ -190,6 +190,7 @@ class LogReader:
     def convert_to_ghastcoiler_minion(self, board):
         ghastcoiler_board = []
         for minion in board:
+            windfury = mega_windfury = False
             if GameTag.WINDFURY in minion.tags:
                 windfury = True if minion.tags[GameTag.WINDFURY] == 1 else False
                 mega_windfury = True if minion.tags[GameTag.WINDFURY] == 3 else False
@@ -200,8 +201,8 @@ class LogReader:
                 minion.tags[GameTag.HEALTH], 
                 minion.tags[GameTag.ATK],
                 True if GameTag.REBORN in minion.tags else False,
-                # windfury,
-                # megawindfury,
+                windfury,
+                mega_windfury,
                 # Deathrattles 
                 True if GameTag.TAUNT in minion.tags else False,
                 True if GameTag.DIVINE_SHIELD in minion.tags else False,
