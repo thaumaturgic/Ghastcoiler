@@ -1,6 +1,6 @@
 from hslog.parser import LogParser, GameTag
 from hslog.export import EntityTreeExporter
-from hearthstone.entities import Zone, CardType
+from hearthstone.entities import Game, Zone, CardType
 from time import sleep
 from dataclasses import dataclass
 from utils.minion_utils import MinionUtils
@@ -9,13 +9,13 @@ from heroes.hero_types import HeroType
 @dataclass
 class BoardState:
     friendlyBoard: [] = None
-    #friendlyPlayerHealth
+    friendlyPlayerHealth: int = None
     friendlyHero: HeroType = None
-    #friendlyTechLevel
+    friendlyTechLevel: int = None
     enemyBoard: [] = None
     enemyHero: HeroType = None
-    #enemyPlayerHealth
-    #enemyTechLevel
+    enemyPlayerHealth: int = None
+    enemyTechLevel: int = None
     #allowedMinionTypes: []
 
 class LogReader:
@@ -72,7 +72,7 @@ class LogReader:
                 #     print(str(lineCount) + " " + line[:-1])
 
                 if LogReader.COMBAT_STEP_STRING in line and self.inShop:
-                    print("\n" + str(self.lineCount) + " *** COMBAT #" + str(self.turn) + ": " + line[:-1])
+                    print("\n" + str(self.lineCount) + " *** COMBAT #" + str(self.turn))
                     self.turn += 1
                     self.entity_board_state = self.scrape_board_state(self.parser)
                     self.boardPending = True
@@ -84,7 +84,7 @@ class LogReader:
                     self.boardPending = False
                     return self.convert_board_state(self.entity_board_state)
                 elif LogReader.SHOP_STEP_STRING in line:
-                    print("\n" + str(self.lineCount) + " *** SHOP   #" + str(self.turn) + ": " + line[:-1])
+                    print("\n" + str(self.lineCount) + " *** SHOP   #" + str(self.turn))
                     self.inShop = True
                 elif LogReader.NEW_GAME_STRING in line:
                     print("\n*** New Game ***")
@@ -102,10 +102,13 @@ class LogReader:
         minions = []
         enchantments = []
         hero_powers = []
-        entities = []
+        entities = {}
+        friendly_player = friendly_hero = friendly_health = friendly_tech_level = None
+        enemy_player = enemy_hero = enemy_health = enemy_tech_level = None
 
         for e in export.game.entities:
-            entities.append(e)
+            entities[e.id] = e
+
             if e.type == CardType.ENCHANTMENT:
                 enchantments.append(e)
 
@@ -114,7 +117,17 @@ class LogReader:
                     hero_powers.append(e)
                 elif e.type == CardType.MINION:
                     minions.append(e)
-                    
+                elif e.type == CardType.PLAYER:
+                    if e.is_ai:
+                        enemy_player = e
+                    else:
+                        friendly_player = e
+                elif e.type == CardType.HERO:
+                    if e.controller == enemy_player:
+                        enemy_hero = e
+                    elif e.controller == friendly_player:
+                        friendly_hero = e
+
         self.attach_enchantments(enchantments, minions)
         
         friendlyMinions = []
@@ -124,16 +137,27 @@ class LogReader:
             if GameTag.ATK not in minion.tags:
                 # Minions with 0 power dont have an ATK tag. Make sure it exists here
                 minion.tags[GameTag.ATK] = 0 
-
             enemyMinions.append(minion) if minion.controller.is_ai else friendlyMinions.append(minion)
 
         friendlyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
         enemyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
+
+        friendly_health = friendly_hero.tags[GameTag.HEALTH]
+        if GameTag.DAMAGE in friendly_hero.tags:
+            friendly_health -= friendly_hero.tags[GameTag.DAMAGE]
+        if GameTag.PLAYER_TECH_LEVEL in friendly_hero.tags:
+            friendly_tech_level = friendly_hero.tags[GameTag.PLAYER_TECH_LEVEL]
         
-        state = BoardState(friendlyBoard=friendlyMinions, enemyBoard=enemyMinions)
+        enemy_health = enemy_hero.tags[GameTag.HEALTH]
+        if GameTag.DAMAGE in enemy_hero.tags:
+            enemy_health -= enemy_hero.tags[GameTag.DAMAGE]
+        if GameTag.PLAYER_TECH_LEVEL in enemy_hero.tags:
+            enemy_tech_level = enemy_hero.tags[GameTag.PLAYER_TECH_LEVEL]
+        
+        state = BoardState(friendlyBoard=friendlyMinions, friendlyPlayerHealth=friendly_health, friendlyTechLevel=friendly_tech_level,
+                            enemyBoard=enemyMinions, enemyPlayerHealth=enemy_health, enemyTechLevel=enemy_tech_level)
         self.apply_hero_powers(state, hero_powers)
-        # TODO: Find player tech levels
-        # TODO: Find player health levels
+
         return state
 
     #TODO: Find deathrattles, modular stuff like annoy o module
@@ -200,7 +224,10 @@ class LogReader:
         ghastcoiler_friendly_board = self.convert_to_ghastcoiler_minion(entity_board_state.friendlyBoard)
         ghastcoiler_enemy_board =  self.convert_to_ghastcoiler_minion(entity_board_state.enemyBoard)
 
-        return BoardState(friendlyBoard = ghastcoiler_friendly_board, enemyBoard = ghastcoiler_enemy_board)
+        entity_board_state.friendlyBoard = ghastcoiler_friendly_board
+        entity_board_state.enemyBoard = ghastcoiler_enemy_board
+
+        return entity_board_state
 
     def print_board(self, board):
         for minion in board:

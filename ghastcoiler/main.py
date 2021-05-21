@@ -3,7 +3,7 @@ import sys, inspect
 from collections import Counter
 from itertools import repeat
 from multiprocessing import Pool
-from time import sleep
+import time
 
 from utils.profile import Profile
 from utils.minion_utils import MinionUtils
@@ -25,7 +25,7 @@ def main():
     test = utils.get_ghastcoiler_minion("TB_BaconUps_250", 1, 4, 3, True, True, True, True, True)
     test = utils.get_ghastcoiler_minion("BROKEN", 1, 4, 3, False, True, False, True, True)
 
-    var = utils.get_all_minions()
+    var = sorted(utils.get_minions(), key = lambda x: x.rank)
     # print(len(var))
     # for minion in var:
     #     print(minion.name)
@@ -36,7 +36,7 @@ def main():
     #"C:\Program Files (x86)\Hearthstone\Logs\Power_old.log"
     #"C:/Users/scott/Desktop/hearthstone_games/Al'Akir_game_log.log"
     
-    logPath = "C:/Users/scott/Desktop/hearthstone_games/Power_game_4_turn15_end.log"
+    logPath = "C:/Users/scott/Desktop/hearthstone_games/Power_game_5_turn15_end.log"
     print("Reading Log: ", logPath)
     logreader = LogReader(logPath) 
     turns = 0
@@ -46,8 +46,8 @@ def main():
         board_state = logreader.watch_log_file_for_combat_state()
         print()
 
-        player_board_0 = PlayerBoard(player_id=0, hero=None, life_total=40, rank=1, minions=board_state.friendlyBoard)
-        player_board_1 = PlayerBoard(player_id=1, hero=None, life_total=40, rank=1, minions=board_state.enemyBoard)
+        player_board_0 = PlayerBoard(player_id=0, hero=board_state.friendlyHero, life_total=board_state.friendlyPlayerHealth, rank=board_state.friendlyTechLevel, minions=board_state.friendlyBoard)
+        player_board_1 = PlayerBoard(player_id=1, hero=board_state.enemyHero, life_total=board_state.enemyPlayerHealth, rank=board_state.enemyTechLevel, minions=board_state.enemyBoard)
 
         print("Enemy board")
         for minion in player_board_1.minions:
@@ -64,9 +64,10 @@ def main():
         #     print("break")
 
         try:
-            games = 1000
+            games = 10000
             game_state = (player_board_0, player_board_1)
 
+            start = time.time()
             pool = Pool()
             results = pool.map(Simulator.Simulate, repeat(game_state, games))
             pool.close()
@@ -83,8 +84,9 @@ def main():
                     losses += result[1]
                 else:
                     ties += result[1]
+            end = time.time()
 
-            print("Win ", 100*wins/games, "Tie ", 100*ties/games, "Loss ", 100*losses/games)
+            print("Win ", 100*wins/games, "Tie ", 100*ties/games, "Loss ", 100*losses/games, "Elapsed: ", end - start)
         except Exception as e:
             print(e)
 
