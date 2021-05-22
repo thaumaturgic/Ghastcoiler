@@ -35,6 +35,10 @@ class LogReader:
     LICH_KING_REBORN = "TB_BaconShop_HP_024e2"
     ALAKIR = "TB_BaconShop_HP_086"
 
+    # Death rattle entity ids
+    REPLICATING_MENACE_DEATHRATTLE = "BOT_312e"
+    REPLICATING_MENACE_GOLDEN_DEATHRATTLE = "TB_BaconUps_032e"
+
     ENEMY_PLAYER_NAME = "Bob's Tavern"
 
     def __init__(self, log_path):
@@ -127,28 +131,33 @@ class LogReader:
                         enemy_hero = e
                     elif e.controller == friendly_player:
                         friendly_hero = e
-
-        self.attach_enchantments(enchantments, minions)
         
         friendlyMinions = []
         enemyMinions = []
 
         for minion in minions:
+            # Create list to hold deathrattle entity ids to convert to ghastcoiler ones
+            if not hasattr(minion, 'deathrattle_ids'):
+                minion.deathrattle_ids = []
             if GameTag.ATK not in minion.tags:
                 # Minions with 0 power dont have an ATK tag. Make sure it exists here
                 minion.tags[GameTag.ATK] = 0 
             enemyMinions.append(minion) if minion.controller.is_ai else friendlyMinions.append(minion)
 
+        self.attach_enchantments(enchantments, minions)
+
         friendlyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
         enemyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
 
-        friendly_health = friendly_hero.tags[GameTag.HEALTH]
+        if GameTag.HEALTH in friendly_hero.tags:
+            friendly_health = friendly_hero.tags[GameTag.HEALTH]
         if GameTag.DAMAGE in friendly_hero.tags:
             friendly_health -= friendly_hero.tags[GameTag.DAMAGE]
         if GameTag.PLAYER_TECH_LEVEL in friendly_hero.tags:
             friendly_tech_level = friendly_hero.tags[GameTag.PLAYER_TECH_LEVEL]
-        
-        enemy_health = enemy_hero.tags[GameTag.HEALTH]
+
+        if GameTag.HEALTH in enemy_hero.tags:
+            enemy_health = enemy_hero.tags[GameTag.HEALTH]
         if GameTag.DAMAGE in enemy_hero.tags:
             enemy_health -= enemy_hero.tags[GameTag.DAMAGE]
         if GameTag.PLAYER_TECH_LEVEL in enemy_hero.tags:
@@ -160,11 +169,8 @@ class LogReader:
 
         return state
 
-    #TODO: Find deathrattles, modular stuff like annoy o module
-    #TODO: Parse mechanically interesting tags -> Like al akir shield
-    # Microbot death rattle = "BOT_312e" 
-    # Annoy o module = 
-    # Living Spores = UNG_999t2
+    #TODO: Find modular deathrattles, and plants # Living Spores = UNG_999t2
+    #TODO: Parse mechanically interesting enchantments -> Like al akir shield
     def attach_enchantments(self, enchantments, minions):
         for enchantment in enchantments:
             if GameTag.ATTACHED in enchantment.tags:
@@ -176,9 +182,16 @@ class LogReader:
                             minion.enchantments.append(enchantment)
                         else:
                             minion.enchantments = [enchantment]
+
                         if enchantment.card_id == LogReader.LICH_KING_REBORN:
                             minion.tags[GameTag.REBORN] = 1
-                        #elif enchantment.card_id == BLAH
+
+                        #TODO: Verify that multiple modular deathrattles are distinct entities
+                        #TODO: Refactor this once all deathrattle enchantments are identified
+                        elif enchantment.card_id == self.REPLICATING_MENACE_DEATHRATTLE:
+                            minion.deathrattle_ids.append(self.REPLICATING_MENACE_DEATHRATTLE)
+                        elif enchantment.card_id == self.REPLICATING_MENACE_GOLDEN_DEATHRATTLE:
+                            minion.deathrattle_ids.append(self.REPLICATING_MENACE_GOLDEN_DEATHRATTLE)
     
     def apply_hero_powers(self, state: BoardState, hero_powers):
         for hero_power in hero_powers:
@@ -194,7 +207,7 @@ class LogReader:
             if GameTag.WINDFURY in minion.tags:
                 windfury = True if minion.tags[GameTag.WINDFURY] == 1 else False
                 mega_windfury = True if minion.tags[GameTag.WINDFURY] == 3 else False
-                
+
             ghastcoiler_minion = self.minion_utils.get_ghastcoiler_minion(
                 minion.card_id, 
                 minion.tags[GameTag.ZONE_POSITION], 
@@ -203,23 +216,23 @@ class LogReader:
                 True if GameTag.REBORN in minion.tags else False,
                 windfury,
                 mega_windfury,
-                # Deathrattles 
                 True if GameTag.TAUNT in minion.tags else False,
                 True if GameTag.DIVINE_SHIELD in minion.tags else False,
                 True if GameTag.POISONOUS in minion.tags else False,
-                True if GameTag.PREMIUM in minion.tags else False  #Golden
+                True if GameTag.PREMIUM in minion.tags and minion.tags[GameTag.PREMIUM] else False  #Golden
                 )
             if ghastcoiler_minion:
+                ghastcoiler_minion.deathrattles += self.minion_utils.get_ghastcoiler_deathrattles(minion.deathrattle_ids)
                 ghastcoiler_board.append(ghastcoiler_minion)
         return ghastcoiler_board
 
     # Convert from entities to ghastcoiler
     def convert_board_state(self, entity_board_state):
-        print("Enemy minions")
-        self.print_board(entity_board_state.enemyBoard)
+        # print("Enemy minions")
+        # self.print_board(entity_board_state.enemyBoard)
         
-        print("Friendly minions")
-        self.print_board(entity_board_state.friendlyBoard)
+        # print("Friendly minions")
+        # self.print_board(entity_board_state.friendlyBoard)
 
         # Convert the entity tags to ghastcoiler minions before passing back
         ghastcoiler_friendly_board = self.convert_to_ghastcoiler_minion(entity_board_state.friendlyBoard)

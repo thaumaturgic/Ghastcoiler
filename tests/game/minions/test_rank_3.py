@@ -224,14 +224,16 @@ def test_replicating_menace(initialized_game):
     assert defender_board.minions[0].health == 97
 
     # Test multiple death rattles.
-    # They should trigger in order they're added
-    attacker_board.set_minions([KaboomBot(deathrattles=[ReplicatingMenaceDeathrattle()])])
+    # TODO: They should trigger in order they're added
+    attacker_board.set_minions([KaboomBot(deathrattles=[ReplicatingMenaceDeathrattle(golden=True)])])
     defender_board.set_minions([PunchingBag(attack=2)])
     initialized_game.start_of_game()
     initialized_game.single_round()
 
     for i in range(3):
         assert attacker_board.minions[i].name == "Microbot"
+        assert attacker_board.minions[i].attack == 2
+        assert attacker_board.minions[i].health == 2
     assert defender_board.minions[0].health == 94
 
 

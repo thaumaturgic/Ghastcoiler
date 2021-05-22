@@ -11,6 +11,8 @@ from minions.rank_4 import *  # noqa: F403
 from minions.rank_5 import *  # noqa: F403
 from minions.rank_6 import *  # noqa: F403
 
+from deathrattles.rank_3 import * # noqa: F403
+
 def is_minion_class(class_object):
         return inspect.isclass(class_object) and issubclass(class_object, Minion) and (class_object is not Minion)
 
@@ -36,8 +38,18 @@ class MinionUtils:
             taunt=taunt,
             divine_shield=divine_shield,
             poisonous=poisonous,
-            golden=golden) #TODO: other tags
+            golden=golden)
         return minion
+
+    def get_ghastcoiler_deathrattles(self, entity_ids):
+        deathrattles = []
+        for entity in entity_ids:
+            if entity == "BOT_312e":
+                deathrattles.append(ReplicatingMenaceDeathrattle())
+            elif entity == "TB_BaconUps_032e":
+                deathrattles.append(ReplicatingMenaceDeathrattle(golden=True)) # TODO: Test this import
+        
+        return deathrattles
 
     def get_minions(self, criteria = None):
         """Returns a List of minions initialized to their base state that meet the given criteria

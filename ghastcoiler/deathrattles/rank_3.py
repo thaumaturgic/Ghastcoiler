@@ -49,12 +49,11 @@ class RatPackDeathrattle(Deathrattle):
 
 class ReplicatingMenaceDeathrattle(Deathrattle):
     "Summon three 1/1 Microbots."
-    def __init__(self):
+    def __init__(self, golden: Optional[bool] = False):
         super().__init__(name="ReplicatingMenaceDeathrattle")
+        self.golden = golden
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Replicating menace deathrattle triggered, creating 3 microbots")
-        # TODO: Handle the golden version of this deathrattle.
-        # The deathrattle being gold determines 2/2 bots, NOT the host minion
         for _ in range(3):
-            own_board.add_minion(Microbot(attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+            own_board.add_minion(Microbot(attacked=minion.attacked, golden=self.golden), position=minion.position, to_right=macaw_trigger)
