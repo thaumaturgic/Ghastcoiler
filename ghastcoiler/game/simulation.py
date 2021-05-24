@@ -5,8 +5,8 @@ from game.player_board import PlayerBoard
 
 class Simulator:
     @classmethod
-    def Simulate(self, tuple):
-        return GameInstance(tuple[0].copy(), tuple[1].copy()).start()
+    def Simulate(self, player_boards):
+        return GameInstance(player_boards[0].copy(), player_boards[1].copy()).start()
 
 class Simulation:
     def __init__(self, player_board: PlayerBoard, opponent_board: PlayerBoard, max_simulations: int = 10000, time_budget_in_milliseconds: int = 1000):

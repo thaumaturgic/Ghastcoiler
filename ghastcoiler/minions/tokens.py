@@ -115,7 +115,14 @@ class MurlocScout(Minion):
                          types=[MinionType.Murloc],
                          **kwargs)
 
-# TODO: Plant {"artist":"Zoltan Boros","attack":1,"cardClass":"NEUTRAL","cost":1,"dbfId":41067,"health":1,"id":"UNG_999t2t1","name":"Plant","set":"UNGORO","type":"MINION"},
+class Plant(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Plant",
+                         id="UNG_999t2t1",
+                         rank=1,
+                         base_attack=1,
+                         base_health=1,
+                         **kwargs)
 
 class Rat(Minion):
     def __init__(self, **kwargs):

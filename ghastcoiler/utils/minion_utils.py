@@ -11,7 +11,8 @@ from minions.rank_4 import *  # noqa: F403
 from minions.rank_5 import *  # noqa: F403
 from minions.rank_6 import *  # noqa: F403
 
-from deathrattles.rank_3 import * # noqa: F403
+from deathrattles.rank_3 import ReplicatingMenaceDeathrattle
+from deathrattles.rank_6 import LivingSporesDeathrattle
 
 def is_minion_class(class_object):
         return inspect.isclass(class_object) and issubclass(class_object, Minion) and (class_object is not Minion)
@@ -48,6 +49,8 @@ class MinionUtils:
                 deathrattles.append(ReplicatingMenaceDeathrattle())
             elif entity == "TB_BaconUps_032e":
                 deathrattles.append(ReplicatingMenaceDeathrattle(golden=True)) # TODO: Test this import
+            elif entity == "UNG_999t2e":
+                deathrattles.append(LivingSporesDeathrattle()) # TODO: Test this import
         
         return deathrattles
 

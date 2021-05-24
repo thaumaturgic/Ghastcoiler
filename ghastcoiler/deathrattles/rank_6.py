@@ -4,6 +4,7 @@ from typing import Optional
 from game.player_board import PlayerBoard
 from minions.base import Minion
 from minions.types import MinionType
+from minions.tokens import Plant
 from deathrattles.base import Deathrattle
 
 class GentleDjinniDeathrattle(Deathrattle):
@@ -60,6 +61,7 @@ class KangorsApprenticeDeathrattle(Deathrattle):
         #TODO: IMPLEMENT
         pass
 
+
 class NadinatheRedDeathrattle(Deathrattle):
     "Give your Dragons Divine Shield."
     def __init__(self):
@@ -85,3 +87,13 @@ class TheTideRazorDeathrattle(Deathrattle):
         minions_to_summon = 6 if minion.golden else 3
         Deathrattle.spawn_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
         pass
+
+# TODO: Test
+class LivingSporesDeathrattle(Deathrattle):
+    "Summon two 1/1 Plants."
+    def __init__(self):
+        super().__init__(name="LivingSporesDeathrattle")
+
+    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
+        for _ in range(2):
+            own_board.add_minion(Plant(attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)

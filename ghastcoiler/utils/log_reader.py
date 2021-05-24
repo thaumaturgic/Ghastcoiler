@@ -38,8 +38,7 @@ class LogReader:
     # Death rattle entity ids
     REPLICATING_MENACE_DEATHRATTLE = "BOT_312e"
     REPLICATING_MENACE_GOLDEN_DEATHRATTLE = "TB_BaconUps_032e"
-
-    ENEMY_PLAYER_NAME = "Bob's Tavern"
+    LIVING_SPORES = "UNG_999t2e"
 
     def __init__(self, log_path):
         self.parser = LogParser()
@@ -169,7 +168,6 @@ class LogReader:
 
         return state
 
-    #TODO: Find modular deathrattles, and plants # Living Spores = UNG_999t2
     #TODO: Parse mechanically interesting enchantments -> Like al akir shield
     def attach_enchantments(self, enchantments, minions):
         for enchantment in enchantments:
@@ -192,6 +190,9 @@ class LogReader:
                             minion.deathrattle_ids.append(self.REPLICATING_MENACE_DEATHRATTLE)
                         elif enchantment.card_id == self.REPLICATING_MENACE_GOLDEN_DEATHRATTLE:
                             minion.deathrattle_ids.append(self.REPLICATING_MENACE_GOLDEN_DEATHRATTLE)
+                        elif enchantment.card_id == self.LIVING_SPORES:
+                            minion.deathrattle_ids.append(self.LIVING_SPORES)
+
     
     def apply_hero_powers(self, state: BoardState, hero_powers):
         for hero_power in hero_powers:
