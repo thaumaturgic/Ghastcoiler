@@ -1,6 +1,6 @@
 from hslog.parser import LogParser, GameTag
 from hslog.export import EntityTreeExporter
-from hearthstone.entities import Game, Zone, CardType
+from hearthstone.entities import Zone, CardType
 from time import sleep
 from dataclasses import dataclass
 from utils.minion_utils import MinionUtils
@@ -88,6 +88,7 @@ class LogReader:
                     return self.convert_board_state(self.entity_board_state)
                 elif LogReader.SHOP_STEP_STRING in line:
                     print("\n" + str(self.lineCount) + " *** SHOP   #" + str(self.turn))
+                    #TODO: Scrape shop for visible minion types
                     self.inShop = True
                 elif LogReader.NEW_GAME_STRING in line:
                     print("\n*** New Game ***")
@@ -97,6 +98,16 @@ class LogReader:
 
             self.parser.read_line(line)
 
+    def get_hero_tags(self, tags):
+        health = tech_level = None
+        if GameTag.HEALTH in tags:
+            health = tags[GameTag.HEALTH]
+        if GameTag.DAMAGE in tags:
+            health -= tags[GameTag.DAMAGE]
+        if GameTag.PLAYER_TECH_LEVEL in tags:
+            tech_level = tags[GameTag.PLAYER_TECH_LEVEL]
+        return (health, tech_level)
+
     def scrape_board_state(self, parser):
         packet_tree = parser.games[len(parser.games)-1]
         exporter = EntityTreeExporter(packet_tree)
@@ -105,9 +116,9 @@ class LogReader:
         minions = []
         enchantments = []
         hero_powers = []
-        entities = {}
-        friendly_player = friendly_hero = friendly_health = friendly_tech_level = None
-        enemy_player = enemy_hero = enemy_health = enemy_tech_level = None
+        entities = {} # For Debug inspection
+        friendly_player = friendly_hero = None
+        enemy_player = enemy_hero = None
 
         for e in export.game.entities:
             entities[e.id] = e
@@ -136,8 +147,7 @@ class LogReader:
 
         for minion in minions:
             # Create list to hold deathrattle entity ids to convert to ghastcoiler ones
-            if not hasattr(minion, 'deathrattle_ids'):
-                minion.deathrattle_ids = []
+            minion.deathrattle_ids = []
             if GameTag.ATK not in minion.tags:
                 # Minions with 0 power dont have an ATK tag. Make sure it exists here
                 minion.tags[GameTag.ATK] = 0 
@@ -148,19 +158,8 @@ class LogReader:
         friendlyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
         enemyMinions.sort(key=lambda minion: minion.tags[GameTag.ZONE_POSITION])
 
-        if GameTag.HEALTH in friendly_hero.tags:
-            friendly_health = friendly_hero.tags[GameTag.HEALTH]
-        if GameTag.DAMAGE in friendly_hero.tags:
-            friendly_health -= friendly_hero.tags[GameTag.DAMAGE]
-        if GameTag.PLAYER_TECH_LEVEL in friendly_hero.tags:
-            friendly_tech_level = friendly_hero.tags[GameTag.PLAYER_TECH_LEVEL]
-
-        if GameTag.HEALTH in enemy_hero.tags:
-            enemy_health = enemy_hero.tags[GameTag.HEALTH]
-        if GameTag.DAMAGE in enemy_hero.tags:
-            enemy_health -= enemy_hero.tags[GameTag.DAMAGE]
-        if GameTag.PLAYER_TECH_LEVEL in enemy_hero.tags:
-            enemy_tech_level = enemy_hero.tags[GameTag.PLAYER_TECH_LEVEL]
+        friendly_health, friendly_tech_level = self.get_hero_tags(friendly_hero.tags)
+        enemy_health, enemy_tech_level = self.get_hero_tags(enemy_hero.tags)
         
         state = BoardState(friendlyBoard=friendlyMinions, friendlyPlayerHealth=friendly_health, friendlyTechLevel=friendly_tech_level,
                             enemyBoard=enemyMinions, enemyPlayerHealth=enemy_health, enemyTechLevel=enemy_tech_level)
@@ -220,8 +219,7 @@ class LogReader:
                 True if GameTag.TAUNT in minion.tags else False,
                 True if GameTag.DIVINE_SHIELD in minion.tags else False,
                 True if GameTag.POISONOUS in minion.tags else False,
-                True if GameTag.PREMIUM in minion.tags and minion.tags[GameTag.PREMIUM] else False  #Golden
-                )
+                True if GameTag.PREMIUM in minion.tags and minion.tags[GameTag.PREMIUM] else False)
             if ghastcoiler_minion:
                 ghastcoiler_minion.deathrattles += self.minion_utils.get_ghastcoiler_deathrattles(minion.deathrattle_ids)
                 ghastcoiler_board.append(ghastcoiler_minion)

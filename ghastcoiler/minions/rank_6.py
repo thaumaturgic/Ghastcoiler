@@ -142,9 +142,7 @@ class ImpMama(Minion):
     def on_receive_damage(self, own_board: PlayerBoard):
         from utils.minion_utils import MinionUtils 
         disallowed_demons = ["Amalgam", "Fiery Imp", "Imp", "Imp Mama", "Voidwalker"]
-        select_demons = lambda x: (MinionType.Demon in x.types) and \
-            (x.rank <= own_board.rank) and \
-            (x.name not in disallowed_demons)
+        select_demons = lambda x: (MinionType.Demon in x.types) and (x.name not in disallowed_demons)
 
         demons = MinionUtils().get_minions(select_demons)
         demon = demons[random.randint(0,len(demons)-1)]

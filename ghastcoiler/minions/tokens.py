@@ -72,7 +72,7 @@ class GuardBot(Minion):
 class Hyena(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Hyena",
-                         id="ULD_154t",  # TODO: Double check
+                         id="ULD_154t",
                          gold_id="TB_BaconUps_049t",
                          rank=1,
                          base_attack=2,
@@ -119,6 +119,7 @@ class Plant(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Plant",
                          id="UNG_999t2t1",
+                         gold_id="", # No gold version
                          rank=1,
                          base_attack=1,
                          base_health=1,

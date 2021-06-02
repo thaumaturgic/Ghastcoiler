@@ -15,9 +15,7 @@ class GentleDjinniDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         # Filter out un purchaseable elementals like curator token, water droplet, and elementals above current tech level
         not_allowed_elementals = ["Amalgam", "Water Droplet", "Gentle Djinni"]
-        isSpawnable = lambda x: (MinionType.Elemental in x.types) and \
-                            (x.name not in not_allowed_elementals) and \
-                            (x.rank <= own_board.rank)
+        isSpawnable = lambda x: (MinionType.Elemental in x.types) and (x.name not in not_allowed_elementals)
         elementals_to_summon = 2 if minion.golden else 1
         Deathrattle.spawn_random_minions(minion, own_board, elementals_to_summon, isSpawnable, macaw_trigger)
 
@@ -30,9 +28,7 @@ class GhastcoilerDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         # TODO: Filter out death rattle minions with types not in the game
         not_allowed_minions = ["Ghastcoiler"]
-        isSpawnable = lambda x: (len(x.deathrattles) > 0) and \
-                            (x.name not in not_allowed_minions) and \
-                            (x.rank <= own_board.rank)
+        isSpawnable = lambda x: (len(x.deathrattles) > 0) and (x.name not in not_allowed_minions)
         
         minions_to_summon = 4 if minion.golden else 2
         Deathrattle.spawn_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
@@ -80,9 +76,7 @@ class TheTideRazorDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         not_allowed_pirates = ["Amalgam", "Sky Pirate"]
-        isSpawnable = lambda x: (MinionType.Pirate in x.types) and \
-                            (x.name not in not_allowed_pirates) and \
-                            (x.rank <= own_board.rank)
+        isSpawnable = lambda x: (MinionType.Pirate in x.types) and (x.name not in not_allowed_pirates)
         
         minions_to_summon = 6 if minion.golden else 3
         Deathrattle.spawn_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)

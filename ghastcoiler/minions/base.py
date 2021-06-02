@@ -138,6 +138,8 @@ class Minion:
             attributes += "[Ta]"
         if self.windfury:
             attributes += "[Wf]"
+        if self.mega_windfury:
+            attributes += "[Mw]"
         if self.poisonous:
             attributes += "[Po]"
         if self.divine_shield:
@@ -146,7 +148,11 @@ class Minion:
             attributes += "[Cl]"
         if self.reborn:
             attributes += "[Re]"
-        return_string = f"{self.attack}/{self.health} {''.join(attributes)} ({self.name})"
+        if self.golden:
+            attributes += "[Go]"
+        if len(self.deathrattles) > 0:
+            attributes += f"[D{len(self.deathrattles)}]"
+        return_string = f"{self.attack}/{self.health} {self.name} {''.join(attributes)}"
         positional_part = f"<P{self.player_id} {self.position}> "
         return_string = positional_part + return_string
         return return_string

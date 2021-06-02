@@ -26,9 +26,7 @@ class SneedsOldShredderDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         # TODO: Filter minions from tribes not in the game
         not_allowed_minions = ["Sneed's Old Shredder"]
-        isSpawnable = lambda x: (x.legendary) and \
-                            (x.name not in not_allowed_minions) and \
-                            (x.rank <= own_board.rank)
+        isSpawnable = lambda x: (x.legendary) and (x.name not in not_allowed_minions)
         
         minions_to_summon = 2 if minion.golden else 1
         Deathrattle.spawn_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
