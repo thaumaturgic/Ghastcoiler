@@ -75,7 +75,7 @@ class LogReader:
                 #     print(str(lineCount) + " " + line[:-1])
 
                 if LogReader.COMBAT_STEP_STRING in line and self.inShop:
-                    print("\n" + str(self.lineCount) + " *** COMBAT #" + str(self.turn))
+                    print(str(self.lineCount) + " *** COMBAT #" + str(self.turn))
                     self.turn += 1
                     self.entity_board_state = self.scrape_board_state(self.parser)
                     self.boardPending = True
@@ -87,7 +87,7 @@ class LogReader:
                     self.boardPending = False
                     return self.convert_board_state(self.entity_board_state)
                 elif LogReader.SHOP_STEP_STRING in line:
-                    print("\n" + str(self.lineCount) + " *** SHOP   #" + str(self.turn))
+                    #print(str(self.lineCount) + " *** SHOP   #" + str(self.turn))
                     #TODO: Scrape shop for visible minion types
                     self.inShop = True
                 elif LogReader.NEW_GAME_STRING in line:
