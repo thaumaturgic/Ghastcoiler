@@ -106,7 +106,6 @@ def test_sneeds_old_shredder(initialized_game):
 
         for minion in attacker_board.minions:
             assert minion.legendary
-            assert minion.rank <= attacker_board.rank
 
 
 def test_voidlord(initialized_game):

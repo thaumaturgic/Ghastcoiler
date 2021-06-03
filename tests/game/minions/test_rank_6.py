@@ -59,7 +59,6 @@ def test_gentle_djinni(initialized_game):
 
         for minion in attacker_board.minions:
             assert MinionType.Elemental in minion.types
-            assert minion.rank <= attacker_board.rank
 
 
 def test_ghastcoiler(initialized_game):
@@ -80,7 +79,6 @@ def test_ghastcoiler(initialized_game):
 
         for minion in attacker_board.minions:
             assert len(minion.deathrattles) > 0
-            assert minion.rank <= attacker_board.rank
 
 
 def test_goldrinn_the_great_wolf(initialized_game):
@@ -163,7 +161,6 @@ def test_the_tide_razor(initialized_game):
 
         for minion in attacker_board.minions:
             assert MinionType.Pirate in minion.types
-            assert minion.rank <= attacker_board.rank
 
 
 def test_zapp_slywick(initialized_game):
