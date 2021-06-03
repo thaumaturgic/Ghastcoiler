@@ -91,10 +91,10 @@ def main():
 
     #---------------------
     # logging.DEBUG will show all steps in combat
-    logging.basicConfig(level=logging.DEBUG, format="%(message)s")
+    # logging.basicConfig(level=logging.DEBUG, format="%(message)s")
 
-    with Profile():
-        print(simulation.simulate()) # List of tuples with outcome and the frequency of that outcome
+    # with Profile():
+    #    print(simulation.simulate()) # List of tuples with outcome and the frequency of that outcome
 
 if __name__ == '__main__':
     main()
