@@ -55,6 +55,18 @@ class FieryImp(Minion):
                          types=[MinionType.Demon],
                          **kwargs)
 
+# TODO: Implement functionality
+class FishofNZoth(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Fish of N'Zoth",
+                         id="TB_BaconShop_HP_105t",
+                         gold_id="TB_BaconUps_307",
+                         rank=1,
+                         base_attack=1,
+                         base_health=1,
+                         types=[MinionType.Beast],
+                         **kwargs)
+
 
 class GuardBot(Minion):
     def __init__(self, **kwargs):
