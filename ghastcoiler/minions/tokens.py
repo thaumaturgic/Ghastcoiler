@@ -1,3 +1,5 @@
+import logging
+
 from minions.base import Minion
 from minions.types import MinionType
 
@@ -55,7 +57,7 @@ class FieryImp(Minion):
                          types=[MinionType.Demon],
                          **kwargs)
 
-# TODO: Implement functionality
+
 class FishofNZoth(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Fish of N'Zoth",
@@ -66,6 +68,11 @@ class FishofNZoth(Minion):
                          base_health=1,
                          types=[MinionType.Beast],
                          **kwargs)
+
+    def on_friendly_removal(self, other_minion: Minion):
+        if len(other_minion.deathrattles) > 0:
+            logging.debug(f"Fish of N'zoth gets deathrattles {other_minion.deathrattles} from {other_minion.minion_string()}")
+            self.deathrattles += other_minion.deathrattles
 
 
 class GuardBot(Minion):

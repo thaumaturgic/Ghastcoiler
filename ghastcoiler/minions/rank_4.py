@@ -150,6 +150,18 @@ class DynamicDuo(Minion):
                          **kwargs)
 
 
+class HexruinMarauder(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Hexruin Marauder",
+                         id="BG20_210",
+                         gold_id="BG20_210_G",
+                         rank=4,
+                         base_attack=3,
+                         base_health=5,
+                         types=[MinionType.Demon],
+                         **kwargs)
+
+
 class Goldgrubber(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Goldgrubber",
@@ -263,7 +275,7 @@ class QirajiHarbinger(Minion):
                          base_health=5,
                          **kwargs)
 
-    def on_friendly_removal(self, other_minion: Minion):
+    def on_friendly_removal_after(self, other_minion: Minion, enemy_board: PlayerBoard):
         if other_minion.taunt:
             pass  # TODO
         pass
@@ -329,34 +341,34 @@ class SecurityRover(Minion):
         own_board.add_minion(GuardBot(golden=self.golden, attacked=self.attacked), position=self.position+1)
 
 
-class Siegebreaker(Minion):
-    def __init__(self, **kwargs):
-        super().__init__(name="Siegebreaker",
-                         id="EX1_185",
-                         gold_id="TB_BaconUps_053",
-                         rank=4,
-                         base_attack=5,
-                         base_health=8,
-                         base_taunt=True,
-                         types=[MinionType.Demon],
-                         **kwargs)
+# class Siegebreaker(Minion):
+#     def __init__(self, **kwargs):
+#         super().__init__(name="Siegebreaker",
+#                          id="EX1_185",
+#                          gold_id="TB_BaconUps_053",
+#                          rank=4,
+#                          base_attack=5,
+#                          base_health=8,
+#                          base_taunt=True,
+#                          types=[MinionType.Demon],
+#                          **kwargs)
 
-    def adjust_demon_power(self, other_minion: Minion, add_power: bool):
-        buffAmount = 2 if self.golden else 1
-        if MinionType.Demon in other_minion.types:
-            if add_power:
-                other_minion.add_stats(buffAmount, 0)
-            else:
-                other_minion.remove_stats(buffAmount, 0)
+#     def adjust_demon_power(self, other_minion: Minion, add_power: bool):
+#         buffAmount = 2 if self.golden else 1
+#         if MinionType.Demon in other_minion.types:
+#             if add_power:
+#                 other_minion.add_stats(buffAmount, 0)
+#             else:
+#                 other_minion.remove_stats(buffAmount, 0)
 
-    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
-        self.adjust_demon_power(other_minion, True)
+#     def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
+#         self.adjust_demon_power(other_minion, True)
 
-    def on_friendly_summon(self, other_minion: Minion):
-        self.adjust_demon_power(other_minion, True)
+#     def on_friendly_summon(self, other_minion: Minion):
+#         self.adjust_demon_power(other_minion, True)
 
-    def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
-        self.adjust_demon_power(other_minion, False)
+#     def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
+#         self.adjust_demon_power(other_minion, False)
 
 
 class Toxfin(Minion):

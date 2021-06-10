@@ -31,14 +31,11 @@ class KaboomBotDeathrattle(Deathrattle):
         super().__init__(name="KaboomBotDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        if minion.golden:
-            logging.debug("Kaboom Bot (golden) deathrattle triggered, dealing 4 damage twice")
-        else:
-            logging.debug("Kaboom Bot deathrattle triggered, dealing 4 damage")
         number_bombs = 2 if minion.golden else 1
         for _ in range(number_bombs):
             opposing_minion = opposing_board.random_minion()
             if opposing_minion:
+                logging.debug(f"Kaboom Bot deathrattle triggered, dealing 4 damage to {opposing_minion.minion_string()}")
                 opposing_minion.receive_damage(amount=4, poisonous=False, own_board=opposing_board)
 
 

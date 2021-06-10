@@ -4,7 +4,7 @@ from ghastcoiler.minions.rank_2 import \
 from ghastcoiler.minions.rank_3 import RatPack, ImpGangBoss
 from ghastcoiler.minions.rank_4 import Bigfernal, BolvarFireblood, CaveHydra, \
     ChampionofYShaarj, DrakonidEnforcer, MechanoEgg, QirajiHarbinger, \
-    RipsnarlCaptain, RingMatron, SavannahHighmane, Siegebreaker
+    RipsnarlCaptain, RingMatron, SavannahHighmane
 
 
 def test_bigfernal(initialized_game):
@@ -197,22 +197,22 @@ def test_security_rover(initialized_game):
     pass
 
 
-def test_siegebreaker(initialized_game):
-    attacker_board = initialized_game.player_board[0]
-    defender_board = initialized_game.player_board[1]
-    attacker_board.set_minions([Siegebreaker()])
-    defender_board.set_minions([PunchingBag(attack=10)])
+# def test_siegebreaker(initialized_game):
+#     attacker_board = initialized_game.player_board[0]
+#     defender_board = initialized_game.player_board[1]
+#     attacker_board.set_minions([Siegebreaker()])
+#     defender_board.set_minions([PunchingBag(attack=10)])
 
-    imp = ImpGangBoss()
-    attacker_board.add_minion(imp)
-    assert imp.attack == 3
-    assert imp.health == 4
+#     imp = ImpGangBoss()
+#     attacker_board.add_minion(imp)
+#     assert imp.attack == 3
+#     assert imp.health == 4
 
-    initialized_game.start_of_game()
-    initialized_game.single_round()
+#     initialized_game.start_of_game()
+#     initialized_game.single_round()
 
-    assert imp.attack == 2
-    assert imp.health == 4
+#     assert imp.attack == 2
+#     assert imp.health == 4
 
 
 def test_wildfire_elemental(initialized_game):

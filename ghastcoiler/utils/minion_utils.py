@@ -50,7 +50,7 @@ class MinionUtils:
             elif entity == "TB_BaconUps_032e":
                 deathrattles.append(ReplicatingMenaceDeathrattle(golden=True)) # TODO: Test this import
             elif entity == "UNG_999t2e":
-                deathrattles.append(LivingSporesDeathrattle()) # TODO: Test this import
+                deathrattles.append(LivingSporesDeathrattle())
         
         return deathrattles
 

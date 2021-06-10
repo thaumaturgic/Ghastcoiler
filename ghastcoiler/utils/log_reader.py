@@ -167,7 +167,6 @@ class LogReader:
 
         return state
 
-    #TODO: Parse mechanically interesting enchantments -> Like al akir shield
     def attach_enchantments(self, enchantments, minions):
         for enchantment in enchantments:
             if GameTag.ATTACHED in enchantment.tags:
@@ -180,11 +179,9 @@ class LogReader:
                         else:
                             minion.enchantments = [enchantment]
 
+                        #TODO: any other enchantments of note to parse?
                         if enchantment.card_id == LogReader.LICH_KING_REBORN:
                             minion.tags[GameTag.REBORN] = 1
-
-                        #TODO: Verify that multiple modular deathrattles are distinct entities
-                        #TODO: Refactor this once all deathrattle enchantments are identified
                         elif enchantment.card_id == self.REPLICATING_MENACE_DEATHRATTLE:
                             minion.deathrattle_ids.append(self.REPLICATING_MENACE_DEATHRATTLE)
                         elif enchantment.card_id == self.REPLICATING_MENACE_GOLDEN_DEATHRATTLE:
@@ -217,7 +214,7 @@ class LogReader:
                 windfury,
                 mega_windfury,
                 True if GameTag.TAUNT in minion.tags else False,
-                True if GameTag.DIVINE_SHIELD in minion.tags else False,
+                True if (GameTag.DIVINE_SHIELD in minion.tags) and (minion.tags[GameTag.DIVINE_SHIELD] == 1) else False,
                 True if GameTag.POISONOUS in minion.tags else False,
                 True if GameTag.PREMIUM in minion.tags and minion.tags[GameTag.PREMIUM] else False)
             if ghastcoiler_minion:
