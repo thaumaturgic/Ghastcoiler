@@ -193,9 +193,13 @@ class LogReader:
     def apply_hero_powers(self, state: BoardState, hero_powers):
         for hero_power in hero_powers:
             if hero_power.card_id == LogReader.ALAKIR:
-                # Find which player is al akir
-                # Find the first minion in their board and give it windfury, taunt, divine shield
-                print(hero_power) #TODO
+                board = state.enemyBoard if hero_power.controller.is_ai else state.friendlyBoard
+                
+                if len(board) > 0:
+                    board[0].tags[GameTag.DIVINE_SHIELD] = 1
+                    board[0].tags[GameTag.WINDFURY] = 1
+                    board[0].tags[GameTag.TAUNT] = 1
+
         
     def convert_to_ghastcoiler_minion(self, board):
         ghastcoiler_board = []

@@ -147,16 +147,16 @@ class GameInstance:
                     deathrattle.trigger(minion, attacking_player_board, defending_player_board)
                     self.resolve_extra_attacks(attacking_player_board, defending_player_board)
 
+        # Resolve "after a friendly minion dies" triggers. ie soul juggles after deathrattles
+        for minion in attacking_player_board.get_living_minions():
+            for dead_minion in attacker_dead_minions:
+                minion.on_friendly_removal_after(dead_minion, defending_player_board)
+
         for minion in defender_dead_minions:
             for deathrattle in minion.deathrattles:
                 for _ in range(defending_player_board.deathrattle_multiplier):
                     deathrattle.trigger(minion, defending_player_board, attacking_player_board)
                     self.resolve_extra_attacks(defending_player_board, attacking_player_board)
-
-        # Resolve "after a friendly minion dies" triggers. ie soul juggles after deathrattles
-        for minion in attacking_player_board.get_living_minions():
-            for dead_minion in attacker_dead_minions:
-                minion.on_friendly_removal_after(dead_minion, defending_player_board)
 
         for minion in defending_player_board.get_living_minions():
             for dead_minion in defender_dead_minions:
@@ -280,9 +280,10 @@ class GameInstance:
         if attacking_minion and defending_minion:
             attacks = 4 if attacking_minion.mega_windfury else 2 if attacking_minion.windfury else 1
             for _ in range(attacks):
-                if not attacking_minion.dead:
+                if not attacking_minion.dead and defending_minion:
                     self.attack(attacking_minion, defending_minion)
                     self.check_deaths(self.attacking_player_board(), self.defending_player_board())
+                    defending_minion = defender_board.select_defending_minion(attacking_minion.attacks_lowest_power)
             # Flag the minion as having attacked.
             # It may be dead, but we have to set this after combat has resolved to maintain correct attack order...
             attacking_minion.attacked = True
