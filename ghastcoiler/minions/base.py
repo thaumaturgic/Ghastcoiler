@@ -187,11 +187,10 @@ class Minion:
 
         Returns 3 item list:
             bool -- Whether the minion has popped a shield
-            bool -- Whether the attacked minion died or not
             int -- Current health of the attacked minion (will be negative if its dead, can be used for overkill amount)
         """
         if amount <= 0:
-            return [False, self.dead, self.health]
+            return (False, self.health)
 
         popped_shield = False
         if self.divine_shield:
@@ -205,7 +204,7 @@ class Minion:
                 self.on_receive_damage(own_board)
             self.damage_trigger_pending = defer_damage_trigger
 
-        return [popped_shield, self.dead, self.health]
+        return (popped_shield, self.health)
 
     def process_deferred_damage_trigger(self, own_board: PlayerBoard):
         if self.damage_trigger_pending:
@@ -262,7 +261,7 @@ class Minion:
             killer_minion {Minion} -- The enemy minion that was killed"""
         pass
 
-    def on_overkill(self):
+    def on_overkill(self, overkill_amount: int, enemy_board: PlayerBoard):
         """Trigger that happens when this minion overkills another minion"""
         pass
 

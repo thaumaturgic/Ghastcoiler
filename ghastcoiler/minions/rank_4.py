@@ -186,17 +186,25 @@ class Groundshaker(Minion):
                          **kwargs)
 
 
-class HeraldofFlame(Minion):  # TODO: Overkill trigger
+class HeraldofFlame(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Herald of Flame",
                          id="BGS_032",
                          gold_id="TB_BaconUps_103",
                          rank=4,
-                         base_attack=5,
+                         base_attack=6,
                          base_health=6,
                          types=[MinionType.Dragon],
                          **kwargs)
 
+    def on_overkill(self, overkill_amount: int, enemy_board: PlayerBoard):
+        damage = 6 if self.golden else 3
+        minion_index = 0
+        while minion_index < len(enemy_board.minions):
+            _, enemy_health = enemy_board.minions[minion_index].receive_damage(amount=damage, poisonous=False, own_board = enemy_board, defer_damage_trigger=True)
+            if enemy_health >= 0:
+                return
+            minion_index += 1
 
 class Junkbot(Minion):
     def __init__(self, **kwargs):

@@ -77,20 +77,17 @@ class GameInstance:
             poisonous {bool} -- Whether it is poisonous damage
             defer_damage_trigger {bool} -- Flag to trigger 'on damage' now or later. Used when minion is damaged by cleave
         """
-        attack_result = defending_minion.receive_damage(attacking_minion.attack, attacking_minion.poisonous, defending_board, defer_damage_trigger)
-        divine_shield_popped = attack_result[0]
-        minion_killed = attack_result[1]
-        defending_minion_health = attack_result[2]
+        divine_shield_popped, defending_minion_health = defending_minion.receive_damage(attacking_minion.attack, attacking_minion.poisonous, defending_board, defer_damage_trigger)
 
         # Detect minion killing here, notify board (ie wagtoggle)
-        if minion_killed:
+        if defending_minion_health <= 0:
             attacking_minion.on_kill()
             attacking_board.on_friendly_kill(attacking_minion)
             if defending_minion_health < 0:
-                attacking_minion.on_overkill()
+                attacking_minion.on_overkill(defending_minion_health * -1, defending_board)
 
         if divine_shield_popped:
-            logging.debug("Divine shield popped")
+            logging.debug(f"Divine shield from {defending_minion.minion_string()} popped")
             defending_board.divine_shield_popped()
 
     def cleanup_dead_minions(self, board: PlayerBoard):

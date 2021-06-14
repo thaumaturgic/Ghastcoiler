@@ -3,7 +3,7 @@ from ghastcoiler.minions.rank_2 import \
     PackLeader, KindlyGrandmother, SouthseaCaptain, FreedealingGambler
 from ghastcoiler.minions.rank_3 import RatPack, ImpGangBoss
 from ghastcoiler.minions.rank_4 import Bigfernal, BolvarFireblood, CaveHydra, \
-    ChampionofYShaarj, DrakonidEnforcer, MechanoEgg, QirajiHarbinger, \
+    ChampionofYShaarj, DrakonidEnforcer, HeraldofFlame, MechanoEgg, QirajiHarbinger, \
     RipsnarlCaptain, RingMatron, SavannahHighmane
 
 
@@ -98,8 +98,22 @@ def test_drakonid_enforcer(initialized_game):
 
 
 def test_herald_of_flame(initialized_game):
-    # TODO:
-    pass
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([HeraldofFlame()])
+    defender_board.set_minions([PunchingBag(health=1, taunt=False),
+                                PunchingBag(health=2, taunt=False),
+                                PunchingBag(health=3, taunt=False),
+                                PunchingBag(health=4, taunt=False),
+                                PunchingBag(health=3, taunt=True)])
+    
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+
+    assert len(defender_board.minions) == 1
+    assert defender_board.minions[0].health == 4
+    # TODO: Other test cases?
 
 
 def test_mechano_egg(initialized_game):
