@@ -1,6 +1,7 @@
 import random
 import logging
 import copy
+import sys
 
 from typing import List, Optional
 
@@ -174,7 +175,7 @@ class PlayerBoard:
             return None
 
         if attacks_lowest:
-            lowest_attack = 0
+            lowest_attack = sys.maxsize
             lowest_attack_minions = []
             for minion in self.minions:
                 if minion.attack < lowest_attack:

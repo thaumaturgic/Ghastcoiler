@@ -43,10 +43,10 @@ def test_crackling_cyclone(initialized_game):
 
     # Wind fury should attack 2 times
     attacker_board.set_minions([CracklingCyclone()])
-    defender_board.set_minions([PunchingBag()])
+    defender_board.set_minions([PunchingBag(health=1), PunchingBag(health=1)])
     initialized_game.start_of_game(0)
     initialized_game.single_round()
-    assert defender_board.minions[0].health == 92
+    assert len(defender_board.minions) == 0
 
 
 def test_deflectobot(initialized_game):

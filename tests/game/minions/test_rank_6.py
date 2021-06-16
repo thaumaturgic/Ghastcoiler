@@ -167,10 +167,17 @@ def test_zapp_slywick(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
-    target = PunchingBag()
-    defender_board.set_minions([target, PunchingBag(attack=1, taunt=True)])
-
+    # Zap should ignore taunts and attack lowest attack
     attacker_board.set_minions([ZappSlywick()])
+
+    target = PunchingBag(attack=1)
+    defender_board.set_minions([target, PunchingBag(attack=2, taunt=True)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert target.health == 86
+
+    target = PunchingBag(attack=0)
+    defender_board.set_minions([target, PunchingBag(attack=1, taunt=True)])
     initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert target.health == 86
