@@ -104,16 +104,29 @@ def test_herald_of_flame(initialized_game):
     attacker_board.set_minions([HeraldofFlame()])
     defender_board.set_minions([PunchingBag(health=1, taunt=False),
                                 PunchingBag(health=2, taunt=False),
-                                PunchingBag(health=3, taunt=False),
+                                PunchingBag(health=3, taunt=True),
                                 PunchingBag(health=4, taunt=False),
-                                PunchingBag(health=3, taunt=True)])
+                                PunchingBag(health=5, taunt=False)])
+    target_minion = defender_board.minions[2]
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert len(defender_board.minions) == 2
+    assert defender_board.minions[0].health == 1
+    assert target_minion.health == -3 # Fire breath should not breathe on dead minions
+
+    # Dragon attacks and kills middle imp. imp damage triggers spawns imp
+    # Dragon overkill trigger resolves, kills bag, spawned imp and procs final imp gang boss
+    # board state should be imp boss and one imp
+    attacker_board.set_minions([HeraldofFlame()])
+    defender_board.set_minions([PunchingBag(health=1, taunt=False),
+                                ImpGangBoss(health=1, taunt=True), 
+                                ImpGangBoss()])
     
     initialized_game.start_of_game(0)
     initialized_game.single_round()
 
-    assert len(defender_board.minions) == 1
-    assert defender_board.minions[0].health == 4
-    # TODO: Other test cases?
+    assert defender_board.minions[0].name == "Imp Gang Boss"
+    assert defender_board.minions[1].name == "Imp"
 
 
 def test_mechano_egg(initialized_game):

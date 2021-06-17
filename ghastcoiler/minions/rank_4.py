@@ -197,13 +197,15 @@ class HeraldofFlame(Minion):
                          types=[MinionType.Dragon],
                          **kwargs)
 
-    def on_overkill(self, overkill_amount: int, enemy_board: PlayerBoard):
+    def on_overkill(self, defending_minion: Minion, enemy_board: PlayerBoard):
         damage = 6 if self.golden else 3
         minion_index = 0
         while minion_index < len(enemy_board.minions):
-            _, enemy_health = enemy_board.minions[minion_index].receive_damage(amount=damage, poisonous=False, own_board = enemy_board, defer_damage_trigger=True)
-            if enemy_health >= 0:
-                return
+            minion_to_breathe_on = enemy_board.minions[minion_index]
+            if not minion_to_breathe_on.dead:
+                _, enemy_health = minion_to_breathe_on.receive_damage(amount=damage, poisonous=False, own_board = enemy_board, defer_damage_trigger=True)
+                if enemy_health >= 0:
+                    return
             minion_index += 1
 
 class Junkbot(Minion):

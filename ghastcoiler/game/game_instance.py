@@ -84,7 +84,7 @@ class GameInstance:
             attacking_minion.on_kill()
             attacking_board.on_friendly_kill(attacking_minion)
             if defending_minion_health < 0:
-                attacking_minion.on_overkill(defending_minion_health * -1, defending_board)
+                attacking_minion.on_overkill(defending_minion, defending_board)
 
         if divine_shield_popped:
             logging.debug(f"Divine shield from {defending_minion.minion_string()} popped")
@@ -202,18 +202,18 @@ class GameInstance:
 
         # Deal attack damage
         if attacking_minion.cleave:
+            # Minions hit with cleave should take damage all at once, but triggers resolve after
             defenders = sorted(defender.get_minions_neighbors(defending_minion) + [defending_minion], key=lambda minion: minion.position)
             for minion in defenders:
                 self.deal_attack_damage(minion, defender, attacking_minion, attacker, True)
             self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
-
-            # Minions hit with cleave should take damage all at once.
-            # 'on_receive_damage' triggers should be handled after that, left to right
-            for minion in defenders:
-                minion.process_deferred_damage_trigger(defender)
         else:
             self.deal_attack_damage(defending_minion, defender, attacking_minion, attacker)
             self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
+
+        # Damage triggers from cleave and herald of flame should be resolved after attack and overkill trigger resolution
+        for minion in defender.minions:
+            minion.process_deferred_damage_trigger(defender)
 
         # Post attack triggers (macaw)
         attacking_minion.on_attack_after(attacker, defender)

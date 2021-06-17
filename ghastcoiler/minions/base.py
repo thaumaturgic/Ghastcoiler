@@ -185,7 +185,7 @@ class Minion:
             poisonous {bool} -- Whether the damage is poisonous
             own_board {PlayerBoard} -- The board belonging to the minion taking damage
 
-        Returns 3 item list:
+        Returns tuple:
             bool -- Whether the minion has popped a shield
             int -- Current health of the attacked minion (will be negative if its dead, can be used for overkill amount)
         """
@@ -250,6 +250,8 @@ class Minion:
         """
         pass
 
+    # TODO: This is only called when a minion is killed by ATTACK
+    # also, no minion implements this hook...
     def on_kill(self):
         """Trigger that happens when this minion kills another minion"""
         pass
@@ -261,7 +263,7 @@ class Minion:
             killer_minion {Minion} -- The enemy minion that was killed"""
         pass
 
-    def on_overkill(self, overkill_amount: int, enemy_board: PlayerBoard):
+    def on_overkill(self, defending_minion: Minion, enemy_board: PlayerBoard):
         """Trigger that happens when this minion overkills another minion"""
         pass
 
