@@ -388,7 +388,7 @@ class SoulJuggler(Minion):
                          **kwargs)
 
     # TODO: TEST
-    def on_friendly_removal_after(self, other_minion: Minion, enemy_board: PlayerBoard):
+    def on_friendly_removal_after(self, other_minion: Minion, friendly_board: PlayerBoard, enemy_board: PlayerBoard):
         """After a friendly Demon dies, deal 3 damage to a random enemy minion.
         """
         triggers = 2 if self.golden else 1

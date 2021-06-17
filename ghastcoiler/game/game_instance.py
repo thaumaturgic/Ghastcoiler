@@ -147,7 +147,7 @@ class GameInstance:
         # Resolve "after a friendly minion dies" triggers. ie soul juggles after deathrattles
         for minion in attacking_player_board.get_living_minions():
             for dead_minion in attacker_dead_minions:
-                minion.on_friendly_removal_after(dead_minion, defending_player_board)
+                minion.on_friendly_removal_after(dead_minion, attacking_player_board, defending_player_board)
 
         for minion in defender_dead_minions:
             for deathrattle in minion.deathrattles:
@@ -157,7 +157,7 @@ class GameInstance:
 
         for minion in defending_player_board.get_living_minions():
             for dead_minion in defender_dead_minions:
-                minion.on_friendly_removal_after(dead_minion, attacking_player_board)
+                minion.on_friendly_removal_after(dead_minion, defending_player_board, attacking_player_board)
 
         # Process deaths here again to see if death rattles resulted in more deaths
         if len(attacking_player_board.select_dead()) > 0 or len(defending_player_board.select_dead()):

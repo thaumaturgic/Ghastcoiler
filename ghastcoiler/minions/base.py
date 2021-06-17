@@ -300,7 +300,7 @@ class Minion:
         """
         pass
 
-    def on_friendly_removal_after(self, other_minion: Minion, enemy_board: PlayerBoard):
+    def on_friendly_removal_after(self, other_minion: Minion, friendly_board: PlayerBoard, enemy_board: PlayerBoard):
         """Trigger that happens after another minion on the player board dies """
         pass
 

@@ -145,21 +145,22 @@ def test_mechano_egg(initialized_game):
 
 
 def test_qiraji_harbinger(initialized_game):
+    # TODO: Figure out how killing multiple taunts with cleave works
+    # TODO: What if a harbinger is killed by a cleave? Does it still buff? 
+    # TODO: Figure out how (if?) order matters with soul juggler and harbinger triggers
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
     leftMinion = QirajiHarbinger()
-    rightMinion = PunchingBag()
+    rightMinion = PunchingBag(taunt=False)
     attacker_board.set_minions([PunchingBag(attack=1, poisonous=True)])
-    defender_board.set_minions([leftMinion, PunchingBag(), rightMinion])
+    defender_board.set_minions([leftMinion, PunchingBag(taunt=True), rightMinion])
 
     initialized_game.start_of_game(0)
     initialized_game.single_round()
 
-    # TODO:
-    # assert leftMinion.attack == 7 and leftMinion.health == 7
+    assert leftMinion.attack == 7 and leftMinion.health == 7
     # assert rightMinion.attack == 2 and rightMinion.health == 102
-    pass
 
 
 def test_ring_matron(initialized_game):

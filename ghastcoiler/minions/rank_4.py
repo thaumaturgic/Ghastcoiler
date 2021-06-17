@@ -286,10 +286,13 @@ class QirajiHarbinger(Minion):
                          base_health=5,
                          **kwargs)
 
-    def on_friendly_removal_after(self, other_minion: Minion, enemy_board: PlayerBoard):
+    def on_friendly_removal_after(self, other_minion: Minion, friendly_board: PlayerBoard, enemy_board: PlayerBoard):
+        stats = 4 if self.golden else 2
         if other_minion.taunt:
-            pass  # TODO
-        pass
+            # TODO: Fix this, the dead minion is removed from the list at this point, so neighbors are wrong
+            neighbors = friendly_board.get_minions_neighbors(other_minion)
+            for minion in neighbors:
+                minion.add_stats(stats,stats)
 
 
 class RingMatron(Minion):
