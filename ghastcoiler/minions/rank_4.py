@@ -1,4 +1,5 @@
 import logging
+import random
 
 from game.player_board import PlayerBoard
 
@@ -405,13 +406,25 @@ class VirmenSensei(Minion):
 
 
 class WildfireElemental(Minion):
-    # TODO: Overkill triggers
     def __init__(self, **kwargs):
         super().__init__(name="Wildfire Elemental",
                          id="BGS_126",
                          gold_id="TB_BaconUps_166",
                          rank=4,
                          base_attack=7,
-                         base_health=3,
+                         base_health=4,
                          types=[MinionType.Elemental],
                          **kwargs)
+
+    def on_overkill(self, defending_minion: Minion, enemy_board: PlayerBoard):
+        overkill_amount = defending_minion.health * -1
+        neighbors = enemy_board.get_minions_neighbors(defending_minion)
+        num_neighbors = len(neighbors)
+
+        if num_neighbors > 0:
+            if self.golden:
+                for i in range(num_neighbors):
+                    neighbors[i].receive_damage(overkill_amount, False, enemy_board)
+            else:
+                index = random.randint(0, num_neighbors - 1)
+                neighbors[index].receive_damage(overkill_amount, False, enemy_board)

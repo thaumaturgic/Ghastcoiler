@@ -4,7 +4,7 @@ from ghastcoiler.minions.rank_2 import \
 from ghastcoiler.minions.rank_3 import RatPack, ImpGangBoss
 from ghastcoiler.minions.rank_4 import Bigfernal, BolvarFireblood, CaveHydra, \
     ChampionofYShaarj, DrakonidEnforcer, HeraldofFlame, MechanoEgg, QirajiHarbinger, \
-    RipsnarlCaptain, RingMatron, SavannahHighmane
+    RipsnarlCaptain, RingMatron, SavannahHighmane, WildfireElemental
 
 
 def test_bigfernal(initialized_game):
@@ -243,5 +243,31 @@ def test_security_rover(initialized_game):
 
 
 def test_wildfire_elemental(initialized_game):
-    # TODO:
-    pass
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    # Regular wildfire should only kill one neighbor
+    attacker_board.set_minions([WildfireElemental()])
+    defender_board.set_minions([PunchingBag(health=1, taunt=False),
+                                PunchingBag(health=2, taunt=True),
+                                PunchingBag(health=3, taunt=False)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert len(defender_board.minions) == 1
+
+    # Golden wildfire should hit both left and right
+    attacker_board.set_minions([WildfireElemental(golden=True)])
+    defender_board.set_minions([PunchingBag(taunt=False),
+                                PunchingBag(health=1, taunt=True),
+                                PunchingBag(taunt=False)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert defender_board.minions[0].health == 87
+    assert defender_board.minions[1].health == 87
+
+    # If there are no neighbors nothing should happen
+    attacker_board.set_minions([WildfireElemental()])
+    defender_board.set_minions([PunchingBag(health=2, taunt=True)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert len(defender_board.minions) == 0
