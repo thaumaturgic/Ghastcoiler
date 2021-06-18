@@ -9,6 +9,7 @@ def test_baron_rivendare(initialized_game):
     # -Khadgar
     # -Bomb (ie generic deathrattle)
     # -Macaw
+    # -Deathrattle multiples when baron itself and neighbors is killed by cleave (ie [bomb, baron, bomb])
     assert True
 
 

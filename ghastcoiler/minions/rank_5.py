@@ -46,7 +46,6 @@ class AnnihilanBattlemaster(Minion):
 
 
 class BaronRivendare(Minion):
-    #TODO: Implement
     def __init__(self, **kwargs):
         super().__init__(name="Baron Rivendare",
                          id="FP1_031",
@@ -56,6 +55,27 @@ class BaronRivendare(Minion):
                          base_health=7,
                          legendary=True,
                          **kwargs)
+
+    def determine_board_deathrattle_multiplier(self, own_board: PlayerBoard, count_self: bool):
+        barons = [minion for minion in own_board.minions if minion.name == "Baron Rivendare"]
+        
+        if count_self:
+            barons += [self]
+
+        if any(baron.golden for baron in barons):
+            multiplier = 3
+        elif len(barons) > 0:
+            multiplier = 2
+        else:
+            multiplier = 1
+
+        own_board.deathrattle_multiplier = multiplier
+
+    def on_self_summon(self, own_board: PlayerBoard):
+        self.determine_board_deathrattle_multiplier(own_board, True)
+
+    def on_self_removal(self, own_board: PlayerBoard):
+        self.determine_board_deathrattle_multiplier(own_board, False)
 
 
 class BrannBronzebeard(Minion):

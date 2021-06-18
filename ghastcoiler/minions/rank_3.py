@@ -253,10 +253,10 @@ class Khadgar(Minion):
                          legendary=True,
                          **kwargs)
 
-    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
+    def on_self_summon(self, own_board: PlayerBoard):
         own_board.token_creation_multiplier += 2 if self.golden else 1
 
-    def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
+    def on_self_removal(self, own_board: PlayerBoard):
         own_board.token_creation_multiplier -= 2 if self.golden else 1
 
 

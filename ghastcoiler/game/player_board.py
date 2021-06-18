@@ -24,22 +24,35 @@ class PlayerBoard:
         self.life_total = life_total
         self.rank = rank
         self.attack_position = 0
-        self.set_minions(minions)
-        self.deathrattle_multiplier = 1  # TODO: Implement baron
+        self.deathrattle_multiplier = 1
         self.token_creation_multiplier = 0
+        self.set_minions(minions)
 
     def set_minions(self, minions: List[Minion]):
-        """Initialize the board to the list of minions given. Used for testing
+        """Initialize the board to the list of minions given.
         """
         self.minions: List[Minion] = minions
         self.token_creation_multiplier = 0
+        self.deathrattle_multiplier = 1
 
         if minions:
+            left_neighbor = None
             for index, minion in enumerate(minions):
+                minion.left_neighbor = left_neighbor
+                minion.right_neighbor = None if (index + 1 >= len(minions)) else minions[index+1] 
+                left_neighbor = minion
+
                 if minion.name == "Khadgar":
+                    # Multiple khadgars DO stack
                     self.token_creation_multiplier += 2 if minion.golden else 1
+                elif minion.name == "Baron Rivendare":
+                    # Multiple barons do not stack. If there is a golden baron and regular baron, golden takes priority
+                    deathrattle_multiplier = 3 if minion.golden else 2
+                    if self.deathrattle_multiplier < deathrattle_multiplier:
+                        self.deathrattle_multiplier = deathrattle_multiplier
                 minion.position = index
                 minion.player_id = self.player_id
+
 
     def copy(self):
         """Deep copy PlayerBoard instance to not carry state over multiple simulations
@@ -47,7 +60,7 @@ class PlayerBoard:
         Returns:
             PlayerBoard -- Deep copy of current PlayerBoard
         """
-        return PlayerBoard(player_id=self.player_id, hero=self.hero, life_total=self.life_total, rank=self.rank, minions=[copy.deepcopy(minion) for minion in self.minions])
+        return PlayerBoard(player_id=self.player_id, hero=self.hero, life_total=self.life_total, rank=self.rank, minions=copy.deepcopy(self.minions))
 
     def minions_string(self):
         """String representation of all minions in player board
@@ -139,16 +152,15 @@ class PlayerBoard:
                 if minion.attack == 0:
                     minion.attacked = True  # Skip zero attack minions
                     continue
-                return minion
+                return minion # We found the left-most non-zero power minion that hasnt attacked this round
 
         # All minions have zero attack
         if not eligibleAttacker:
             return None
 
-        # All minions must have attacked this round, reset their flags
+        # All minions must have attacked this round, reset their flags, search again
         for minion in self.minions:
             minion.attacked = False
-
         return self.select_attacking_minion()
 
     def generate_possible_defending_minions(self):
@@ -180,8 +192,7 @@ class PlayerBoard:
             for minion in self.minions:
                 if minion.attack < lowest_attack:
                     lowest_attack = minion.attack
-                    lowest_attack_minions.clear()
-                    lowest_attack_minions.append(minion)
+                    lowest_attack_minions = [minion]
                 elif minion.attack == lowest_attack:
                     lowest_attack_minions.append(minion)
             return lowest_attack_minions[random.randint(0, len(lowest_attack_minions) - 1)]
@@ -249,6 +260,8 @@ class PlayerBoard:
             minion.on_removal(other_minion, self)
             other_minion.on_friendly_removal(minion)
 
+        minion.on_self_removal(self)
+
     def add_minion(self, new_minion: Minion, position: Optional[int] = None, to_right: Optional[bool] = False, allow_copy: Optional[bool] = True) -> Optional[Minion]:
         """Add minion to the board if there is space
 
@@ -266,6 +279,8 @@ class PlayerBoard:
 
             if to_right:
                 position += 1
+
+            new_minion.on_self_summon(self)
 
             for minion in self.minions:
                 minion.on_friendly_summon(other_minion=new_minion)

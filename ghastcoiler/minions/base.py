@@ -273,8 +273,12 @@ class Minion:
         """Trigger that happens when this minion receives damage"""
         pass
 
-    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
+    def on_self_summon(self, own_board: PlayerBoard):
         """Trigger that happens when this minion enters the board"""
+        pass
+
+    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
+        """Trigger that happens when this minion enters the board and affects existing minions (ie auras)"""
         pass
 
     def on_friendly_summon(self, other_minion: Minion):
@@ -283,6 +287,10 @@ class Minion:
         Arguments:
             other_minion {Minion} -- Minion entering the friendly player board
         """
+        pass
+
+    def on_self_removal(self, own_board: PlayerBoard):
+        """Trigger that happens when this minion exits the board"""
         pass
 
     def on_removal(self, other_minion: Minion, own_board: PlayerBoard):

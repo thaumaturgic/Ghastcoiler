@@ -1,6 +1,6 @@
 import random
 from minions.test_minions import PunchingBag
-from ghastcoiler.minions.rank_2 import KindlyGrandmother
+from ghastcoiler.minions.rank_2 import KindlyGrandmother, SpawnofNZoth
 from ghastcoiler.minions.rank_5 import BaronRivendare, BristlebackKnight, \
     IronhideDirehorn, KingBagurgle, MalGanis, MamaBear, \
     SeabreakerGoliath, SneedsOldShredder, Voidlord
@@ -8,11 +8,49 @@ from ghastcoiler.minions.rank_5 import BaronRivendare, BristlebackKnight, \
 
 def test_baronrivendar(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    baron = BaronRivendare()
-    attacker_board.set_minions([baron])
-    # TODO: Implement
-    assert True
+    # Basic test
+    attacker_board.set_minions([Voidlord(), Voidlord(), BaronRivendare()])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    for i in range(5):
+        assert attacker_board.minions[i].name == "Voidwalker"
+
+    # Golden baron
+    baron =  BaronRivendare(golden=True)
+    attacker_board.set_minions([SpawnofNZoth(), baron])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert baron.attack == 5
+
+    # Test adding and removing baron(s)
+    attacker_board.set_minions([])
+    assert attacker_board.deathrattle_multiplier == 1
+
+    regular_baron = BaronRivendare()
+    attacker_board.add_minion(regular_baron)
+    assert attacker_board.deathrattle_multiplier == 2
+
+    golden_baron = BaronRivendare(golden=True)
+    attacker_board.add_minion(golden_baron)
+    assert attacker_board.deathrattle_multiplier == 3
+
+    attacker_board.remove_minion(regular_baron)
+    assert attacker_board.deathrattle_multiplier == 3
+
+    attacker_board.remove_minion(golden_baron)
+    assert attacker_board.deathrattle_multiplier == 1
+
+    attacker_board.add_minion(BaronRivendare())
+    attacker_board.add_minion(BaronRivendare())
+    assert attacker_board.deathrattle_multiplier == 2
+
+    attacker_board.add_minion(BaronRivendare(golden=True))
+    attacker_board.add_minion(BaronRivendare(golden=True))
+    assert attacker_board.deathrattle_multiplier == 3
 
 
 def test_bristleback_knight(initialized_game):
