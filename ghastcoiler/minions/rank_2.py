@@ -354,7 +354,7 @@ class TormentedRitualist(Minion):
 
     def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
         buff_amount = 2 if self.golden else 1
-        for minion in own_board.get_minions_neighbors(self):
+        for minion in [x for x in own_board.get_minions_neighbors(self) if x]:
             minion.add_stats(buff_amount, buff_amount)
 
 

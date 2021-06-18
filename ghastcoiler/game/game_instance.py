@@ -203,8 +203,9 @@ class GameInstance:
         # Deal attack damage
         if attacking_minion.cleave:
             # Minions hit with cleave should take damage all at once, but triggers resolve after
-            defenders = sorted(defender.get_minions_neighbors(defending_minion) + [defending_minion], key=lambda minion: minion.position)
-            for minion in defenders:
+            neighbors = defender.get_minions_neighbors(defending_minion)
+            defenders = [neighbors[0], defending_minion, neighbors[1]]
+            for minion in [x for x in defenders if x]:
                 self.deal_attack_damage(minion, defender, attacking_minion, attacker, True)
             self.deal_attack_damage(attacking_minion, attacker, defending_minion, defender)
         else:

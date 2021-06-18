@@ -204,21 +204,13 @@ class PlayerBoard:
         Returns:
             List[Minion] -- List of all minions next to the minion
         """
-        position = minion.position
-        neighbors = []
-        left_position = position - 1
-        right_position = position + 1
-        if left_position >= 0:
-            neighbors.append(self.minions[left_position])
-        if right_position < len(self.minions):
-            neighbors.append(self.minions[right_position])
-        return neighbors
+        return [minion.left_neighbor, minion.right_neighbor]
 
     def get_immediate_attack_minions(self,):
         """ Return a list of minions that should attack 'immediately'
 
         Returns:
-            List[Minion] -- Randomly selected minion
+            List[Minion] -- Minions with pending attack triggers
         """
         return [x for x in self.minions if x.immediate_attack_pending]
 
@@ -243,6 +235,12 @@ class PlayerBoard:
         """
         logging.debug(f"Removing {minion.minion_string()}")
         position = minion.position
+        neighbors = self.get_minions_neighbors(minion)
+        if neighbors[0]:
+            neighbors[0].right_neighbor = neighbors[1]
+        if neighbors[1]:
+            neighbors[1].left_neighbor = neighbors[0]
+
         self.minions.pop(position)
         for other_minion in self.minions[position:]:
             other_minion.shift_left()
@@ -273,8 +271,31 @@ class PlayerBoard:
                 minion.on_friendly_summon(other_minion=new_minion)
                 new_minion.on_summon(minion, self)
 
+            # Set neighbors for new minion and existing minions
+            left_neighbor, right_neighbor = None, None
+            if len(self.minions) == 0:
+                # left and right are None
+                test = 1 
+            elif position > len(self.minions)-1:
+                # left exists, right is None
+                left_neighbor = self.minions[position-1]
+                left_neighbor.right_neighbor = new_minion
+            elif position == 0 and len(self.minions) > 0:
+                # right exists, left is None
+                right_neighbor = self.minions[position]
+                right_neighbor.left_neighbor = new_minion
+            else:
+                # left and right exist
+                left_neighbor = self.minions[position-1]
+                right_neighbor = self.minions[position]
+                left_neighbor.right_neighbor = new_minion
+                right_neighbor.left_neighbor = new_minion
+
             new_minion.position = position
             new_minion.player_id = self.player_id
+            new_minion.left_neighbor = left_neighbor
+            new_minion.right_neighbor = right_neighbor
+
             self.minions.insert(position, new_minion)
             for minion in self.minions[position + 1:]:
                 minion.shift_right()
@@ -283,7 +304,7 @@ class PlayerBoard:
             if allow_copy:
                 for _ in range(self.token_creation_multiplier):
                     copied_minion = copy.deepcopy(new_minion)
-                    self.add_minion(copied_minion, copied_minion.position, True, False)
+                    self.add_minion(copied_minion, copied_minion.position, to_right=True, allow_copy=False)
 
         else:
             logging.debug(f"Did not add {new_minion.minion_string()} because of a lack of space")

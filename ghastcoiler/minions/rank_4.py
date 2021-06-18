@@ -289,8 +289,7 @@ class QirajiHarbinger(Minion):
     def on_friendly_removal_after(self, other_minion: Minion, friendly_board: PlayerBoard, enemy_board: PlayerBoard):
         stats = 4 if self.golden else 2
         if other_minion.taunt:
-            # TODO: Fix this, the dead minion is removed from the list at this point, so neighbors are wrong
-            neighbors = friendly_board.get_minions_neighbors(other_minion)
+            neighbors = [x for x in friendly_board.get_minions_neighbors(other_minion) if x]
             for minion in neighbors:
                 minion.add_stats(stats,stats)
 
@@ -421,7 +420,7 @@ class WildfireElemental(Minion):
 
     def on_overkill(self, defending_minion: Minion, enemy_board: PlayerBoard):
         overkill_amount = defending_minion.health * -1
-        neighbors = enemy_board.get_minions_neighbors(defending_minion)
+        neighbors = [x for x in enemy_board.get_minions_neighbors(defending_minion) if x]
         num_neighbors = len(neighbors)
 
         if num_neighbors > 0:

@@ -123,6 +123,8 @@ class Minion:
         self.damage_trigger_pending = False
         self.attacks_lowest_power = False
         self.legendary = legendary
+        self.left_neighbor = None
+        self.right_neighbor = None
 
         if self.reborn_triggered:
             self.health = 1

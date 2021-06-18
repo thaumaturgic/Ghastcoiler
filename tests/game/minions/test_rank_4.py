@@ -160,7 +160,7 @@ def test_qiraji_harbinger(initialized_game):
     initialized_game.single_round()
 
     assert leftMinion.attack == 7 and leftMinion.health == 7
-    # assert rightMinion.attack == 2 and rightMinion.health == 102
+    assert rightMinion.attack == 2 and rightMinion.health == 102
 
 
 def test_ring_matron(initialized_game):
