@@ -93,6 +93,11 @@ class ChampionofYShaarj(Minion):
                          base_health=4,
                          **kwargs)
 
+    def on_attacked(self, own_board: PlayerBoard, opposing_board: PlayerBoard):
+        if self.taunt:
+            stats = 2 if self.golden else 1
+            self.add_stats(stats, stats)
+
     def on_friendly_attacked(self, friendly_minion: Minion):
         if friendly_minion.taunt:
             stats = 2 if self.golden else 1

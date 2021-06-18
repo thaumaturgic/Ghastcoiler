@@ -74,12 +74,24 @@ def test_champion_of_yshaarj(initialized_game):
 
     attacker_board.set_minions([PunchingBag(attack=1)])
     defender_board.set_minions([PunchingBag(taunt=True), champion])
-
     initialized_game.start_of_game(0)
     initialized_game.single_round()
-
     assert champion.attack == 5
     assert champion.health == 5
+
+    champion = ChampionofYShaarj(taunt=True)
+    defender_board.set_minions([champion])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert champion.attack == 5
+    assert champion.health == 4
+
+    champion = ChampionofYShaarj(taunt=True, golden=True)
+    defender_board.set_minions([champion])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert champion.attack == 10
+    assert champion.health == 9
 
 
 def test_drakonid_enforcer(initialized_game):
