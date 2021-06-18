@@ -9,12 +9,12 @@ from heroes.hero_types import HeroType
 @dataclass
 class BoardState:
     friendlyBoard: [] = None
-    friendlyPlayerHealth: int = None
+    friendlyPlayerHealth: int = 0
     friendlyHero: HeroType = None
     friendlyTechLevel: int = None
     enemyBoard: [] = None
     enemyHero: HeroType = None
-    enemyPlayerHealth: int = None
+    enemyPlayerHealth: int = 0
     enemyTechLevel: int = None
     #allowedMinionTypes: []
 
@@ -99,7 +99,8 @@ class LogReader:
             self.parser.read_line(line)
 
     def get_hero_tags(self, tags):
-        health = tech_level = None
+        health = 0
+        tech_level = None
         if GameTag.HEALTH in tags:
             health = tags[GameTag.HEALTH]
         if GameTag.DAMAGE in tags:
