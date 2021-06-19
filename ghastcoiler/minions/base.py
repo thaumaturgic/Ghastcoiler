@@ -277,7 +277,7 @@ class Minion:
         """Trigger that happens when this minion enters the board"""
         pass
 
-    def on_summon(self, other_minion: Minion, own_board: PlayerBoard):
+    def on_summon(self, other_minion: Minion):
         """Trigger that happens when this minion enters the board and affects existing minions (ie auras)"""
         pass
 
@@ -293,12 +293,11 @@ class Minion:
         """Trigger that happens when this minion exits the board"""
         pass
 
-    def on_removal(self, other_minion: Minion, own_board: PlayerBoard):
+    def on_removal(self, other_minion: Minion):
         """What the minion should do to other minion on the player board when it exits (NOT a deathrattle)
 
         Arguments:
             other_minion {Minion} -- Friendly minion that is remaining on the board
-            own_board {PlayerBoard} -- Board the minion belongs to
         """
         pass
 
