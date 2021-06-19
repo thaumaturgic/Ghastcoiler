@@ -94,19 +94,6 @@ def test_glyph_guardian(initialized_game):
     assert attacker_board.minions[0].attack == 4
 
 
-def test_rabid_saurolisk(initialized_game):
-    rabid_saurolisk = RabidSaurolisk()
-    initialized_game.player_board[0].add_minion(rabid_saurolisk)
-    assert rabid_saurolisk.attack == 3
-    assert rabid_saurolisk.health == 1
-    initialized_game.player_board[0].add_minion(FiendishServant())
-    assert rabid_saurolisk.attack == 4
-    assert rabid_saurolisk.health == 2
-    initialized_game.player_board[0].add_minion(DragonspawnLieutenant())
-    assert rabid_saurolisk.attack == 4
-    assert rabid_saurolisk.health == 2
-
-
 def test_spawn_of_nzoth(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]

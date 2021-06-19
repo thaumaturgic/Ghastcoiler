@@ -255,12 +255,6 @@ class RabidSaurolisk(Minion):
                          types=[MinionType.Beast],
                          **kwargs)
 
-    def on_friendly_summon(self, other_minion):
-        if other_minion.deathrattles:
-            increase_amount = 2 if self.golden else 1
-            self.attack += increase_amount
-            self.health += increase_amount
-
 
 class Roadboar(Minion):
     def __init__(self, **kwargs):
