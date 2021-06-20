@@ -28,7 +28,9 @@ class Deathrattle:
         minions = MinionUtils().get_minions(criteria)
 
         # TODO: Test the details of this implementation, especially with macaw and attack order etc
+        # TODO: Think about this with macaw and positioning...
+        insert_position = spawning_minion.position
         for i in range(minions_to_spawn):
             new_minion = copy.deepcopy(minions[random.randint(0, len(minions) - 1)])
             new_minion.attacked = spawning_minion.attacked
-            own_board.add_minion(new_minion, position=spawning_minion.position + i, to_right=triggered_from_macaw)
+            own_board.add_minion(new_minion, position=insert_position + i, to_right=triggered_from_macaw, summoning_minion=spawning_minion if spawning_minion.dead else None)

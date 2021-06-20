@@ -327,8 +327,6 @@ class Minion:
 
     def trigger_reborn(self, own_board: PlayerBoard, insert_position: int):
         """If the minion has reborn and has not triggered, trigger it"""
-        # TODO: Account for shifted position due to deathrattle minions entering and/or dieing
-        # IDEA: Track how many minions were inserted from friendly deathrattles, check how many are still alive when reborn is handled
         if self.reborn and not self.reborn_triggered:
             self.__init__(reborn_triggered=True, token=True, attacked=self.attacked, golden=self.golden)
             own_board.add_minion(new_minion=self, position=insert_position)

@@ -97,13 +97,13 @@ def test_infested_wolf(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
-    attacker_board.set_minions([InfestedWolf()])
+    attacker_board.set_minions([PunchingBag(), InfestedWolf()])
     defender_board.set_minions([PunchingBag(attack=3)])
-    initialized_game.start_of_game()
+    initialized_game.start_of_game(0)
     initialized_game.single_round()
-    assert len(attacker_board.minions) == 2
-    assert attacker_board.minions[0].name == "Spider"
+    assert len(attacker_board.minions) == 3
     assert attacker_board.minions[1].name == "Spider"
+    assert attacker_board.minions[2].name == "Spider"
 
     attacker_board.set_minions([InfestedWolf(golden=True)])
     defender_board.set_minions([PunchingBag(attack=6)])
@@ -160,12 +160,12 @@ def test_monstrous_macaw(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
-    attacker_board.set_minions([MonstrousMacaw(), InfestedWolf()])
+    attacker_board.set_minions([MonstrousMacaw(), InfestedWolf(), PunchingBag()])
     defender_board.set_minions([PunchingBag()])
     initialized_game.start_of_game()
     initialized_game.single_round()
     # Make sure tokens spawn in the right spot
-    assert len(attacker_board.minions) == 4
+    assert len(attacker_board.minions) == 5
     assert attacker_board.minions[2].name == "Spider"
     assert attacker_board.minions[3].name == "Spider"
 
@@ -175,18 +175,19 @@ def test_monstrous_macaw(initialized_game):
     initialized_game.start_of_game()
     initialized_game.single_round()
     assert len(attacker_board.minions) == 6
-    # TODO: Test randomness of deathrattles?
-    # TODO: Test baron multiplier
-    # TODO: Test with goldrinn keeping macaw alive after it takes lethal
-    # TODO: Test order of operations with killing an opposing death rattle
-    # TODO: Test with minions with multiple deathrattles
-    golem = HarvestGolem()
-    golem.deathrattles.append(ReplicatingMenaceDeathrattle())
-    attacker_board.set_minions([MonstrousMacaw(), golem])
+
+    # Test with minions with multiple deathrattles
+    attacker_board.set_minions([MonstrousMacaw(), HarvestGolem(deathrattles=[ReplicatingMenaceDeathrattle()])])
     defender_board.set_minions([PunchingBag()])
     initialized_game.start_of_game()
     initialized_game.single_round()
     assert (len(attacker_board.minions) == 3 or len(attacker_board.minions) == 5)
+
+    # TODO: Test randomness of deathrattles?
+    # TODO: Test baron multiplier
+    # TODO: Test with goldrinn keeping macaw alive after it takes lethal
+    # TODO: Test order of operations with killing an opposing death rattle
+    
 
 
 # def test_piloted_shredder(initialized_game):
@@ -208,19 +209,33 @@ def test_monstrous_macaw(initialized_game):
 #     assert attacker_board.minions[0].mana_cost == 2
 #     assert attacker_board.minions[1].mana_cost == 2
 
+def test_rat_pack(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+    rat = RatPack(reborn=True, attack=4)
+
+    attacker_board.set_minions([rat])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 5
+    assert attacker_board.minions[0].name == "Rat"
+
 
 def test_replicating_menace(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
     # Base minion test
-    attacker_board.set_minions([ReplicatingMenace()])
+    menace = ReplicatingMenace()
+    attacker_board.set_minions([menace])
     defender_board.set_minions([PunchingBag(attack=1)])
     initialized_game.start_of_game()
     initialized_game.single_round()
 
     for i in range(3):
         assert attacker_board.minions[i].name == "Microbot"
+    assert menace.left_neighbor == attacker_board.minions[2]
     assert defender_board.minions[0].health == 97
 
     # Test multiple death rattles.
@@ -235,6 +250,15 @@ def test_replicating_menace(initialized_game):
         assert attacker_board.minions[i].attack == 2
         assert attacker_board.minions[i].health == 2
     assert defender_board.minions[0].health == 94
+
+    menace = ReplicatingMenace(reborn=True)
+    attacker_board.set_minions([PunchingBag(), menace])
+    defender_board.set_minions([PunchingBag(attack=1)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert menace.position == 4
+    assert menace.reborn_triggered
+    assert not menace.reborn
 
 
 # TODO: Verify tests

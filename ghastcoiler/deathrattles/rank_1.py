@@ -39,4 +39,4 @@ class ScallywagDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Scallyway deathrattle triggered, creating Sky Pirate")
         token = SkyPirate(golden=minion.golden, attacked=minion.attacked, immediate_attack_pending=True, token=True)
-        own_board.add_minion(token, position=minion.position, to_right=macaw_trigger)
+        own_board.add_minion(token, position=minion.position, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)

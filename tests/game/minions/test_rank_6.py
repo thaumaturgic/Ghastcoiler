@@ -124,6 +124,7 @@ def test_kangors_apprentice(initialized_game):
     kangor = KangorsApprentice()
     attacker_board.set_minions([kangor])
     # TODO: Implement
+    # TODO: Test cleave killing 3 mechs, which 2 are recorded? Left most? or target + left? 
     assert True
 
 

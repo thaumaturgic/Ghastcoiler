@@ -38,5 +38,6 @@ class VoidlordDeathrattle(Deathrattle):
         super().__init__(name="VoidlordDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        for _ in range(3):
-            own_board.add_minion(Voidwalker(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+        insert_position = minion.position
+        for i in range(3):
+            own_board.add_minion(Voidwalker(golden=minion.golden, attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)

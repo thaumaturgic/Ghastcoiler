@@ -166,12 +166,20 @@ class GameInstance:
         # Resolve reborns after deathrattles
         for minion in attacker_dead_minions:
             if minion.reborn and not minion.reborn_triggered:
-                # TODO: position
-                minion.trigger_reborn(attacking_player_board, minion.position)
+                # Find left most living minion and insert reborn to right of that
+                left = minion.left_neighbor
+                while left and left.dead:
+                    left = left.left_neighbor
+                position = left.position + 1 if left else 0
+                minion.trigger_reborn(attacking_player_board, position)
 
         for minion in defender_dead_minions:
             if minion.reborn and not minion.reborn_triggered:
-                minion.trigger_reborn(defending_player_board, minion.position)
+                left = minion.left_neighbor
+                while left and left.dead:
+                    left = left.left_neighbor
+                position = left.position + 1 if left else 0
+                minion.trigger_reborn(defending_player_board, position)
 
         # Continue to resolve extra attacks until all are done
         while attacking_player_board.get_immediate_attack_minions() or defending_player_board.get_immediate_attack_minions():

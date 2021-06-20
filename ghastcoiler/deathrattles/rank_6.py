@@ -89,5 +89,6 @@ class LivingSporesDeathrattle(Deathrattle):
         super().__init__(name="LivingSporesDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        for _ in range(2):
-            own_board.add_minion(Plant(attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+        insert_position = minion.position
+        for i in range(2):
+            own_board.add_minion(Plant(attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)

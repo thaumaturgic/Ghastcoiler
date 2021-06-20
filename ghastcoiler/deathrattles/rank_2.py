@@ -14,7 +14,7 @@ class HarvestGolemDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Harvest Golem deathrattle triggered, creating Damaged Golem")
-        own_board.add_minion(DamagedGolem(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+        own_board.add_minion(DamagedGolem(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
 
 
 class ImprisonerDeathrattle(Deathrattle):
@@ -23,7 +23,7 @@ class ImprisonerDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Imprisoner deathrattle triggered, creating Imp")
-        own_board.add_minion(Imp(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+        own_board.add_minion(Imp(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
 
 
 class KaboomBotDeathrattle(Deathrattle):
@@ -45,7 +45,7 @@ class KindlyGrandmotherDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Kindly Grandmother deathrattle triggered, creating Big Bad Wolf")
-        own_board.add_minion(BigBadWolf(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+        own_board.add_minion(BigBadWolf(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
 
 
 class SpawnofNZothDeathrattle(Deathrattle):

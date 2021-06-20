@@ -15,8 +15,9 @@ class InfestedWolfDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Infested Wolf deathrattle triggered, creating spider tokens")
-        for _ in range(2):
-            own_board.add_minion(Spider(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+        insert_position = minion.position
+        for i in range(2):
+            own_board.add_minion(Spider(golden=minion.golden, attacked=minion.attacked), position=insert_position + i, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)
 
 
 # class PilotedShredderDeathrattle(Deathrattle):
@@ -43,8 +44,9 @@ class RatPackDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         number_rats = minion.attack
         logging.debug(f"Rat pack deathrattle triggered, creating {number_rats} rats")
-        for _ in range(number_rats):
-            own_board.add_minion(Rat(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger)
+        insert_position = minion.position
+        for i in range(number_rats):
+            own_board.add_minion(Rat(golden=minion.golden, attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)
 
 
 class ReplicatingMenaceDeathrattle(Deathrattle):
@@ -55,5 +57,6 @@ class ReplicatingMenaceDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         logging.debug("Replicating menace deathrattle triggered, creating 3 microbots")
-        for _ in range(3):
-            own_board.add_minion(Microbot(attacked=minion.attacked, golden=self.golden), position=minion.position, to_right=macaw_trigger)
+        insert_position = minion.position
+        for i in range(3):
+            own_board.add_minion(Microbot(attacked=minion.attacked, golden=self.golden), position=insert_position+i, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)

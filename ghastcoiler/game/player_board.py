@@ -257,12 +257,12 @@ class PlayerBoard:
             other_minion.shift_left()
 
         for other_minion in self.minions:
-            minion.on_removal(other_minion, self)
+            minion.on_removal(other_minion)
             other_minion.on_friendly_removal(minion)
 
         minion.on_self_removal(self)
 
-    def add_minion(self, new_minion: Minion, position: Optional[int] = None, to_right: Optional[bool] = False, allow_copy: Optional[bool] = True) -> Optional[Minion]:
+    def add_minion(self, new_minion: Minion, position: Optional[int] = None, to_right: Optional[bool] = False, allow_copy: Optional[bool] = True, summoning_minion: Optional[Minion] = None) -> Optional[Minion]:
         """Add minion to the board if there is space
 
         Arguments:
@@ -273,53 +273,67 @@ class PlayerBoard:
             position {Optional[int]} -- Optional position to insert the minion at, if None add at the end (default: {None})
             to_right {Optional[bool]} -- Optional flag to insert minion to right of the indicated position if possible
         """
-        if len(self.minions) < 7:
-            if position is None:
-                position = len(self.minions)
-
-            if to_right:
-                position += 1
-
-            new_minion.on_self_summon(self)
-
-            for minion in self.minions:
-                minion.on_friendly_summon(other_minion=new_minion)
-                new_minion.on_summon(minion, self)
-
-            # Set neighbors for new minion and existing minions
-            left_neighbor, right_neighbor = None, None
-            if len(self.minions) == 0:
-                # left and right are None
-                test = 1 
-            elif position > len(self.minions)-1:
-                # left exists, right is None
-                left_neighbor = self.minions[position-1]
-                left_neighbor.right_neighbor = new_minion
-            elif position == 0 and len(self.minions) > 0:
-                # right exists, left is None
-                right_neighbor = self.minions[position]
-                right_neighbor.left_neighbor = new_minion
-            else:
-                # left and right exist
-                left_neighbor = self.minions[position-1]
-                right_neighbor = self.minions[position]
-                left_neighbor.right_neighbor = new_minion
-                right_neighbor.left_neighbor = new_minion
-
-            new_minion.position = position
-            new_minion.player_id = self.player_id
-            new_minion.left_neighbor = left_neighbor
-            new_minion.right_neighbor = right_neighbor
-
-            self.minions.insert(position, new_minion)
-            for minion in self.minions[position + 1:]:
-                minion.shift_right()
-            logging.debug(f"Adding {new_minion.minion_string()}")
-
-            if allow_copy:
-                for _ in range(self.token_creation_multiplier):
-                    copied_minion = copy.deepcopy(new_minion)
-                    self.add_minion(copied_minion, copied_minion.position, to_right=True, allow_copy=False)
-
-        else:
+        if len(self.minions) == 7:
             logging.debug(f"Did not add {new_minion.minion_string()} because of a lack of space")
+            return None
+
+        if position is None:
+            position = len(self.minions)
+
+        if to_right:
+            position += 1
+
+        new_minion.on_self_summon(self)
+
+        for minion in self.minions:
+            minion.on_friendly_summon(new_minion)
+            new_minion.on_summon(minion)
+
+        # TODO: Apply hero auras here? 
+
+        # Set neighbors for new minion and existing minions
+        left_neighbor, right_neighbor = None, None
+        if len(self.minions) == 0:
+            # left and right are None
+            left_neighbor, right_neighbor = None, None
+        elif position > len(self.minions)-1:
+            # left exists, right is None
+            left_neighbor = self.minions[position-1]
+            left_neighbor.right_neighbor = new_minion
+        elif position == 0 and len(self.minions) > 0:
+            # right exists, left is None
+            right_neighbor = self.minions[position]
+            right_neighbor.left_neighbor = new_minion
+        else:
+            # left and right exist
+            left_neighbor = self.minions[position-1]
+            right_neighbor = self.minions[position]
+            left_neighbor.right_neighbor = new_minion
+            right_neighbor.left_neighbor = new_minion
+
+        new_minion.position = position
+        new_minion.player_id = self.player_id
+        new_minion.left_neighbor = left_neighbor
+        new_minion.right_neighbor = right_neighbor
+
+        self.minions.insert(position, new_minion)
+        for minion in self.minions[position + 1:]:
+            minion.shift_right()
+        logging.debug(f"Adding {new_minion.minion_string()}")
+
+        copied_minion = None
+        if allow_copy:
+            for _ in range(self.token_creation_multiplier):
+                copied_minion = copy.deepcopy(new_minion)
+                copied_minion = self.add_minion(copied_minion, copied_minion.position, to_right=True, allow_copy=False)
+
+        inserted_minion = copied_minion if copied_minion else new_minion
+        # If there is a minion that is set aside (ie dead) that summoned this minion, (ie via deathrattle)
+        # Then its important for the parent minion to track in case that minion will be reborn.
+        # If it is reborn, then it should spawn to the right of its child minions (pending space restrictions)
+        if summoning_minion:
+            assert summoning_minion.dead
+            summoning_minion.left_neighbor = inserted_minion
+            summoning_minion.position = inserted_minion.position + 1
+
+        return inserted_minion
