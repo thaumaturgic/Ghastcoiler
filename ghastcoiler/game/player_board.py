@@ -198,6 +198,8 @@ class PlayerBoard:
             return lowest_attack_minions[random.randint(0, len(lowest_attack_minions) - 1)]
         else:
             possible_minions = self.generate_possible_defending_minions()
+            if len(possible_minions) == 0:
+                return None # This can happen when a sky pirate is spawned in reaction to a deathrattle that kills the board (ie ghoul)
             defending_minion_index = random.randint(0, len(possible_minions) - 1)
             return possible_minions[defending_minion_index]
 

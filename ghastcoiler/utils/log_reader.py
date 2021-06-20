@@ -94,7 +94,7 @@ class LogReader:
                     print("\n*** New Game ***")
                     self.turn = 1
                 elif LogReader.GAME_END_STRING in line:
-                    print("\n*** Game Over ***")
+                    return None
 
             self.parser.read_line(line)
 

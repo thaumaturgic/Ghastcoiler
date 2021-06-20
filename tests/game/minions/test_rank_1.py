@@ -98,3 +98,4 @@ def test_scallywag(initialized_game):
     assert defender.health == 94
 
     # TODO: Test scallywag on scallywag
+    # TODO: Test scallywag spawning from a deathrattle (ie ghoul), and having no board to attack into
