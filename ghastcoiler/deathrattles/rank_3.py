@@ -14,10 +14,11 @@ class InfestedWolfDeathrattle(Deathrattle):
         super().__init__(name="InfestedWolfDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Infested Wolf deathrattle triggered, creating spider tokens")
-        insert_position = minion.position
-        for i in range(2):
-            own_board.add_minion(Spider(golden=minion.golden, attacked=minion.attacked), position=insert_position + i, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = Spider,
+            minions_to_spawn = 2,
+            triggered_from_macaw = macaw_trigger)
 
 
 # class PilotedShredderDeathrattle(Deathrattle):
@@ -42,11 +43,11 @@ class RatPackDeathrattle(Deathrattle):
         super().__init__(name="RatPackDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        number_rats = minion.attack
-        logging.debug(f"Rat pack deathrattle triggered, creating {number_rats} rats")
-        insert_position = minion.position
-        for i in range(number_rats):
-            own_board.add_minion(Rat(golden=minion.golden, attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = Rat,
+            minions_to_spawn = minion.attack,
+            triggered_from_macaw = macaw_trigger)
 
 
 class ReplicatingMenaceDeathrattle(Deathrattle):
@@ -56,7 +57,9 @@ class ReplicatingMenaceDeathrattle(Deathrattle):
         self.golden = golden
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Replicating menace deathrattle triggered, creating 3 microbots")
-        insert_position = minion.position
-        for i in range(3):
-            own_board.add_minion(Microbot(attacked=minion.attacked, golden=self.golden), position=insert_position+i, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = Microbot,
+            summon_golden_minion = self.golden,
+            minions_to_spawn = 3,
+            triggered_from_macaw = macaw_trigger)

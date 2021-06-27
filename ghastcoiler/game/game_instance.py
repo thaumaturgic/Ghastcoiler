@@ -87,19 +87,25 @@ class GameInstance:
                 attacking_minion.on_overkill(defending_minion, defending_board)
 
         if divine_shield_popped:
-            logging.debug(f"Divine shield from {defending_minion.minion_string()} popped")
+            #logging.debug(f"Divine shield from {defending_minion.minion_string()} popped")
             defending_board.divine_shield_popped()
 
-    def cleanup_dead_minions(self, board: PlayerBoard):
+    def set_aside_dead_minions(self, board: PlayerBoard):
         """Remove any dead minions. Return the List of minions to process any deathrattles and reborn triggers.
 
         Arguments:
             board {PlayerBoard} -- Player board to check for dead minions
         """
-        dead_minions = []
-        for minion in board.select_dead():
-            dead_minions.append(minion)
+        dead_minions = board.select_dead()
+        left_neighors = []
+        for minion in dead_minions:
+            left_neighors.append(minion.left_neighbor)
+
+        # Dead minions care about their left neighbor for deathrattle/reborn positioning
+        for index,minion in enumerate(dead_minions):
             board.remove_minion(minion)
+            minion.left_neighbor = left_neighors[index]
+
         return dead_minions
 
     def resolve_extra_attacks(self, attacking_player_board: PlayerBoard, defending_player_board: PlayerBoard):
@@ -132,8 +138,8 @@ class GameInstance:
         #     Resolve extra attacks after each deathrattle resolves (then recursively check deaths)
 
         # There are some DRY vibes here but for now this is fine
-        attacker_dead_minions = self.cleanup_dead_minions(attacking_player_board)
-        defender_dead_minions = self.cleanup_dead_minions(defending_player_board)
+        attacker_dead_minions = self.set_aside_dead_minions(attacking_player_board)
+        defender_dead_minions = self.set_aside_dead_minions(defending_player_board)
 
         # Resolve death rattles and 'attacks immediately' triggers. Attacker first, then defender
         # TODO: immediate attacks on defender side resolve before attacks deathrattles?
@@ -166,20 +172,11 @@ class GameInstance:
         # Resolve reborns after deathrattles
         for minion in attacker_dead_minions:
             if minion.reborn and not minion.reborn_triggered:
-                # Find left most living minion and insert reborn to right of that
-                left = minion.left_neighbor
-                while left and left.dead:
-                    left = left.left_neighbor
-                position = left.position + 1 if left else 0
-                minion.trigger_reborn(attacking_player_board, position)
+                minion.trigger_reborn(attacking_player_board)
 
         for minion in defender_dead_minions:
             if minion.reborn and not minion.reborn_triggered:
-                left = minion.left_neighbor
-                while left and left.dead:
-                    left = left.left_neighbor
-                position = left.position + 1 if left else 0
-                minion.trigger_reborn(defending_player_board, position)
+                minion.trigger_reborn(defending_player_board)
 
         # Continue to resolve extra attacks until all are done
         while attacking_player_board.get_immediate_attack_minions() or defending_player_board.get_immediate_attack_minions():
@@ -195,7 +192,7 @@ class GameInstance:
             defending_minion {Minion} -- Minion that is attacked
         """
         attacker, defender = self.attacking_player_board(), self.defending_player_board()
-        logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}")
+        #logging.debug(f"{attacking_minion.minion_string()} attacks {defending_minion.minion_string()}")
 
         # Pre-attack triggers
         attacking_minion.on_attack_before(attacker, defender)
@@ -278,9 +275,9 @@ class GameInstance:
         defender_board = self.defending_player_board()
 
         self.turn += 1
-        logging.debug(f"Turn {self.turn} has started, player {self.player_turn} will attack")
-        self.log_current_game()
-        logging.debug('-----------------')
+        #logging.debug(f"Turn {self.turn} has started, player {self.player_turn} will attack")
+        #self.log_current_game()
+        #logging.debug('-----------------')
         attacking_minion = attacker_board.select_attacking_minion()
         defending_minion = defender_board.select_defending_minion(False if not attacking_minion else attacking_minion.attacks_lowest_power)
         if attacking_minion and defending_minion:
@@ -293,9 +290,9 @@ class GameInstance:
             # Flag the minion as having attacked.
             # It may be dead, but we have to set this after combat has resolved to maintain correct attack order...
             attacking_minion.attacked = True
-        else:
-            logging.debug("No attacker or No defender")
-        logging.debug("=================")
+        #else:
+        #logging.debug("No attacker or No defender")
+        #logging.debug("=================")
         self.player_turn = 1 - self.player_turn
 
     def start(self):
@@ -309,5 +306,5 @@ class GameInstance:
         while not self.finished():
             self.single_round()
 
-        logging.debug(f"Ending board score {self.calculate_score_player_0()}")
+        #logging.debug(f"Ending board score {self.calculate_score_player_0()}")
         return self.calculate_score_player_0()

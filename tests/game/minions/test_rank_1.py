@@ -85,7 +85,7 @@ def test_scallywag(initialized_game):
     defender = VulgarHomunculus()
     attacker_board.add_minion(Scallywag())
     defender_board.add_minion(defender)
-    initialized_game.start_of_game()
+    initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert defender.health == 1
 
@@ -93,7 +93,7 @@ def test_scallywag(initialized_game):
     defender = PunchingBag(attack=10)
     attacker_board.set_minions([Scallywag(golden=True)])
     defender_board.set_minions([defender])
-    initialized_game.start_of_game()
+    initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert defender.health == 94
 

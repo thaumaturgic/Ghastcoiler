@@ -1,5 +1,3 @@
-import logging
-
 from typing import Optional
 from game.player_board import PlayerBoard
 from minions.base import Minion
@@ -14,11 +12,10 @@ class FiendishServantDeathrattle(Deathrattle):
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         target_minion = own_board.random_minion()
+        # TODO: is this 2x its attack to one minion or its attack to 2x minions?
+        bonus_attack = minion.attack * 2 if minion.golden else minion.attack
         if target_minion:
-            target_minion.add_stats(minion.attack, 0)
-            logging.debug(f"Fiendish Servant deathrattle triggers onto {target_minion.minion_string()}")
-        else:
-            logging.debug("Fiendish Servant deathrattle triggers but there are no targets left")
+            target_minion.add_stats(bonus_attack, 0)
 
 
 # class MecharooDeathrattle(Deathrattle):
@@ -37,6 +34,8 @@ class ScallywagDeathrattle(Deathrattle):
         super().__init__(name="ScallywagDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Scallyway deathrattle triggered, creating Sky Pirate")
-        token = SkyPirate(golden=minion.golden, attacked=minion.attacked, immediate_attack_pending=True, token=True)
-        own_board.add_minion(token, position=minion.position, to_right=macaw_trigger, summoning_minion=minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = SkyPirate,
+            triggered_from_macaw = macaw_trigger,
+            should_attack = True)

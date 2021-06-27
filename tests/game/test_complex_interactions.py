@@ -106,15 +106,32 @@ def test_reborn_position_tracking(initialized_game):
     assert attacker_board.minions[4].reborn_triggered
 
     attacker_board.set_minions([CaveHydra(attack=10)])
-    defender_board.set_minions([ReplicatingMenace(), PunchingBag(taunt=True, health=1), MicroMummy()])
+    defender_board.set_minions([ReplicatingMenace(), MicroMummy(taunt=True), HarvestGolem(health=1, reborn=True)])
+    initialized_game.start_of_game(starting_player=0)
+    initialized_game.single_round()
+    assert defender_board.minions[0].name == "Microbot"
+    assert defender_board.minions[3].name == "Micro Mummy"
+    assert defender_board.minions[3].reborn_triggered
+    assert defender_board.minions[4].name == "Damaged Golem"
+    assert defender_board.minions[5].name == "Harvest Golem"
+    assert defender_board.minions[5].reborn_triggered
+
+    # TODO: Consider a dead, living, dead sequence and ensure order is correct
+    # TODO: Do all deathrattles resolve before any reborns?
+    attacker_board.set_minions([CaveHydra(attack=10)])
+    defender_board.set_minions([ReplicatingMenace(reborn=True), MicroMummy(taunt=True, health=999), ReplicatingMenace()])
     initialized_game.start_of_game(starting_player=0)
     initialized_game.single_round()
     assert True
-    # assert defender_board.minions[0].name == "Microbot"
-    # assert defender_board.minions[3].name == "Micro Mummy"
-    # assert defender_board.minions[3].reborn_triggered
 
-    # TODO: Consider a dead, living, dead sequence and ensure order is correct
+    # Order of on damage triggers
+    attacker_board.set_minions([PunchingBag(health=1), MicroMummy()])
+    defender_board.set_minions([Imprisoner(health=1), SoulJuggler()])
+    initialized_game.start_of_game(starting_player=0)
+    initialized_game.single_round()
+    reborn_mummy = attacker_board.minions[0]
+    assert reborn_mummy.position == 0
+    assert reborn_mummy.reborn
 
 
 def test_golden_tokens(initialized_game):

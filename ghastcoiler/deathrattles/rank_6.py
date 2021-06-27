@@ -17,7 +17,7 @@ class GentleDjinniDeathrattle(Deathrattle):
         not_allowed_elementals = ["Amalgam", "Water Droplet", "Gentle Djinni"]
         isSpawnable = lambda x: (MinionType.Elemental in x.types) and (x.name not in not_allowed_elementals)
         elementals_to_summon = 2 if minion.golden else 1
-        Deathrattle.spawn_random_minions(minion, own_board, elementals_to_summon, isSpawnable, macaw_trigger)
+        Deathrattle.summon_random_minions(minion, own_board, elementals_to_summon, isSpawnable, macaw_trigger)
 
 
 class GhastcoilerDeathrattle(Deathrattle):
@@ -31,7 +31,7 @@ class GhastcoilerDeathrattle(Deathrattle):
         isSpawnable = lambda x: (len(x.deathrattles) > 0) and (x.name not in not_allowed_minions)
         
         minions_to_summon = 4 if minion.golden else 2
-        Deathrattle.spawn_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
+        Deathrattle.summon_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
 
 
 class GoldrinntheGreatWolfDeathrattle(Deathrattle):
@@ -79,7 +79,7 @@ class TheTideRazorDeathrattle(Deathrattle):
         isSpawnable = lambda x: (MinionType.Pirate in x.types) and (x.name not in not_allowed_pirates)
         
         minions_to_summon = 6 if minion.golden else 3
-        Deathrattle.spawn_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
+        Deathrattle.summon_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
         pass
 
 # TODO: Test
@@ -89,6 +89,4 @@ class LivingSporesDeathrattle(Deathrattle):
         super().__init__(name="LivingSporesDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        insert_position = minion.position
-        for i in range(2):
-            own_board.add_minion(Plant(attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board, minion, Plant, False, 2, macaw_trigger)

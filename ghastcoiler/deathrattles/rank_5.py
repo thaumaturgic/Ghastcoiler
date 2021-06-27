@@ -29,7 +29,7 @@ class SneedsOldShredderDeathrattle(Deathrattle):
         isSpawnable = lambda x: (x.legendary) and (x.name not in not_allowed_minions)
         
         minions_to_summon = 2 if minion.golden else 1
-        Deathrattle.spawn_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
+        Deathrattle.summon_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
         
 
 class VoidlordDeathrattle(Deathrattle):
@@ -38,6 +38,8 @@ class VoidlordDeathrattle(Deathrattle):
         super().__init__(name="VoidlordDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        insert_position = minion.position
-        for i in range(3):
-            own_board.add_minion(Voidwalker(golden=minion.golden, attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = Voidwalker,
+            minions_to_spawn = 3,
+            triggered_from_macaw = macaw_trigger)

@@ -324,9 +324,17 @@ class Minion:
     def shift_right(self):
         """Shift position of minion right because a minion was added to the left"""
         self.position += 1
+    
+    def find_deathrattle_reborn_position(self):
+        # Find left most living minion. Units spawned via deathrattle/reborn should be inserted to the right of it
+        left = self.left_neighbor
+        while left and left.dead:
+            left = left.left_neighbor
+        return 0 if not left else left.position + 1
 
-    def trigger_reborn(self, own_board: PlayerBoard, insert_position: int):
+    def trigger_reborn(self, own_board: PlayerBoard):
         """If the minion has reborn and has not triggered, trigger it"""
         if self.reborn and not self.reborn_triggered:
+            reborn_at = self.find_deathrattle_reborn_position()
             self.__init__(reborn_triggered=True, token=True, attacked=self.attacked, golden=self.golden)
-            own_board.add_minion(new_minion=self, position=insert_position)
+            own_board.add_minion(new_minion=self, position=reborn_at)

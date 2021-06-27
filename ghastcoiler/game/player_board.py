@@ -246,7 +246,7 @@ class PlayerBoard:
         Arguments:
             minion {Minion} -- Minion to be removed from board
         """
-        logging.debug(f"Removing {minion.minion_string()}")
+        #logging.debug(f"Removing {minion.minion_string()}")
         position = minion.position
         neighbors = self.get_minions_neighbors(minion)
         if neighbors[0]:
@@ -264,7 +264,7 @@ class PlayerBoard:
 
         minion.on_self_removal(self)
 
-    def add_minion(self, new_minion: Minion, position: Optional[int] = None, to_right: Optional[bool] = False, allow_copy: Optional[bool] = True, summoning_minion: Optional[Minion] = None) -> Optional[Minion]:
+    def add_minion(self, new_minion: Minion, position: Optional[int] = None, allow_copy: Optional[bool] = True, summoning_minion: Optional[Minion] = None) -> Optional[Minion]:
         """Add minion to the board if there is space
 
         Arguments:
@@ -273,17 +273,13 @@ class PlayerBoard:
 
         Keyword Arguments:
             position {Optional[int]} -- Optional position to insert the minion at, if None add at the end (default: {None})
-            to_right {Optional[bool]} -- Optional flag to insert minion to right of the indicated position if possible
         """
         if len(self.minions) == 7:
-            logging.debug(f"Did not add {new_minion.minion_string()} because of a lack of space")
+            #logging.debug(f"Did not add {new_minion.minion_string()} because of a lack of space")
             return None
 
         if position is None:
             position = len(self.minions)
-
-        if to_right:
-            position += 1
 
         new_minion.on_self_summon(self)
 
@@ -321,13 +317,13 @@ class PlayerBoard:
         self.minions.insert(position, new_minion)
         for minion in self.minions[position + 1:]:
             minion.shift_right()
-        logging.debug(f"Adding {new_minion.minion_string()}")
+        #logging.debug(f"Adding {new_minion.minion_string()}")
 
         copied_minion = None
         if allow_copy:
             for _ in range(self.token_creation_multiplier):
                 copied_minion = copy.deepcopy(new_minion)
-                copied_minion = self.add_minion(copied_minion, copied_minion.position, to_right=True, allow_copy=False)
+                copied_minion = self.add_minion(copied_minion, copied_minion.position+1, allow_copy=False)
 
         inserted_minion = copied_minion if copied_minion else new_minion
         # If there is a minion that is set aside (ie dead) that summoned this minion, (ie via deathrattle)
@@ -336,6 +332,5 @@ class PlayerBoard:
         if summoning_minion:
             assert summoning_minion.dead
             summoning_minion.left_neighbor = inserted_minion
-            summoning_minion.position = inserted_minion.position + 1
 
         return inserted_minion

@@ -131,10 +131,9 @@ def test_khadgar(initialized_game):
     initialized_game.single_round()
     assert len(attacker_board.minions) == 7
     assert attacker_board.minions[0].attack == 3
-    # TODO: Fix order of token insertion and buffing
-    # assert attacker_board.minions[1].attack == 5
-    # assert attacker_board.minions[2].attack == 3
-    # assert attacker_board.minions[3].attack == 5
+    assert attacker_board.minions[1].attack == 5
+    assert attacker_board.minions[2].attack == 3
+    assert attacker_board.minions[3].attack == 5
 
     # Test reborn copying
     attacker_board.set_minions([MicroMummy(), Khadgar()])
@@ -187,6 +186,7 @@ def test_monstrous_macaw(initialized_game):
     # TODO: Test baron multiplier
     # TODO: Test with goldrinn keeping macaw alive after it takes lethal
     # TODO: Test order of operations with killing an opposing death rattle
+    # TODO: Test attack order when spawning minions, ie generating tokens from a minion that hasnt attacked yet
     
 
 

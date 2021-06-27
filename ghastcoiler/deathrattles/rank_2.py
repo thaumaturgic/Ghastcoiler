@@ -13,8 +13,10 @@ class HarvestGolemDeathrattle(Deathrattle):
         super().__init__(name="HarvestGolemDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Harvest Golem deathrattle triggered, creating Damaged Golem")
-        own_board.add_minion(DamagedGolem(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = DamagedGolem,
+            triggered_from_macaw = macaw_trigger)
 
 
 class ImprisonerDeathrattle(Deathrattle):
@@ -22,8 +24,10 @@ class ImprisonerDeathrattle(Deathrattle):
         super().__init__(name="ImprisonerDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Imprisoner deathrattle triggered, creating Imp")
-        own_board.add_minion(Imp(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = Imp,
+            triggered_from_macaw = macaw_trigger)
 
 
 class KaboomBotDeathrattle(Deathrattle):
@@ -35,7 +39,6 @@ class KaboomBotDeathrattle(Deathrattle):
         for _ in range(number_bombs):
             opposing_minion = opposing_board.random_minion()
             if opposing_minion:
-                logging.debug(f"Kaboom Bot deathrattle triggered, dealing 4 damage to {opposing_minion.minion_string()}")
                 opposing_minion.receive_damage(amount=4, poisonous=False, own_board=opposing_board)
 
 
@@ -44,8 +47,10 @@ class KindlyGrandmotherDeathrattle(Deathrattle):
         super().__init__(name="KindlyGrandmotherDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Kindly Grandmother deathrattle triggered, creating Big Bad Wolf")
-        own_board.add_minion(BigBadWolf(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = BigBadWolf,
+            triggered_from_macaw = macaw_trigger)
 
 
 class SpawnofNZothDeathrattle(Deathrattle):
@@ -53,7 +58,6 @@ class SpawnofNZothDeathrattle(Deathrattle):
         super().__init__(name="SpawnofNZothDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Spawn of NZoth deathrattle triggered")
         bonus = 2 if minion.golden else 1
         for other_minion in own_board.get_living_minions():
             other_minion.add_stats(bonus, bonus)
@@ -64,7 +68,6 @@ class UnstableGhoulDeathrattle(Deathrattle):
         super().__init__(name="UnstableGhoulDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Unstable Ghoul deathrattle triggered")
         triggers = 2 if minion.golden else 1
         for _ in range(triggers):
             for opposing_minion in opposing_board.get_living_minions():
@@ -78,7 +81,6 @@ class SelflessHeroDeathrattle(Deathrattle):
         super().__init__(name="SelflessHeroDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        logging.debug("Selfless Hero deathrattle triggered")
         iterations = 2 if minion.golden else 1
         for _ in range(iterations):
             unshielded_minions = [minion for minion in own_board.get_living_minions() if not minion.divine_shield]

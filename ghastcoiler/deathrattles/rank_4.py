@@ -13,7 +13,10 @@ class MechanoEggDeathrattle(Deathrattle):
         super().__init__(name="MechanoEggDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        own_board.add_minion(Robosaur(golden=minion.golden, attacked=minion.attacked), position=minion.position, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = Robosaur,
+            triggered_from_macaw = macaw_trigger)
 
 
 class RingMatronDeathrattle(Deathrattle):
@@ -22,9 +25,11 @@ class RingMatronDeathrattle(Deathrattle):
         super().__init__(name="RingMatronDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        insert_position = minion.position
-        for i in range(2):
-            own_board.add_minion(FieryImp(golden=minion.golden, attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = FieryImp,
+            minions_to_spawn = 2,
+            triggered_from_macaw = macaw_trigger)
 
 
 class SavannahHighmaneDeathrattle(Deathrattle):
@@ -33,6 +38,8 @@ class SavannahHighmaneDeathrattle(Deathrattle):
         super().__init__(name="SavannahHighmaneDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        insert_position = minion.position
-        for i in range(2):
-            own_board.add_minion(Hyena(golden=minion.golden, attacked=minion.attacked), position=insert_position+i, to_right=macaw_trigger, summoning_minion = minion if minion.dead else None)
+        Deathrattle.summon_deathrattle_minions(own_board = own_board,
+            summoning_minion = minion, 
+            summoned_minion_class = Hyena,
+            minions_to_spawn = 2,
+            triggered_from_macaw = macaw_trigger)

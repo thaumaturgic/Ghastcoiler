@@ -1,3 +1,4 @@
+from minions.rank_3 import Khadgar
 from minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_6 import Amalgadon, DreadAdmiralEliza, \
     GentleDjinni, Ghastcoiler, GoldrinntheGreatWolf, ImpMama, \
@@ -67,19 +68,22 @@ def test_ghastcoiler(initialized_game):
 
     test_runs = 100
     for _ in range(test_runs):
-        attacker_board.rank += 1
-        if attacker_board.rank == 7:
-            attacker_board.rank = 1
-
         attacker_board.set_minions([Ghastcoiler(golden=random.randint(0,1))])
         defender_board.set_minions([PunchingBag(attack=20)])
-        
         initialized_game.start_of_game()
         initialized_game.single_round()
 
         for minion in attacker_board.minions:
             assert len(minion.deathrattles) > 0
 
+        # Test with khadgar, should spawn 4 minions, then reborn itself for two copies
+        attacker_board.set_minions([Ghastcoiler(golden=False, reborn=True), Khadgar()])
+        defender_board.set_minions([PunchingBag(attack=20)])
+        initialized_game.start_of_game()
+        initialized_game.single_round()
+        for i in range(6):
+            assert len(attacker_board.minions[i].deathrattles) == 1
+        
 
 def test_goldrinn_the_great_wolf(initialized_game):
     attacker_board = initialized_game.player_board[0]
