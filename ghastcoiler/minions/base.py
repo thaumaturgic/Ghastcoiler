@@ -265,7 +265,7 @@ class Minion:
             killer_minion {Minion} -- The enemy minion that was killed"""
         pass
 
-    def on_overkill(self, defending_minion: Minion, enemy_board: PlayerBoard):
+    def on_overkill(self, friendly_board: PlayerBoard, defending_minion: Minion, enemy_board: PlayerBoard):
         """Trigger that happens when this minion overkills another minion"""
         pass
 

@@ -84,7 +84,7 @@ class GameInstance:
             attacking_minion.on_kill()
             attacking_board.on_friendly_kill(attacking_minion)
             if defending_minion_health < 0:
-                attacking_minion.on_overkill(defending_minion, defending_board)
+                attacking_minion.on_overkill(attacking_board, defending_minion, defending_board)
 
         if divine_shield_popped:
             #logging.debug(f"Divine shield from {defending_minion.minion_string()} popped")

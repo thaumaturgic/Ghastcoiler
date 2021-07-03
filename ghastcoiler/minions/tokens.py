@@ -112,6 +112,18 @@ class Imp(Minion):
                          **kwargs)
 
 
+class IronhideRunt(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Ironhide Runt",
+                         id="BRM_006t",
+                         gold_id="TB_BaconUps_030t",
+                         rank=1,
+                         base_attack=5,
+                         base_health=5,
+                         types=[MinionType.Beast],
+                         **kwargs)
+
+
 class Microbot(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Microbot",

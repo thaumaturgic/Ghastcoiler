@@ -203,7 +203,7 @@ class HeraldofFlame(Minion):
                          types=[MinionType.Dragon],
                          **kwargs)
 
-    def on_overkill(self, defending_minion: Minion, enemy_board: PlayerBoard):
+    def on_overkill(self, friendly_board: PlayerBoard, defending_minion: Minion, enemy_board: PlayerBoard):
         damage = 6 if self.golden else 3
         minion_index = 0
         while minion_index < len(enemy_board.minions):
@@ -225,7 +225,6 @@ class Junkbot(Minion):
                          types=[MinionType.Mech],
                          **kwargs)
     
-    #TODO: TEST
     def on_friendly_removal(self, other_minion: Minion):
         if MinionType.Mech in other_minion.types:
             stats = 4 if self.golden else 2
@@ -423,7 +422,7 @@ class WildfireElemental(Minion):
                          types=[MinionType.Elemental],
                          **kwargs)
 
-    def on_overkill(self, defending_minion: Minion, enemy_board: PlayerBoard):
+    def on_overkill(self, friendly_board: PlayerBoard, defending_minion: Minion, enemy_board: PlayerBoard):
         overkill_amount = defending_minion.health * -1
         neighbors = [x for x in enemy_board.get_minions_neighbors(defending_minion) if x]
         num_neighbors = len(neighbors)

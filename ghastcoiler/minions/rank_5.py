@@ -6,6 +6,7 @@ from minions.base import Minion
 from minions.types import MinionType
 
 from deathrattles.rank_5 import KingBagurgleDeathrattle, SneedsOldShredderDeathrattle, VoidlordDeathrattle
+from minions.tokens import IronhideRunt
 
 class AgamaggantheGreatBoar(Minion):
     def __init__(self, **kwargs):
@@ -160,6 +161,9 @@ class IronhideDirehorn(Minion):
                          types=[MinionType.Beast],
                          **kwargs)
 
+    def on_overkill(self, friendly_board: PlayerBoard, defending_minion: Minion, enemy_board: PlayerBoard):
+        friendly_board.add_minion(IronhideRunt(attacked = self.attacked, golden = self.golden), self.position+1)
+
 
 class KingBagurgle(Minion):
     def __init__(self, **kwargs):
@@ -187,7 +191,6 @@ class LightfangEnforcer(Minion):
 
 
 class MalGanis(Minion):
-    #TODO: Aura
     def __init__(self, **kwargs):
         super().__init__(name="Mal'Ganis",
                          id="GVG_021",
@@ -198,6 +201,23 @@ class MalGanis(Minion):
                          legendary=True,
                          types=[MinionType.Demon],
                          **kwargs)
+
+    def adjust_demon_power(self, other_minion: Minion, add_power: bool):
+        stats = 4 if self.golden else 2
+        if MinionType.Demon in other_minion.types:
+            if add_power:
+                other_minion.add_stats(stats, stats)
+            else:
+                other_minion.remove_stats(stats, stats)
+
+    def on_summon(self, other_minion: Minion):
+        self.adjust_demon_power(other_minion, True)
+
+    def on_friendly_summon(self, other_minion: Minion):
+        self.adjust_demon_power(other_minion, True)
+
+    def on_removal(self, other_minion: Minion):
+        self.adjust_demon_power(other_minion, False)
 
 
 class MamaBear(Minion):
@@ -281,7 +301,6 @@ class RazorgoretheUntamed(Minion):
 
 
 class SeabreakerGoliath(Minion):
-    #TODO: Overkill trigger
     def __init__(self, **kwargs):
         super().__init__(name="Seabreaker Goliath",
                          id="BGS_080",
@@ -293,9 +312,14 @@ class SeabreakerGoliath(Minion):
                          types=[MinionType.Pirate],
                          **kwargs)
 
+    def on_overkill(self, friendly_board: PlayerBoard, defending_minion: Minion, enemy_board: PlayerBoard):
+        stats = 4 if self.golden else 2
+        for minion in friendly_board.minions:
+            if MinionType.Pirate in minion.types and minion is not self:
+                minion.add_stats(stats, stats)
+
 
 class SneedsOldShredder(Minion):
-    #TODO: Test Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="Sneed's Old Shredder",
                          id="BGS_006",

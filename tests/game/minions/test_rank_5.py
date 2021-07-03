@@ -1,6 +1,6 @@
 import random
 from minions.test_minions import PunchingBag
-from ghastcoiler.minions.rank_2 import KindlyGrandmother, SpawnofNZoth
+from ghastcoiler.minions.rank_2 import Imprisoner, KindlyGrandmother, SpawnofNZoth
 from ghastcoiler.minions.rank_5 import BaronRivendare, BristlebackKnight, \
     IronhideDirehorn, KingBagurgle, MalGanis, MamaBear, \
     SeabreakerGoliath, SneedsOldShredder, Voidlord
@@ -70,11 +70,33 @@ def test_bristleback_knight(initialized_game):
 
 def test_ironhide_direhorn(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    direhorn = IronhideDirehorn()
-    attacker_board.set_minions([direhorn])
-    # TODO: Implement
-    assert True
+    attacker_board.set_minions([IronhideDirehorn()])
+    defender_board.set_minions([PunchingBag(health=1)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert attacker_board.minions[1].name == "Ironhide Runt"
+
+    attacker_board.set_minions([IronhideDirehorn(golden=True)])
+    defender_board.set_minions([PunchingBag(health=1)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert attacker_board.minions[1].attack == 10
+    assert attacker_board.minions[1].health == 10
+
+    attacker_board.set_minions([IronhideDirehorn(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag()])
+    defender_board.set_minions([PunchingBag(attack=10, health=1)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert attacker_board.minions[0].name == "PunchingBag"
+    assert len(attacker_board.minions) == 6
+
+    attacker_board.set_minions([IronhideDirehorn(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag(), PunchingBag()])
+    defender_board.set_minions([PunchingBag(attack=10, health=1)])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 6
 
 
 def test_king_bagurgle(initialized_game):
@@ -96,11 +118,18 @@ def test_king_bagurgle(initialized_game):
 
 def test_malganis(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    malganis = MalGanis()
-    attacker_board.set_minions([malganis])
-    # TODO: Implement
-    assert True
+    attacker_board.set_minions([Imprisoner(), MalGanis(taunt=True)])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert attacker_board.minions[0].attack == 3
+    assert attacker_board.minions[0].health == 3
+    
+    initialized_game.single_round()
+    assert attacker_board.minions[0].attack == 1
+    assert attacker_board.minions[0].health == 1
 
 
 def test_mama_bear(initialized_game):
@@ -118,11 +147,23 @@ def test_mama_bear(initialized_game):
 
 def test_seabreaker_goliath(initialized_game):
     attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
 
-    goliath = SeabreakerGoliath()
-    attacker_board.set_minions([goliath])
-    # TODO: Implement
-    assert True
+    self_goliath = SeabreakerGoliath()
+    other_goliath = SeabreakerGoliath()
+    non_pirate = PunchingBag()
+    attacker_board.set_minions([self_goliath, other_goliath, non_pirate])
+    defender_board.set_minions([PunchingBag(health=1)])
+
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    
+    assert self_goliath.attack == 6
+    assert self_goliath.health == 7
+    assert other_goliath.attack == 8
+    assert other_goliath.health == 9
+    assert non_pirate.attack == 0
+    assert non_pirate.health == 100
 
 
 def test_sneeds_old_shredder(initialized_game):

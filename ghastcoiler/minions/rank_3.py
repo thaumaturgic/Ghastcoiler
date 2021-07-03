@@ -286,7 +286,6 @@ class MonstrousMacaw(Minion):
             for _ in range(own_board.deathrattle_multiplier):
                 index = random.randint(0, len(deathrattles) - 1)
                 minion_pair = deathrattles[index]
-                # TODO: Multiply this with baron?
                 minion_pair[1].trigger(minion_pair[0], own_board, opposing_board, macaw_trigger=True)
 
 

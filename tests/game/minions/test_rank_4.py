@@ -3,7 +3,7 @@ from ghastcoiler.minions.rank_2 import \
     PackLeader, KindlyGrandmother, SouthseaCaptain, FreedealingGambler
 from ghastcoiler.minions.rank_3 import RatPack, ImpGangBoss
 from ghastcoiler.minions.rank_4 import Bigfernal, BolvarFireblood, CaveHydra, \
-    ChampionofYShaarj, DrakonidEnforcer, HeraldofFlame, MechanoEgg, QirajiHarbinger, \
+    ChampionofYShaarj, DrakonidEnforcer, HeraldofFlame, Junkbot, MechanoEgg, QirajiHarbinger, \
     RipsnarlCaptain, RingMatron, SavannahHighmane, WildfireElemental
 
 
@@ -139,6 +139,27 @@ def test_herald_of_flame(initialized_game):
 
     assert defender_board.minions[0].name == "Imp Gang Boss"
     assert defender_board.minions[1].name == "Imp"
+
+
+def test_junkbot(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    junkbot = Junkbot()
+    attacker_board.set_minions([Junkbot(), junkbot])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert junkbot.attack == 3
+    assert junkbot.health == 7
+
+    junkbot = Junkbot(golden=True)
+    attacker_board.set_minions([Junkbot(), junkbot])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert junkbot.attack == 6
+    assert junkbot.health == 14
 
 
 def test_mechano_egg(initialized_game):
