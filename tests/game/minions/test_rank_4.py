@@ -14,8 +14,8 @@ def test_bigfernal(initialized_game):
     attacker_board.set_minions([bigfernal])
     attacker_board.add_minion(ImpGangBoss())
 
-    assert bigfernal.attack == 5
-    assert bigfernal.health == 5
+    assert bigfernal.attack == 7
+    assert bigfernal.health == 7
 
 
 def test_bolvar_fireblood(initialized_game):

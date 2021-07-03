@@ -112,8 +112,8 @@ def test_mama_bear(initialized_game):
     initialized_game.start_of_game()
     initialized_game.single_round()
     
-    assert attacker_board.minions[0].attack == 7
-    assert attacker_board.minions[0].health == 6
+    assert attacker_board.minions[0].attack == 8
+    assert attacker_board.minions[0].health == 7
 
 
 def test_seabreaker_goliath(initialized_game):

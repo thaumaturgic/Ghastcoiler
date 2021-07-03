@@ -166,7 +166,7 @@ class NathrezimOverseer(Minion):
                          gold_id="TB_BaconUps_062",
                          rank=2,
                          base_attack=2,
-                         base_health=3,
+                         base_health=4,
                          types=[MinionType.Demon],
                          **kwargs)
 
@@ -213,7 +213,7 @@ class PackLeader(Minion):
                          gold_id="TB_BaconUps_086",
                          rank=2,
                          base_attack=3,
-                         base_health=3,
+                         base_health=4,
                          **kwargs)
 
     def on_friendly_summon(self, other_minion: Minion):

@@ -165,7 +165,7 @@ class RefreshingAnomaly(Minion):
                          gold_id="TB_BaconUps_167",
                          rank=1,
                          base_attack=1,
-                         base_health=3,
+                         base_health=4,
                          types=[MinionType.Elemental],
                          **kwargs)
 

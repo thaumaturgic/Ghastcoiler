@@ -35,6 +35,18 @@ class CaptainFlatTusk(Minion):
                          **kwargs)
 
 
+class ArchdruidHamuul(Minion):
+    def __init__(self, **kwargs):
+        super().__init__(name="Archdruid Hamuul",
+                         id="BG20_304",
+                         gold_id="BG20_304_G",
+                         rank=6,
+                         base_attack=4,
+                         base_health=4,
+                         legendary=True,
+                         **kwargs)
+
+
 class Charlga(Minion):
     def __init__(self, **kwargs):
         super().__init__(name="Charlga",
@@ -183,7 +195,7 @@ class LieutenantGarr(Minion):
                          gold_id="TB_BaconUps_163",
                          rank=6,
                          base_attack=8,
-                         base_health=1,
+                         base_health=8,
                          legendary=True,
                          types=[MinionType.Elemental],
                          **kwargs)

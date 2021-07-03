@@ -63,7 +63,7 @@ def test_deflectobot(initialized_game):
 
     attacker_board.add_minion(DeflectoBot())
     assert deflectobot.divine_shield
-    assert deflectobot.attack == 4
+    assert deflectobot.attack == 5
 
 
 def test_imp_gang_boss(initialized_game):

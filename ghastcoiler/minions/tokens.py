@@ -9,7 +9,7 @@ class Amalgam(Minion):
                          id="TB_BaconShop_HP_033t",
                          gold_id="",
                          rank=1,
-                         base_attack=1,
+                         base_attack=2,
                          base_health=2,
                          types=[MinionType.Murloc, 
                          MinionType.Dragon, 
@@ -64,8 +64,8 @@ class FishofNZoth(Minion):
                          id="TB_BaconShop_HP_105t",
                          gold_id="TB_BaconUps_307",
                          rank=1,
-                         base_attack=1,
-                         base_health=1,
+                         base_attack=2,
+                         base_health=2,
                          types=[MinionType.Beast],
                          **kwargs)
 

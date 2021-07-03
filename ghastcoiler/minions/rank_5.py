@@ -206,14 +206,14 @@ class MamaBear(Minion):
                          id="BGS_021",
                          gold_id="TB_BaconUps_090",
                          rank=5,
-                         base_attack=4,
-                         base_health=4,
+                         base_attack=5,
+                         base_health=5,
                          types=[MinionType.Beast],
                          **kwargs)
 
     def on_friendly_summon(self, other_minion: Minion):
         if MinionType.Beast in other_minion.types:
-            stats = 8 if self.golden else 4
+            stats = 10 if self.golden else 5
             other_minion.add_stats(stats, stats)
 
 
@@ -273,8 +273,8 @@ class RazorgoretheUntamed(Minion):
                          id="BGS_036",
                          gold_id="TB_BaconUps_106",
                          rank=5,
-                         base_attack=2,
-                         base_health=4,
+                         base_attack=4,
+                         base_health=6,
                          legendary=True,
                          types=[MinionType.Dragon],
                          **kwargs)

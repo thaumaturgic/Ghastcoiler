@@ -30,8 +30,8 @@ class Bigfernal(Minion):
                          id="BGS_204",
                          gold_id="TB_BaconUps_304",
                          rank=4,
-                         base_attack=4,
-                         base_health=4,
+                         base_attack=6,
+                         base_health=6,
                          types=[MinionType.Demon],
                          **kwargs)
 

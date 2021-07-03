@@ -160,7 +160,7 @@ class DeflectoBot(Minion):
 
     def on_friendly_summon(self, other_minion: Minion):
         if MinionType.Mech in other_minion.types:
-            attack = 2 if self.golden else 1
+            attack = 4 if self.golden else 2
             self.divine_shield = True
             self.add_stats(attack, 0)
 
@@ -384,7 +384,7 @@ class SoulJuggler(Minion):
                          gold_id="TB_BaconUps_075",
                          rank=3,
                          base_attack=3,
-                         base_health=3,
+                         base_health=5,
                          **kwargs)
 
     # TODO: TEST
