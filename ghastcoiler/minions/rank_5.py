@@ -5,7 +5,8 @@ from game.player_board import PlayerBoard
 from minions.base import Minion
 from minions.types import MinionType
 
-from deathrattles.rank_5 import KingBagurgleDeathrattle, SneedsOldShredderDeathrattle, VoidlordDeathrattle
+from deathrattles.rank_5 import KingBagurgleDeathrattle, SneedsOldShredderDeathrattle, VoidlordDeathrattle, \
+    KangorsApprenticeDeathrattle
 from minions.tokens import IronhideRunt
 
 class AgamaggantheGreatBoar(Minion):
@@ -150,7 +151,6 @@ class FacelessTaverngoer(Minion):
 
 
 class IronhideDirehorn(Minion):
-    #TODO: Overkill triggers
     def __init__(self, **kwargs):
         super().__init__(name="Ironhide Direhorn",
                          id="TRL_232",
@@ -163,6 +163,24 @@ class IronhideDirehorn(Minion):
 
     def on_overkill(self, friendly_board: PlayerBoard, defending_minion: Minion, enemy_board: PlayerBoard):
         friendly_board.add_minion(IronhideRunt(attacked = self.attacked, golden = self.golden), self.position+1)
+
+
+class KangorsApprentice(Minion):
+    #TODO: Deathrattle
+    def __init__(self, **kwargs):
+        super().__init__(name="Kangor's Apprentice",
+                         id="BGS_012",
+                         gold_id="TB_BaconUps_087",
+                         rank=5,
+                         base_attack=3,
+                         base_health=6,
+                         base_deathrattle=KangorsApprenticeDeathrattle(),
+                         **kwargs)
+    #     self.friendly_mechs = []
+
+    # def on_friendly_removal(self, other_minion: Minion):
+    #     if len(self.friendly_mechs) < 4 and MinionType.Mech in other_minion.types:
+    #         self.friendly_mechs.append(other_minion)
 
 
 class KingBagurgle(Minion):

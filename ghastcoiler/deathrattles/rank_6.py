@@ -48,16 +48,6 @@ class GoldrinntheGreatWolfDeathrattle(Deathrattle):
                 other_minion.add_stats(stats,stats)
 
 
-class KangorsApprenticeDeathrattle(Deathrattle):
-    "Summon the first 2 friendly Mechs that died this combat."
-    def __init__(self):
-        super().__init__(name="KangorsApprenticeDeathrattle")
-
-    def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        #TODO: IMPLEMENT
-        pass
-
-
 class NadinatheRedDeathrattle(Deathrattle):
     "Give your Dragons Divine Shield."
     def __init__(self):

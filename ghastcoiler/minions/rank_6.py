@@ -6,7 +6,7 @@ from game.player_board import PlayerBoard
 from minions.base import Minion
 from minions.types import MinionType
 from deathrattles.rank_6 import GentleDjinniDeathrattle, GhastcoilerDeathrattle, \
-    GoldrinntheGreatWolfDeathrattle, KangorsApprenticeDeathrattle, \
+    GoldrinntheGreatWolfDeathrattle, \
     NadinatheRedDeathrattle, TheTideRazorDeathrattle
 
 
@@ -172,19 +172,6 @@ class KalecgosArcaneAspect(Minion):
                          base_health=12,
                          legendary=True,
                          types=[MinionType.Dragon],
-                         **kwargs)
-
-
-class KangorsApprentice(Minion):
-    #TODO: Deathrattle
-    def __init__(self, **kwargs):
-        super().__init__(name="Kangor's Apprentice",
-                         id="BGS_012",
-                         gold_id="TB_BaconUps_087",
-                         rank=6,
-                         base_attack=4,
-                         base_health=8,
-                         base_deathrattle=KangorsApprenticeDeathrattle(),
                          **kwargs)
 
 

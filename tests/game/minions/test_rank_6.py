@@ -2,7 +2,7 @@ from minions.rank_3 import Khadgar
 from minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_6 import Amalgadon, DreadAdmiralEliza, \
     GentleDjinni, Ghastcoiler, GoldrinntheGreatWolf, ImpMama, \
-    KangorsApprentice, NadinatheRed, TheTideRazor, ZappSlywick
+    NadinatheRed, TheTideRazor, ZappSlywick
 from minions.types import MinionType
 import random
 
@@ -120,16 +120,6 @@ def test_imp_mama(initialized_game):
     assert MinionType.Demon in demon.types    
     assert demon.taunt
     assert demon.rank <= attacker_board.rank
-
-
-def test_kangors_apprentice(initialized_game):
-    attacker_board = initialized_game.player_board[0]
-
-    kangor = KangorsApprentice()
-    attacker_board.set_minions([kangor])
-    # TODO: Implement
-    # TODO: Test cleave killing 3 mechs, which 2 are recorded? Left most? or target + left? 
-    assert True
 
 
 def test_nadina_the_red(initialized_game):

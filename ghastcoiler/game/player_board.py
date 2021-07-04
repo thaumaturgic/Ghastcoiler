@@ -6,6 +6,7 @@ import sys
 from typing import List, Optional
 
 from minions.base import Minion
+from minions.types import MinionType
 
 
 class PlayerBoard:
@@ -27,6 +28,7 @@ class PlayerBoard:
         self.deathrattle_multiplier = 1
         self.token_creation_multiplier = 0
         self.set_minions(minions)
+        self.friendly_mechs = []
 
     def set_minions(self, minions: List[Minion]):
         """Initialize the board to the list of minions given.
@@ -34,6 +36,7 @@ class PlayerBoard:
         self.minions: List[Minion] = minions
         self.token_creation_multiplier = 0
         self.deathrattle_multiplier = 1
+        self.friendly_mechs = []
 
         if minions:
             left_neighbor = None
@@ -257,6 +260,9 @@ class PlayerBoard:
         self.minions.pop(position)
         for other_minion in self.minions[position:]:
             other_minion.shift_left()
+
+        if len(self.friendly_mechs) < 4 and MinionType.Mech in minion.types:
+            self.friendly_mechs.append(minion)
 
         for other_minion in self.minions:
             minion.on_removal(other_minion)

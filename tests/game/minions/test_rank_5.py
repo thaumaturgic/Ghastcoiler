@@ -1,9 +1,12 @@
 import random
+from minions.rank_3 import DeflectoBot, IronSensei, ScrewjankClunker
+from minions.rank_4 import Junkbot
+from minions.rank_6 import Amalgadon, FoeReaper4000
 from minions.test_minions import PunchingBag
 from ghastcoiler.minions.rank_2 import Imprisoner, KindlyGrandmother, SpawnofNZoth
 from ghastcoiler.minions.rank_5 import BaronRivendare, BristlebackKnight, \
     IronhideDirehorn, KingBagurgle, MalGanis, MamaBear, \
-    SeabreakerGoliath, SneedsOldShredder, Voidlord
+    SeabreakerGoliath, SneedsOldShredder, Voidlord, KangorsApprentice
 
 
 def test_baronrivendar(initialized_game):
@@ -97,6 +100,48 @@ def test_ironhide_direhorn(initialized_game):
     initialized_game.start_of_game(0)
     initialized_game.single_round()
     assert len(attacker_board.minions) == 6
+
+
+def test_kangors_apprentice(initialized_game):
+    attacker_board = initialized_game.player_board[0]
+    defender_board = initialized_game.player_board[1]
+
+    attacker_board.set_minions([Junkbot(), FoeReaper4000(), KangorsApprentice(), PunchingBag(taunt=True)])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    for _ in range(5):
+        initialized_game.single_round()
+    assert attacker_board.minions[0].name == "Junkbot"
+    assert attacker_board.minions[1].name == "Foe Reaper 4000"
+    
+    attacker_board.set_minions([Junkbot(), FoeReaper4000(golden=True), Amalgadon(), ScrewjankClunker(golden=True), IronSensei(), KangorsApprentice(golden=True), PunchingBag(taunt=True, health=999)])
+    defender_board.set_minions([PunchingBag(attack=20)])
+    initialized_game.start_of_game()
+    for _ in range(11):
+        initialized_game.single_round()
+    assert attacker_board.minions[0].name == "Junkbot"
+    assert attacker_board.minions[1].name == "Foe Reaper 4000"
+    assert attacker_board.minions[1].golden
+    assert attacker_board.minions[2].name == "Amalgadon"
+    assert attacker_board.minions[3].name == "Screwjank Clunker"
+    assert attacker_board.minions[3].golden
+    assert attacker_board.minions[4].name == "PunchingBag"
+    
+    # A kangor that is summoned (ie via ghastcoiler) after friendly mechs have died should spawn those mechs
+    attacker_board.set_minions([Junkbot(), FoeReaper4000(), PunchingBag(taunt=True)])
+    defender_board.set_minions([PunchingBag(attack=10)])
+    initialized_game.start_of_game()
+    for _ in range(3):
+        initialized_game.single_round()
+
+    attacker_board.add_minion(KangorsApprentice(), position=0)
+    initialized_game.single_round()
+    initialized_game.single_round()
+    assert attacker_board.minions[0].name == "Junkbot"
+    assert attacker_board.minions[1].name == "Foe Reaper 4000"
+
+
+    # TODO: Test cleave killing 3 mechs, which 2 are recorded? Left most? or target + left? 
 
 
 def test_king_bagurgle(initialized_game):
