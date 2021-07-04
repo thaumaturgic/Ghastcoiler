@@ -12,10 +12,10 @@ class KangorsApprenticeDeathrattle(Deathrattle):
         super().__init__(name="KangorsApprenticeDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        mech_to_spawns = min(len(own_board.friendly_mechs), 4 if minion.golden else 2)
-        for i in range(mech_to_spawns):
-            mech_type = own_board.friendly_mechs[i].__class__
-            mech_golden = own_board.friendly_mechs[i].golden
+        mechs_to_summon = min(len(own_board.dead_friendly_mechs), 4 if minion.golden else 2)
+        for i in range(mechs_to_summon):
+            mech_type = own_board.dead_friendly_mechs[i].__class__
+            mech_golden = own_board.dead_friendly_mechs[i].golden
             Deathrattle.summon_deathrattle_minions(own_board, minion, mech_type, mech_golden, triggered_from_macaw=macaw_trigger)
 
 

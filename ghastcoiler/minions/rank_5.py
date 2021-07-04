@@ -166,7 +166,6 @@ class IronhideDirehorn(Minion):
 
 
 class KangorsApprentice(Minion):
-    #TODO: Deathrattle
     def __init__(self, **kwargs):
         super().__init__(name="Kangor's Apprentice",
                          id="BGS_012",
@@ -176,11 +175,6 @@ class KangorsApprentice(Minion):
                          base_health=6,
                          base_deathrattle=KangorsApprenticeDeathrattle(),
                          **kwargs)
-    #     self.friendly_mechs = []
-
-    # def on_friendly_removal(self, other_minion: Minion):
-    #     if len(self.friendly_mechs) < 4 and MinionType.Mech in other_minion.types:
-    #         self.friendly_mechs.append(other_minion)
 
 
 class KingBagurgle(Minion):
