@@ -5,6 +5,7 @@ from multiprocessing import Pool
 import time
 import csv
 import glob
+import pickle
 import os
 from typing import List
 
@@ -40,21 +41,21 @@ def simulate_game_from_log(logPath):
 
         player_board_0 = PlayerBoard(player_id=0, hero=board_state.friendlyHero, life_total=board_state.friendlyPlayerHealth, rank=board_state.friendlyTechLevel, minions=board_state.friendlyBoard)
         player_board_1 = PlayerBoard(player_id=1, hero=board_state.enemyHero, life_total=board_state.enemyPlayerHealth, rank=board_state.enemyTechLevel, minions=board_state.enemyBoard)
+        turns += 1
 
         try:
             single_threaded = False
             games = 10_000
             game_state = (player_board_0, player_board_1)
+            pickled_state = pickle.dumps(game_state)
 
             if single_threaded:
                 results = []
-                #with Profile():
-                #logging.basicConfig(level=logging.DEBUG, format="%(message)s")
                 for _ in range(games):
-                    results.append(Simulator.Simulate(game_state))
+                    results.append(Simulator.Simulate(pickled_state))
             else:
                 pool = Pool()
-                results = pool.map(Simulator.Simulate, repeat(game_state, games))
+                results = pool.map(Simulator.Simulate, repeat(pickled_state, games))
                 pool.close()
                 pool.join()
 
@@ -79,9 +80,8 @@ def simulate_game_from_log(logPath):
 
             turn_results[turns] = [100*enemy_lethal/games, 100*wins/games, 100*ties/games, 100*losses/games, 100*friendly_lethal/games]
         except Exception as e:
-            print(e)
-        turns += 1
-
+            print(f"Game:{logPath}, turn:{turns}, error:{e}")
+            turn_results[turns] = [0,0,0,0,0]
     return turn_results
 
 def compare_results(known_results: List, simulated_results: List):
@@ -115,6 +115,9 @@ def run_regressions(logDirectoryPath):
 
             if csv_exists:
                 known_results = read_game_results(csv_path)
+                profile = Profile()
+                profile.__enter__()
                 simulated_results = simulate_game_from_log(log_path)
-                print(compare_results(known_results, simulated_results))
+                profile.__exit__()
+                print(f"{file}results,{compare_results(known_results, simulated_results)}")
     pass

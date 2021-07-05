@@ -54,12 +54,10 @@ class Deathrattle:
         insert_position = summoning_minion.position+1 if triggered_from_macaw else summoning_minion.find_deathrattle_reborn_position()
 
         for _ in range(minions_to_summon):
-            new_minion_class = minions[random.randint(0, len(minions) - 1)].__class__
+            new_minion = minions[random.randint(0, len(minions) - 1)]
+            new_minion.attacked = summoning_minion.attacked
 
-            new_minion = own_board.add_minion(
-                new_minion_class(attacked = summoning_minion.attacked, golden = False),
-                position = insert_position, 
-                summoning_minion = summoning_minion if summoning_minion.dead else None)
+            new_minion = own_board.add_minion(new_minion, position = insert_position, summoning_minion = summoning_minion if summoning_minion.dead else None)
             if new_minion:
                 insert_position = new_minion.position+1
             else:

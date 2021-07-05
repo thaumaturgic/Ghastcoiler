@@ -442,6 +442,7 @@ class TwilightEmissary(Minion):
                          rank=3,
                          base_attack=4,
                          base_health=4,
+                         base_taunt=True,
                          types=[MinionType.Dragon],
                          **kwargs)
 

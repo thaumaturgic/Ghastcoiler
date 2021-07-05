@@ -1,5 +1,6 @@
 import sys
 import inspect
+from copy import deepcopy
 
 # We explicitly want to import all Minion classes
 from minions.base import *  # noqa: F403
@@ -21,8 +22,10 @@ class MinionUtils:
     def __init__(self):
         self.minion_classes = inspect.getmembers(sys.modules[__name__], is_minion_class)
         self.minions_dictionary = {}
+        self.minions_instantiated = []
         for minion_class in self.minion_classes:
             minion = minion_class[1]()
+            self.minions_instantiated.append(minion)
             self.minions_dictionary[minion.id] = minion_class[1]
             self.minions_dictionary[minion.gold_id] = minion_class[1]
 
@@ -60,10 +63,8 @@ class MinionUtils:
         Returns:
             Minion[] -- List of instantiated minions that match the given criteria
         """
-        # TODO: Consider filtering out minion tribes that are not present in current game
-        minions_instantiated = []
-        for minion_class in self.minion_classes:
-            minion = minion_class[1]()
+        minions = []
+        for minion in self.minions_instantiated:
             if (not criteria) or (criteria and criteria(minion)):
-                minions_instantiated.append(minion)
-        return minions_instantiated
+                minions.append(deepcopy(minion))
+        return minions

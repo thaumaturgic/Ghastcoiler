@@ -1,3 +1,4 @@
+import logging
 from hslog.parser import LogParser, GameTag
 from hslog.export import EntityTreeExporter
 from hearthstone.entities import Zone, CardType
@@ -41,6 +42,7 @@ class LogReader:
     LIVING_SPORES = "UNG_999t2e"
 
     def __init__(self, log_path):
+        logging.basicConfig(level=logging.ERROR)
         self.parser = LogParser()
         self.minion_utils = MinionUtils()
 
@@ -75,7 +77,7 @@ class LogReader:
                 #     print(str(lineCount) + " " + line[:-1])
 
                 if LogReader.COMBAT_STEP_STRING in line and self.inShop:
-                    print(str(self.lineCount) + " *** COMBAT #" + str(self.turn))
+                    #print(str(self.lineCount) + " *** COMBAT #" + str(self.turn))
                     self.turn += 1
                     self.entity_board_state = self.scrape_board_state(self.parser)
                     self.boardPending = True
@@ -91,7 +93,7 @@ class LogReader:
                     #TODO: Scrape shop for visible minion types
                     self.inShop = True
                 elif LogReader.NEW_GAME_STRING in line:
-                    print("\n*** New Game ***")
+                    #print("\n*** New Game ***")
                     self.turn = 1
                 elif LogReader.GAME_END_STRING in line:
                     return None

@@ -306,6 +306,7 @@ class RingMatron(Minion):
                          rank=4,
                          base_attack=6,
                          base_health=4,
+                         base_taunt=True,
                          types=[MinionType.Demon],
                          base_deathrattle=RingMatronDeathrattle(),
                          **kwargs)

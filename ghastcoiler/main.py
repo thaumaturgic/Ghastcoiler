@@ -3,6 +3,8 @@ from collections import Counter
 from itertools import repeat
 from multiprocessing import Pool
 import time
+import pickle
+from utils.minion_utils import MinionUtils
 
 from utils.profile import Profile
 from utils.log_reader import LogReader
@@ -12,12 +14,17 @@ from game.simulation import Simulator
 from game.player_board import PlayerBoard
 
 def main():
-    logPath = "C:/Users/scott/Desktop/hearthstone_games/Recorded_games/Power_game_2.log"
+    logPath = "C:/Users/scott/Desktop/hearthstone_games/Recorded_games/Power_game_15.log"
     #logPath = "C:/Program Files (x86)/Hearthstone/Logs/Power_old.log"
+
+    #logging.basicConfig(level=logging.DEBUG, format="%(message)s")
 
     print("Reading Log: ", logPath)
     logreader = LogReader(logPath) 
     turns = 0
+
+    profile = Profile()
+    profile.__enter__()
 
     while True:
         print("------------------------------------------------------------------------")
@@ -25,6 +32,7 @@ def main():
 
         if not board_state:
             print("\n*** Game Over ***")
+            profile.__exit__()
             continue
 
         player_board_0 = PlayerBoard(player_id=0, hero=board_state.friendlyHero, life_total=board_state.friendlyPlayerHealth, rank=board_state.friendlyTechLevel, minions=board_state.friendlyBoard)
@@ -37,26 +45,24 @@ def main():
         print(player_board_0)
 
         # turns += 1
-        # if turns < 6:
-        #     #print("")
+        # if turns < 4:
         #     continue
 
         try:
             single_threaded = False
             games = 10_000
             game_state = (player_board_0, player_board_1)
+            pickled_state = pickle.dumps(game_state)
 
             if single_threaded:
                 results = []
                 start = time.time()
-                #with Profile():
-                #logging.basicConfig(level=logging.DEBUG, format="%(message)s")
                 for _ in range(games):
-                    results.append(Simulator.Simulate(game_state))
+                    results.append(Simulator.Simulate(pickled_state))
             else:
                 start = time.time()
                 pool = Pool()
-                results = pool.map(Simulator.Simulate, repeat(game_state, games))
+                results = pool.map(Simulator.Simulate, repeat(pickled_state, games))
                 pool.close()
                 pool.join()
 
@@ -87,5 +93,5 @@ def main():
             print(e)
 
 if __name__ == '__main__':
-    #turn_results = run_regressions("C:/Users/scott/Desktop/hearthstone_games/Recorded_games/")
-    main()
+    run_regressions("C:/Users/scott/Desktop/hearthstone_games/Recorded_games/")
+    #main()
