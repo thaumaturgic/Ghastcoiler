@@ -266,7 +266,7 @@ class MonstrousMacaw(Minion):
                          id="BGS_078",
                          gold_id="TB_BaconUps_135",
                          rank=3,
-                         base_attack=4,
+                         base_attack=5,
                          base_health=3,
                          types=[MinionType.Beast],
                          **kwargs)

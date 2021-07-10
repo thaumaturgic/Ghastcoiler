@@ -95,6 +95,7 @@ class Minion:
         self.attack = attack if attack else self.base_attack
         self.health = health if health else self.base_health
         self.dead = dead
+        self.dead_by_poison = False
         self.types = types if types else []
         self.base_divine_shield = base_divine_shield
         self.divine_shield = divine_shield if divine_shield else base_divine_shield
@@ -173,6 +174,9 @@ class Minion:
         self.attack += attack
         self.health += health
 
+        if self.health > 0 and self.dead and not self.dead_by_poison:
+            self.dead = False
+
     def remove_stats(self, attack: int, health: int):
         """Remove minion attack/health
         """
@@ -202,6 +206,7 @@ class Minion:
             self.health -= amount
             if self.health <= 0 or poisonous:
                 self.dead = True
+                self.dead_by_poison = True if poisonous else False
             if not defer_damage_trigger:
                 self.on_receive_damage(own_board)
             self.damage_trigger_pending = defer_damage_trigger

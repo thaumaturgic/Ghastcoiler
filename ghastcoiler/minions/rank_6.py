@@ -157,8 +157,7 @@ class ImpMama(Minion):
         select_demons = lambda x: (MinionType.Demon in x.types) and (x.name not in disallowed_demons)
 
         demons = MinionUtils().get_minions(select_demons)
-        demon = demons[random.randint(0,len(demons)-1)]
-        demon.taunt = True
+        demon = demons[random.randint(0,len(demons)-1)](taunt=True)
         own_board.add_minion(demon, self.position, True)
 
 

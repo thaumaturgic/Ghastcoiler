@@ -66,5 +66,5 @@ class MinionUtils:
         minions = []
         for minion in self.minions_instantiated:
             if (not criteria) or (criteria and criteria(minion)):
-                minions.append(deepcopy(minion))
+                minions.append(minion.__class__)
         return minions

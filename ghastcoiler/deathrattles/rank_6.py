@@ -42,8 +42,6 @@ class GoldrinntheGreatWolfDeathrattle(Deathrattle):
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
         for other_minion in own_board.minions:
             if MinionType.Beast in other_minion.types:
-                if other_minion == minion and not macaw_trigger:
-                    continue
                 stats = 10 if minion.golden else 5
                 other_minion.add_stats(stats,stats)
 
@@ -72,7 +70,7 @@ class TheTideRazorDeathrattle(Deathrattle):
         Deathrattle.summon_random_minions(minion, own_board, minions_to_summon, isSpawnable, macaw_trigger)
         pass
 
-# TODO: Test
+
 class LivingSporesDeathrattle(Deathrattle):
     "Summon two 1/1 Plants."
     def __init__(self):
