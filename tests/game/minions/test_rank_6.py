@@ -135,19 +135,14 @@ def test_imp_mama(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
-    
     attacker_board.set_minions([ImpMama()])  
     defender_board.set_minions([PunchingBag(attack=10)])
-
-    attacker_board.rank = 6
-
     initialized_game.start_of_game()
     initialized_game.single_round()
 
     demon = attacker_board.minions[0]
     assert MinionType.Demon in demon.types    
     assert demon.taunt
-    assert demon.rank <= attacker_board.rank
 
 
 def test_nadina_the_red(initialized_game):

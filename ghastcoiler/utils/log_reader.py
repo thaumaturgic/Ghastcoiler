@@ -4,7 +4,8 @@ from hslog.export import EntityTreeExporter
 from hearthstone.entities import Zone, CardType
 from time import sleep
 from dataclasses import dataclass
-from utils.minion_utils import MinionUtils
+from utils.minion_utils import get_ghastcoiler_minion
+from utils.minion_utils import get_ghastcoiler_deathrattles
 from heroes.hero_types import HeroType
 
 @dataclass
@@ -44,8 +45,6 @@ class LogReader:
     def __init__(self, log_path):
         logging.basicConfig(level=logging.ERROR)
         self.parser = LogParser()
-        self.minion_utils = MinionUtils()
-
         self.entity_board_state = BoardState()
         
         self.lineCount = 0
@@ -212,7 +211,7 @@ class LogReader:
                 windfury = True if minion.tags[GameTag.WINDFURY] == 1 else False
                 mega_windfury = True if minion.tags[GameTag.WINDFURY] == 3 else False
 
-            ghastcoiler_minion = self.minion_utils.get_ghastcoiler_minion(
+            ghastcoiler_minion = get_ghastcoiler_minion(
                 minion.card_id, 
                 minion.tags[GameTag.ZONE_POSITION], 
                 minion.tags[GameTag.HEALTH], 
@@ -225,7 +224,7 @@ class LogReader:
                 True if GameTag.POISONOUS in minion.tags else False,
                 True if GameTag.PREMIUM in minion.tags and minion.tags[GameTag.PREMIUM] else False)
             if ghastcoiler_minion:
-                ghastcoiler_minion.deathrattles += self.minion_utils.get_ghastcoiler_deathrattles(minion.deathrattle_ids)
+                ghastcoiler_minion.deathrattles += get_ghastcoiler_deathrattles(minion.deathrattle_ids)
                 ghastcoiler_board.append(ghastcoiler_minion)
         return ghastcoiler_board
 

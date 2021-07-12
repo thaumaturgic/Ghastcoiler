@@ -48,8 +48,8 @@ class Deathrattle:
 
     @staticmethod
     def summon_random_minions(summoning_minion, own_board, minions_to_summon: int, criteria, triggered_from_macaw: bool):
-        from utils.minion_utils import MinionUtils        
-        minions = MinionUtils().get_minions(criteria)
+        from utils.minion_utils import get_minions        
+        minions = get_minions(criteria)
 
         insert_position = summoning_minion.position+1 if triggered_from_macaw else summoning_minion.find_deathrattle_reborn_position()
 

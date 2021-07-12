@@ -1,6 +1,5 @@
 import sys
 import inspect
-from copy import deepcopy
 
 # We explicitly want to import all Minion classes
 from minions.base import *  # noqa: F403
@@ -18,53 +17,54 @@ from deathrattles.rank_6 import LivingSporesDeathrattle
 def is_minion_class(class_object):
         return inspect.isclass(class_object) and issubclass(class_object, Minion) and (class_object is not Minion)
 
-class MinionUtils:
-    def __init__(self):
-        self.minion_classes = inspect.getmembers(sys.modules[__name__], is_minion_class)
-        self.minions_dictionary = {}
-        self.minions_instantiated = []
-        for minion_class in self.minion_classes:
-            minion = minion_class[1]()
-            self.minions_instantiated.append(minion)
-            self.minions_dictionary[minion.id] = minion_class[1]
-            self.minions_dictionary[minion.gold_id] = minion_class[1]
+# Build list of all the declared minion class types
+minion_classes = inspect.getmembers(sys.modules[__name__], is_minion_class)
+minions_dictionary = {}
+minions_instantiated = []
+for minion_class in minion_classes:
+    minion = minion_class[1]()
+    minions_instantiated.append(minion)
+    minions_dictionary[minion.id] = minion_class[1]
+    minions_dictionary[minion.gold_id] = minion_class[1]
+    
+def get_minions(criteria = None):
+    """Returns a List of minion classes that meet the given criteria, or all minions if no criteria is given
 
-    # Method to return a ghastcoiler minion using ID and parsed board parameters
-    def get_ghastcoiler_minion(self, id, position, health, attack, reborn, windfury, mega_windfury, taunt, divine_shield, poisonous, golden):
-        minion = None
-        if id in self.minions_dictionary:
-            minion = self.minions_dictionary[id](position=position, 
-            health=health, 
-            attack=attack, 
-            reborn=reborn,
-            windfury=windfury,
-            mega_windfury=mega_windfury,
-            taunt=taunt,
-            divine_shield=divine_shield,
-            poisonous=poisonous,
-            golden=golden)
-        return minion
+    Returns:
+        Minion[] -- List of minion classes that match the given criteria
+    """
+    if not criteria:
+        return minion_classes
 
-    def get_ghastcoiler_deathrattles(self, entity_ids):
-        deathrattles = []
-        for entity in entity_ids:
-            if entity == "BOT_312e":
-                deathrattles.append(ReplicatingMenaceDeathrattle())
-            elif entity == "TB_BaconUps_032e":
-                deathrattles.append(ReplicatingMenaceDeathrattle(golden=True)) # TODO: Test this import
-            elif entity == "UNG_999t2e":
-                deathrattles.append(LivingSporesDeathrattle())
-        
-        return deathrattles
+    minions = []
+    for minion in minions_instantiated:
+        if criteria(minion):
+            minions.append(minion.__class__)
+    return minions
 
-    def get_minions(self, criteria = None):
-        """Returns a List of minions initialized to their base state that meet the given criteria
+# Method to return a ghastcoiler minion using ID and parsed board parameters
+def get_ghastcoiler_minion(id, position, health, attack, reborn, windfury, mega_windfury, taunt, divine_shield, poisonous, golden):
+    minion = None
+    if id in minions_dictionary:
+        minion = minions_dictionary[id](position=position, 
+        health=health, 
+        attack=attack, 
+        reborn=reborn,
+        windfury=windfury,
+        mega_windfury=mega_windfury,
+        taunt=taunt,
+        divine_shield=divine_shield,
+        poisonous=poisonous,
+        golden=golden)
+    return minion
 
-        Returns:
-            Minion[] -- List of instantiated minions that match the given criteria
-        """
-        minions = []
-        for minion in self.minions_instantiated:
-            if (not criteria) or (criteria and criteria(minion)):
-                minions.append(minion.__class__)
-        return minions
+def get_ghastcoiler_deathrattles(entity_ids):
+    deathrattles = []
+    for entity in entity_ids:
+        if entity == "BOT_312e":
+            deathrattles.append(ReplicatingMenaceDeathrattle())
+        elif entity == "TB_BaconUps_032e":
+            deathrattles.append(ReplicatingMenaceDeathrattle(golden=True)) # TODO: Test this import
+        elif entity == "UNG_999t2e":
+            deathrattles.append(LivingSporesDeathrattle())
+    return deathrattles
