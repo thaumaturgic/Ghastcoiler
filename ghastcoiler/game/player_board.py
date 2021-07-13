@@ -4,6 +4,7 @@ import copy
 import sys
 
 from typing import List, Optional
+from heroes.hero_types import HeroType
 
 from minions.base import Minion
 from minions.types import MinionType
@@ -293,7 +294,9 @@ class PlayerBoard:
             minion.on_friendly_summon(new_minion)
             new_minion.on_summon(minion)
 
-        # TODO: Apply hero auras here? 
+        if self.hero == HeroType.GREYBOUGH:
+            new_minion.taunt = True
+            new_minion.add_stats(1,2)
 
         # Set neighbors for new minion and existing minions
         left_neighbor, right_neighbor = None, None

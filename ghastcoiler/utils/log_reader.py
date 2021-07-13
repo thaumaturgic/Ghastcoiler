@@ -36,6 +36,10 @@ class LogReader:
     # Hero power related entity IDs
     LICH_KING_REBORN = "TB_BaconShop_HP_024e2"
     ALAKIR = "TB_BaconShop_HP_086"
+    GREYBOUGH = "TB_BaconShop_HERO_95"
+    DEATHWING = "TB_BaconShop_HERO_52"
+    YSHAARJ = "TB_BaconShop_HERO_92"
+    ILLIDAN_STORMRAGE = "TB_BaconShop_HERO_08"
 
     # Death rattle entity ids
     REPLICATING_MENACE_DEATHRATTLE = "BOT_312e"
@@ -110,6 +114,18 @@ class LogReader:
             tech_level = tags[GameTag.PLAYER_TECH_LEVEL]
         return (health, tech_level)
 
+    def get_hero(self, hero_card_id):
+        if hero_card_id == LogReader.GREYBOUGH:
+            return HeroType.GREYBOUGH
+        elif hero_card_id == LogReader.DEATHWING:
+            return HeroType.DEATHWING
+        elif hero_card_id == LogReader.YSHAARJ:
+            return HeroType.YSHAARJ
+        elif hero_card_id == LogReader.ILLIDAN_STORMRAGE:
+            return HeroType.ILLIDAN_STORMRAGE
+        else:
+            return None
+
     def scrape_board_state(self, parser):
         packet_tree = parser.games[len(parser.games)-1]
         exporter = EntityTreeExporter(packet_tree)
@@ -163,8 +179,8 @@ class LogReader:
         friendly_health, friendly_tech_level = self.get_hero_tags(friendly_hero.tags)
         enemy_health, enemy_tech_level = self.get_hero_tags(enemy_hero.tags)
         
-        state = BoardState(friendlyBoard=friendlyMinions, friendlyPlayerHealth=friendly_health, friendlyTechLevel=friendly_tech_level,
-                            enemyBoard=enemyMinions, enemyPlayerHealth=enemy_health, enemyTechLevel=enemy_tech_level)
+        state = BoardState(friendlyBoard=friendlyMinions, friendlyPlayerHealth=friendly_health, friendlyTechLevel=friendly_tech_level, friendlyHero=self.get_hero(friendly_hero.card_id),
+                            enemyBoard=enemyMinions, enemyPlayerHealth=enemy_health, enemyTechLevel=enemy_tech_level, enemyHero=self.get_hero(enemy_hero.card_id))
         self.apply_hero_powers(state, hero_powers)
 
         return state
