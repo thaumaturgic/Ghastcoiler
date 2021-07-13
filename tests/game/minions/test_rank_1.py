@@ -9,15 +9,28 @@ def test_fiendish_servant_deathrattle(initialized_game):
     attacker_board = initialized_game.player_board[0]
     defender_board = initialized_game.player_board[1]
 
+    # Regular
     attacker_board.set_minions([FiendishServant(), DragonspawnLieutenant()])
     defender_board.set_minions([FiendishServant()])
-
     initialized_game.start_of_game()
     initialized_game.single_round()
-
     assert len(attacker_board.minions) == 1
     assert len(defender_board.minions) == 0
     assert attacker_board.minions[0].attack == 4
+
+    # Golden triggers 2x on potentially different minions
+    dragon_one = DragonspawnLieutenant()
+    dragon_two = DragonspawnLieutenant()
+    attacker_board.set_minions([FiendishServant(golden=True), dragon_one, dragon_two])
+    defender_board.set_minions([FiendishServant()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    if dragon_one.attack == 2:
+        assert dragon_two.attack == 10
+    elif dragon_one.attack == 6:
+        assert dragon_two.attack == 6
+    elif dragon_one.attack == 10:
+        assert dragon_two.attack == 2
 
 
 def test_fish_of_nzoth(initialized_game):

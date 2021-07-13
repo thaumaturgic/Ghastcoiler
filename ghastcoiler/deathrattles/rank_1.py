@@ -11,11 +11,10 @@ class FiendishServantDeathrattle(Deathrattle):
         super().__init__(name="FiendishServantDeathrattle")
 
     def trigger(self, minion: Minion, own_board: PlayerBoard, opposing_board: PlayerBoard, macaw_trigger: Optional[bool] = False):
-        target_minion = own_board.random_minion()
-        # TODO: is this 2x its attack to one minion or its attack to 2x minions?
-        bonus_attack = minion.attack * 2 if minion.golden else minion.attack
-        if target_minion:
-            target_minion.add_stats(bonus_attack, 0)
+        for _ in range(2 if minion.golden else 1):
+            target_minion = own_board.random_minion()
+            if target_minion:
+                target_minion.add_stats(minion.attack, 0)
 
 
 # class MecharooDeathrattle(Deathrattle):

@@ -1,11 +1,13 @@
 from ghastcoiler.minions.test_minions import PunchingBag
 from ghastcoiler.minions.tokens import Imp
 from ghastcoiler.minions.rank_1 import MicroMummy
-from ghastcoiler.minions.rank_2 import KaboomBot, PackLeader, HarvestGolem
+from ghastcoiler.minions.rank_2 import KaboomBot, PackLeader, HarvestGolem, SpawnofNZoth
 from ghastcoiler.minions.rank_3 import ArmoftheEmpire, CracklingCyclone,\
     DeflectoBot, ImpGangBoss, InfestedWolf, Khadgar, MonstrousMacaw,\
     ReplicatingMenace, RatPack, SoulJuggler
 from ghastcoiler.deathrattles.rank_3 import ReplicatingMenaceDeathrattle
+from minions.rank_5 import BaronRivendare
+from minions.rank_6 import GoldrinntheGreatWolf
 
 
 def test_arm_of_the_empire(initialized_game):
@@ -173,15 +175,17 @@ def test_monstrous_macaw(initialized_game):
     initialized_game.single_round()
     # Make sure tokens spawn in the right spot
     assert len(attacker_board.minions) == 5
+    assert not attacker_board.minions[2].attacked
     assert attacker_board.minions[2].name == "Spider"
     assert attacker_board.minions[3].name == "Spider"
 
     # Golden macaw
-    attacker_board.set_minions([MonstrousMacaw(golden=True), InfestedWolf()])
+    attacker_board.set_minions([MonstrousMacaw(golden=True), InfestedWolf(), PunchingBag()])
     defender_board.set_minions([PunchingBag()])
     initialized_game.start_of_game()
     initialized_game.single_round()
-    assert len(attacker_board.minions) == 6
+    assert len(attacker_board.minions) == 7
+    assert attacker_board.minions[6].name == "PunchingBag"
 
     # Test with minions with multiple deathrattles
     attacker_board.set_minions([MonstrousMacaw(), HarvestGolem(deathrattles=[ReplicatingMenaceDeathrattle()])])
@@ -191,11 +195,54 @@ def test_monstrous_macaw(initialized_game):
     assert (len(attacker_board.minions) == 3 or len(attacker_board.minions) == 5)
 
     # TODO: Test randomness of deathrattles?
-    # TODO: Test baron multiplier
-    # TODO: Test with goldrinn keeping macaw alive after it takes lethal
+
+    # Test baron multiplier
+    # Regular macaw + Regular baron = 2 triggers
+    spawn = SpawnofNZoth()
+    attacker_board.set_minions([MonstrousMacaw(), spawn, BaronRivendare()])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert spawn.health == 4
+
+    # Regular macaw + Golden baron = 3 triggers
+    spawn = SpawnofNZoth()
+    attacker_board.set_minions([MonstrousMacaw(), spawn, BaronRivendare(golden=True)])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert spawn.health == 5
+
+    # Golden macaw + Regular baron = 4 triggers
+    spawn = SpawnofNZoth()
+    attacker_board.set_minions([MonstrousMacaw(golden=True), spawn, BaronRivendare()])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert spawn.health == 6
+
+    # Golden macaw + Golden baron = 6 triggers
+    spawn = SpawnofNZoth()
+    attacker_board.set_minions([MonstrousMacaw(golden=True), spawn, BaronRivendare(golden=True)])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    assert spawn.health == 8
+
     # TODO: Test order of operations with killing an opposing death rattle
-    # TODO: Test attack order when spawning minions, ie generating tokens from a minion that hasnt attacked yet
-    
+
+    # Test attack order when spawning minions, ie generating tokens from a minion that has / hasnt attacked yet
+    attacker_board.set_minions([InfestedWolf(), MonstrousMacaw(), PunchingBag(attack=5)])
+    defender_board.set_minions([PunchingBag()])
+    initialized_game.start_of_game()
+    initialized_game.single_round()
+    initialized_game.single_round()
+    initialized_game.single_round()
+    assert len(attacker_board.minions) == 5
+    assert attacker_board.minions[4].name == "PunchingBag"
+    initialized_game.single_round()
+    initialized_game.single_round()
+    assert defender_board.minions[0].health == 87
 
 
 # def test_piloted_shredder(initialized_game):
