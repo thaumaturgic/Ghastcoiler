@@ -28,6 +28,14 @@ def test_arm_of_the_empire(initialized_game):
     assert defender_board.minions[0].attack == 6
     assert defender_board.minions[0].health == 4
 
+    # Multiple arms stack
+    attacker_board.set_minions([PunchingBag(attack=1)])
+    defender_board.set_minions([ArmoftheEmpire(taunt=True), ArmoftheEmpire()])
+    initialized_game.start_of_game(0)
+    initialized_game.single_round()
+    assert defender_board.minions[0].attack == 8
+    assert defender_board.minions[0].health == 4
+
 
 def test_crackling_cyclone(initialized_game):
     attacker_board = initialized_game.player_board[0]

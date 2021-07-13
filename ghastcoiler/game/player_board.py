@@ -4,14 +4,14 @@ import copy
 import sys
 
 from typing import List, Optional
-from heroes.hero_types import HeroType
+from heroes.hero_types import HeroType, deathwing_summon_effect, greybough_summon_effect
 
 from minions.base import Minion
 from minions.types import MinionType
 
 
 class PlayerBoard:
-    def __init__(self, player_id: int, hero: None, life_total: int, rank: int, minions: List[Minion]):
+    def __init__(self, player_id: int, hero: None, life_total: int, rank: int, minions: List[Minion], enemy_is_deathwing: bool = False):
         """The board of one the players in a game instance
 
         Arguments:
@@ -30,6 +30,17 @@ class PlayerBoard:
         self.token_creation_multiplier = 0
         self.set_minions(minions)
         self.dead_friendly_mechs = []
+        self.on_minion_summon_effects = []
+
+        if enemy_is_deathwing:
+            self.on_minion_summon_effects.append(deathwing_summon_effect)
+
+        if self.hero == HeroType.DEATHWING:
+            self.on_minion_summon_effects.append(deathwing_summon_effect)
+        elif self.hero == HeroType.GREYBOUGH:
+            self.on_minion_summon_effects.append(greybough_summon_effect)
+        
+        # self.start_of_game_effects = [] # TODO: Illidan, Lich, Alakir, YShraaj?
 
     def set_minions(self, minions: List[Minion]):
         """Initialize the board to the list of minions given.
@@ -57,14 +68,6 @@ class PlayerBoard:
                 minion.position = index
                 minion.player_id = self.player_id
 
-
-    def copy(self):
-        """Deep copy PlayerBoard instance to not carry state over multiple simulations
-
-        Returns:
-            PlayerBoard -- Deep copy of current PlayerBoard
-        """
-        return PlayerBoard(player_id=self.player_id, hero=self.hero, life_total=self.life_total, rank=self.rank, minions=copy.deepcopy(self.minions))
 
     def minions_string(self):
         """String representation of all minions in player board
@@ -294,9 +297,8 @@ class PlayerBoard:
             minion.on_friendly_summon(new_minion)
             new_minion.on_summon(minion)
 
-        if self.hero == HeroType.GREYBOUGH:
-            new_minion.taunt = True
-            new_minion.add_stats(1,2)
+        for summon_effect in self.on_minion_summon_effects:
+            summon_effect(new_minion)
 
         # Set neighbors for new minion and existing minions
         left_neighbor, right_neighbor = None, None

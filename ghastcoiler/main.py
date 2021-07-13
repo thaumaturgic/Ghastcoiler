@@ -4,7 +4,8 @@ from itertools import repeat
 from multiprocessing import Pool
 import time
 import pickle
-from utils.minion_utils import MinionUtils
+from heroes.hero_types import HeroType
+from utils.minion_utils import get_minions
 
 from utils.profile import Profile
 from utils.log_reader import LogReader
@@ -35,8 +36,19 @@ def main():
             profile.__exit__()
             continue
 
-        player_board_0 = PlayerBoard(player_id=0, hero=board_state.friendlyHero, life_total=board_state.friendlyPlayerHealth, rank=board_state.friendlyTechLevel, minions=board_state.friendlyBoard)
-        player_board_1 = PlayerBoard(player_id=1, hero=board_state.enemyHero, life_total=board_state.enemyPlayerHealth, rank=board_state.enemyTechLevel, minions=board_state.enemyBoard)
+        player_board_0 = PlayerBoard(player_id=0, 
+            hero=board_state.friendlyHero, 
+            life_total=board_state.friendlyPlayerHealth, 
+            rank=board_state.friendlyTechLevel, 
+            minions=board_state.friendlyBoard,
+            enemy_is_deathwing = board_state.enemyHero is HeroType.DEATHWING)
+
+        player_board_1 = PlayerBoard(player_id=1, 
+            hero=board_state.enemyHero,
+            life_total=board_state.enemyPlayerHealth,
+            rank=board_state.enemyTechLevel,
+            minions=board_state.enemyBoard,
+            enemy_is_deathwing = board_state.friendlyHero is HeroType.DEATHWING)
 
         print("Enemy board")
         print(player_board_1)
@@ -45,11 +57,11 @@ def main():
         print(player_board_0)
 
         # turns += 1
-        # if turns < 4:
+        # if turns < 9:
         #     continue
 
         try:
-            single_threaded = False
+            single_threaded = True
             games = 10_000
             game_state = (player_board_0, player_board_1)
             pickled_state = pickle.dumps(game_state)

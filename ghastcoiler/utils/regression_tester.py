@@ -4,13 +4,13 @@ from itertools import repeat
 from multiprocessing import Pool
 import time
 import csv
-import glob
 import pickle
 import os
 from typing import List
+from heroes.hero_types import HeroType
 
 from utils.profile import Profile
-from utils.log_reader import BoardState, LogReader
+from utils.log_reader import LogReader
 
 from game.simulation import Simulator
 from game.player_board import PlayerBoard
@@ -39,9 +39,18 @@ def simulate_game_from_log(logPath):
         if not board_state:
             break
 
-        player_board_0 = PlayerBoard(player_id=0, hero=board_state.friendlyHero, life_total=board_state.friendlyPlayerHealth, rank=board_state.friendlyTechLevel, minions=board_state.friendlyBoard)
-        player_board_1 = PlayerBoard(player_id=1, hero=board_state.enemyHero, life_total=board_state.enemyPlayerHealth, rank=board_state.enemyTechLevel, minions=board_state.enemyBoard)
-        turns += 1
+        player_board_0 = PlayerBoard(player_id=0, 
+            hero=board_state.friendlyHero, 
+            life_total=board_state.friendlyPlayerHealth, 
+            rank=board_state.friendlyTechLevel, 
+            minions=board_state.friendlyBoard,
+            enemy_is_deathwing = board_state.enemyHero is HeroType.DEATHWING)
+        player_board_1 = PlayerBoard(player_id=1, 
+            hero=board_state.enemyHero,
+            life_total=board_state.enemyPlayerHealth,
+            rank=board_state.enemyTechLevel,
+            minions=board_state.enemyBoard,
+            enemy_is_deathwing = board_state.friendlyHero is HeroType.DEATHWING)
 
         try:
             single_threaded = False
@@ -79,14 +88,16 @@ def simulate_game_from_log(logPath):
                     ties += game_count
 
             turn_results[turns] = [100*enemy_lethal/games, 100*wins/games, 100*ties/games, 100*losses/games, 100*friendly_lethal/games]
+            turns += 1
         except Exception as e:
             print(f"Game:{logPath}, turn:{turns}, error:{e}")
             turn_results[turns] = [0,0,0,0,0]
+            turns += 1
     return turn_results
 
 def compare_results(known_results: List, simulated_results: List):
     # Compare the results of the simulation with the known results file, flag differences of +/- 2%
-    error_range = 2
+    error_range = 5
     results_string = ""
     for i in range(len(known_results)):
         all_results_match = True
@@ -103,6 +114,10 @@ def compare_results(known_results: List, simulated_results: List):
     return results_string[:-1]
 
 def run_regressions(logDirectoryPath):
+    start = time.time()
+    games = 0
+    profile = Profile()
+    profile.__enter__()
     # Look for all .log files in the directory
     for file in os.listdir(logDirectoryPath):
         # For each log file, see if there is a csv file
@@ -115,9 +130,10 @@ def run_regressions(logDirectoryPath):
 
             if csv_exists:
                 known_results = read_game_results(csv_path)
-                profile = Profile()
-                profile.__enter__()
+                #with Profile():
                 simulated_results = simulate_game_from_log(log_path)
-                profile.__exit__()
-                print(f"{file}results,{compare_results(known_results, simulated_results)}")
-    pass
+                print(f"{file} results, {compare_results(known_results, simulated_results)}")
+                games += 1
+    end_time = time.time() - start
+    print(f"Elapsed Time: {end_time}\nGames: {games}\nTime per game: {end_time / games}")
+    profile.__exit__()
